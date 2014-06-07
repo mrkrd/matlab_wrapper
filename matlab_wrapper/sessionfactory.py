@@ -1,22 +1,22 @@
-# -*- coding: iso-8859-15 -*-
-'''
-Copyright 2010-2013 Joakim MÃ¶ller
+"""
+Copyright 2010-2013 Joakim Möller
+Copyright 2014 Marek Rudnicki
 
-This file is part of pymatlab.
+This file is part of matlab_wrapper.
 
-pymatlab is free software: you can redistribute it and/or modify
+matlab_wrapper is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-pymatlab is distributed in the hope that it will be useful,
+matlab_wrapper is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with pymatlab.  If not, see <http://www.gnu.org/licenses/>.
-'''
+along with matlab_wrapper.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
 import os
 import os.path
@@ -79,4 +79,3 @@ def remote_session_factory(hostname,remote_path):
                 'Not supported on the {platform}-platform'.format(
                         platform=system))
     return session
-

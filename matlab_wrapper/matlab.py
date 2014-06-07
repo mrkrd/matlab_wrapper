@@ -1,28 +1,30 @@
-# -*- coding: iso-8859-15 -*-
-'''
-Copyright 2010-2013 Joakim MÃ¶ller
+"""
+Copyright 2010-2013 Joakim Möller
+Copyright 2014 Marek Rudnicki
 
-This file is part of pymatlab.
+This file is part of matlab_wrapper.
 
-pymatlab is free software: you can redistribute it and/or modify
+matlab_wrapper is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-pymatlab is distributed in the hope that it will be useful,
+matlab_wrapper is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with pymatlab.  If not, see <http://www.gnu.org/licenses/>.
-'''
+along with matlab_wrapper.  If not, see <http://www.gnu.org/licenses/>.
+"""
 
-from ctypes import *
-from numpy import array,ndarray,dtype
-from os.path import join
+from __future__ import print_function, division, absolute_import
+
+import ctypes
+import numpy as np
 import platform
-import sys,numpy
+import sys
+import os
 
 from pymatlab.typeconv import *
 
@@ -30,20 +32,20 @@ class mxArray(Structure):
     pass
 
 
-wrap_script = '''
-pymatlaberrstring ='';
+wrap_script = r"""
+pymatlaberrstring = '';
 try
     {0}
 catch err
-    pymatlaberrstring = sprintf('Error: %s with message: %s\\n',err.identifier,err.message);
+    pymatlaberrstring = sprintf('Error: %s with message: %s\n',err.identifier,err.message);
     for i = 1:length(err.stack)
-        pymatlaberrstring = sprintf('%%sError: in fuction %%s in file %%s line %%i\\n',pymatlaberrstring,err.stack(i,1).name,err.stack(i,1).file,err.stack(i,1).line);
+        pymatlaberrstring = sprintf('%sError: in fuction %s in file %s line %i\n',pymatlaberrstring,err.stack(i,1).name,err.stack(i,1).file,err.stack(i,1).line);
     end
 end
 if exist('pymatlaberrstring','var')==0
     pymatlaberrstring='';
 end
-'''
+"""
 
 class MatlabSession(object):
     def __init__(self,matlab_root='',command='',bufsize=128):
@@ -113,9 +115,9 @@ class MatlabSession(object):
                 imagbuf =create_string_buffer(returnsize)
                 memmove(imagbuf,data_imag,returnsize)
                 #datatype = class_name.split()[1]
-                pyarray_imag = ndarray(buffer=imagbuf,shape=dims[:ndims], 
+                pyarray_imag = ndarray(buffer=imagbuf,shape=dims[:ndims],
                         dtype=dtype(datatype),order='F')
-            pyarray_real = ndarray(buffer=realbuf,shape=dims[:ndims], 
+            pyarray_real = ndarray(buffer=realbuf,shape=dims[:ndims],
                     dtype=dtype(datatype),order='F')
             if is_complex:
                 pyarray = pyarray_real + pyarray_imag*1j
@@ -140,7 +142,7 @@ class MatlabSession(object):
                 data =self.mx.mxGetData(mx)
                 buf =create_string_buffer(returnsize)
                 memmove(buf,data,returnsize)
-                pyarray = ndarray(buffer=buf,shape=dims[:ndims], 
+                pyarray = ndarray(buffer=buf,shape=dims[:ndims],
                         dtype=dtype('bool'),order='F')
                 return pyarray.squeeze()
             elif class_name=='struct':
@@ -183,7 +185,7 @@ class MatlabSession(object):
                     datastring = pyvariable.imag.tostring('F')
                     n_datastring = len(datastring)
                     memmove(data_old_imag,datastring,n_datastring)
-                
+
             elif pyvariable.dtype.kind =='b':
                 dim = pyvariable.ctypes.shape_as(c_size_t)
                 self.mx.mxCreateLogicalArray.restype=POINTER(mxArray)

@@ -1,2 +1,1 @@
 include COPYING.txt
-recursive-include docs *.txt 
