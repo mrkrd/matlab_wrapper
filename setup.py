@@ -5,7 +5,7 @@ from setuptools import setup,find_packages
 setup(
     name = "matlab_wrapper",
     version = "0.1",
-    packages = find_packages()
+    packages = find_packages(),
 
     author = "Marek Rudnicki",
     author_email = "marekrud@gmail.com",
