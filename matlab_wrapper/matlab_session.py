@@ -58,7 +58,7 @@ class MatlabSession(object):
     ----------
     options : str, optional
         Options that will be passed to MATLAB at the start,
-        e.g. '-nosplash -nodesktop'.
+        e.g. '-nosplash'.
     matlab_root : str or None, optional
         Root of the MATLAB installation.  If unsure, then start MATLAB
         and type `matlabroot`.  If `None`, then will be determined
@@ -68,7 +68,7 @@ class MatlabSession(object):
         through `output_buffer` property.
 
     """
-    def __init__(self, options=None, matlab_root=None, buffer_size=0):
+    def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
         system = platform.system()
 
 
