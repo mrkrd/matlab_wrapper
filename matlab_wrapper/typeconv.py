@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-Copyright 2010-2013 Joakim Möller
+Copyright 2010-2013 Joakim MÃ¶ller
 Copyright 2014 Marek Rudnicki
 
 This file is part of matlab_wrapper.
@@ -82,7 +83,7 @@ def mat_to_ctype(classname):
     return ctype
 
 
-def np_to_mat(np_variable):
+def np_to_mat(dtype):
 
     #Typedef enum
     #{
@@ -90,47 +91,47 @@ def np_to_mat(np_variable):
     #1        mxCELL_CLASS,
     #2        mxSTRUCT_CLASS,
     #3        mxLOGICAL_CLASS,
-    if np_variable.dtype.type ==numpy.bool:
+    if dtype.type == numpy.bool_:
         matlab_type = c_int(3)
     #4        mxCHAR_CLASS,
-    elif np_variable.dtype.type ==numpy.str :
+    elif dtype.type == numpy.str_:
         matlab_type = c_int(4)
     #5        mxVOID_CLASS,
-    elif np_variable.dtype.type ==numpy.void:
+    elif dtype.type == numpy.void:
         matlab_type = c_int(5)
     #6        mxDOUBLE_CLASS,
-    elif np_variable.dtype.type ==numpy.complex128:
+    elif dtype.type == numpy.complex128:
         matlab_type = c_int(6)
-    elif np_variable.dtype.type ==numpy.float64:
+    elif dtype.type == numpy.float64:
         matlab_type = c_int(6)
     #7        mxSINGLE_CLASS,
-    elif np_variable.dtype.type ==numpy.complex64:
+    elif dtype.type ==numpy.complex64:
         matlab_type = c_int(7)
-    elif np_variable.dtype.type ==numpy.float32:
+    elif dtype.type ==numpy.float32:
         matlab_type = c_int(7)
     #8        mxINT8_CLASS,
-    elif np_variable.dtype.type ==numpy.int8:
+    elif dtype.type ==numpy.int8:
         matlab_type = c_int(8)
     #9        mxUINT8_CLASS,
-    elif np_variable.dtype.type ==numpy.uint8:
+    elif dtype.type ==numpy.uint8:
         matlab_type = c_int(9)
     #10       mxINT16_CLASS,
-    elif np_variable.dtype.type ==numpy.int16:
+    elif dtype.type ==numpy.int16:
         matlab_type = c_int(10)
     #11       mxUINT16_CLASS,
-    elif np_variable.dtype.type ==numpy.uint16:
+    elif dtype.type ==numpy.uint16:
         matlab_type = c_int(11)
     #12       mxINT32_CLASS,
-    elif np_variable.dtype.type ==numpy.int32:
+    elif dtype.type ==numpy.int32:
         matlab_type = c_int(12)
     #13       mxUINT32_CLASS,
-    elif np_variable.dtype.type ==numpy.uint32:
+    elif dtype.type ==numpy.uint32:
         matlab_type = c_int(13)
     #14       mxINT64_CLASS,
-    elif np_variable.dtype.type ==numpy.int64:
+    elif dtype.type ==numpy.int64:
         matlab_type = c_int(14)
     #15       mxUINT64_CLASS,
-    elif np_variable.dtype.type ==numpy.uint64:
+    elif dtype.type ==numpy.uint64:
         matlab_type = c_int(15)
     #16       mxFUNCTION_CLASS,
     #17       mxOPAQUE_CLASS,
