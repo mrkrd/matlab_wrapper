@@ -35,6 +35,8 @@ from matlab_wrapper.typeconv import np_to_mat
 class mxArray(ctypes.Structure):
     pass
 
+class Engine(ctypes.Structure):
+    pass
 
 wrap_script = r"""
 ERRORSTR = '';
@@ -95,7 +97,6 @@ class MatlabSession(object):
             )
             executable = join(matlab_root, 'bin', 'matlab')
             command = "{} {}".format(executable, options)
-            self._ep = self._libeng.engOpen( c_char_p(command) )
 
         # elif system=='Windows':
         #     self.engine = CDLL(join(matlab_root,'bin','glnxa64','libeng.dll'))
@@ -106,10 +107,86 @@ class MatlabSession(object):
             raise NotImplementedError("System {} not supported".format(system))
 
 
-        if self._ep is None:
-            raise RuntimeError(
-                "Could not start matlab using command:\n\t{}".format(command)
-            )
+
+
+        ### Setup function types for args and returns
+        self._libeng.engOpen.argtypes = (c_char_p,)
+        self._libeng.engOpen.restype = POINTER(Engine)
+        self._libeng.engOpen.errcheck = error_check
+
+        self._libeng.engPutVariable.argtypes = (POINTER(Engine), c_char_p, POINTER(mxArray))
+        self._libeng.engPutVariable.restype = c_int
+        self._libeng.engPutVariable.errcheck = error_check
+
+        self._libeng.engGetVariable.argtypes = (POINTER(Engine), c_char_p)
+        self._libeng.engGetVariable.restype = POINTER(mxArray)
+        self._libeng.engGetVariable.errcheck = error_check
+
+        self._libeng.engEvalString.argtypes = (POINTER(Engine), c_char_p)
+        self._libeng.engEvalString.restype = c_int
+        self._libeng.engEvalString.errcheck = error_check
+
+        self._libeng.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
+        self._libeng.engOutputBuffer.restype = c_int
+
+
+        self._libmx.mxGetNumberOfDimensions.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetNumberOfDimensions.restype = c_size_t
+
+        self._libmx.mxGetDimensions.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetDimensions.restype = POINTER(c_size_t)
+
+        self._libmx.mxGetNumberOfElements.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetNumberOfElements.restype = c_size_t
+
+        self._libmx.mxGetElementSize.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetElementSize.restype = c_size_t
+
+        self._libmx.mxGetClassName.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetClassName.restype = c_char_p
+
+        self._libmx.mxIsNumeric.restype = c_bool
+        self._libmx.mxIsNumeric.argtypes = (POINTER(mxArray),)
+
+        self._libmx.mxIsComplex.restype = c_bool
+        self._libmx.mxIsComplex.argtypes = (POINTER(mxArray),)
+
+        self._libmx.mxGetData.restype = POINTER(c_void_p)
+        self._libmx.mxGetData.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetData.errcheck = error_check
+
+        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
+        self._libmx.mxGetImagData.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetImagData.errcheck = error_check
+
+        self._libmx.mxArrayToString.argtypes = (POINTER(mxArray),)
+        self._libmx.mxArrayToString.restype = c_char_p
+        self._libmx.mxArrayToString.errcheck = error_check
+
+        self._libmx.mxCreateString.restype = POINTER(mxArray)
+        self._libmx.mxCreateString.argtypes = (c_char_p,)
+        self._libmx.mxCreateString.errcheck = error_check
+
+        self._libmx.mxCreateNumericArray.argtypes = (c_size_t, POINTER(c_size_t), c_int, c_int)
+        self._libmx.mxCreateNumericArray.restype = POINTER(mxArray)
+        self._libmx.mxCreateNumericArray.errcheck = error_check
+
+        self._libmx.mxCreateLogicalArray.argtypes = (c_size_t, POINTER(c_size_t))
+        self._libmx.mxCreateLogicalArray.restype = POINTER(mxArray)
+        self._libmx.mxCreateLogicalArray.errcheck = error_check
+
+        self._libmx.mxGetData.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetData.restype = POINTER(c_void_p)
+
+        self._libmx.mxGetImagData.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
+
+        self._libmx.mxDestroyArray.argtypes = (POINTER(mxArray),)
+        self._libmx.mxDestroyArray.restype = None
+
+
+        ### Start the engine
+        self._ep = self._libeng.engOpen(command)
 
 
         ### Setup the output buffer
@@ -122,6 +199,7 @@ class MatlabSession(object):
             )
         else:
             self._output_buffer = None
+
 
 
 
@@ -147,19 +225,11 @@ class MatlabSession(object):
 
 
         ### Evaluate the expression
-        self._libeng.engEvalString(
-            self._ep,
-            c_char_p(expression_wrapped)
-        )
+        self._libeng.engEvalString(self._ep, expression_wrapped)
 
         ### Check for exceptions in MATLAB
-        self._libeng.engGetVariable.restype = POINTER(mxArray)
-        mxresult = self._libeng.engGetVariable(
-            self._ep,
-            c_char_p('ERRORSTR')
-        )
+        mxresult = self._libeng.engGetVariable(self._ep, 'ERRORSTR')
 
-        self._libmx.mxArrayToString.restype = c_char_p
         error_string = self._libmx.mxArrayToString(mxresult)
 
         if error_string != "":
@@ -181,34 +251,15 @@ class MatlabSession(object):
             Value of the variable `name`.
 
         """
-        self._libeng.engGetVariable.restype = POINTER(mxArray)
-        pm = self._libeng.engGetVariable(self._ep, c_char_p(name))
-
-        self._libmx.mxGetNumberOfDimensions.restype = c_size_t
+        pm = self._libeng.engGetVariable(self._ep, name)
         ndims = self._libmx.mxGetNumberOfDimensions(pm)
-
-        self._libmx.mxGetDimensions.restype = POINTER(c_size_t)
         dims = self._libmx.mxGetDimensions(pm)
-
-        self._libmx.mxGetNumberOfElements.restype = c_size_t
         numelems = self._libmx.mxGetNumberOfElements(pm)
-
-        self._libmx.mxGetElementSize.restype = c_size_t
         elem_size = self._libmx.mxGetElementSize(pm)
-
-        self._libmx.mxGetClassName.restype = c_char_p
         class_name = self._libmx.mxGetClassName(pm)
-
-        self._libmx.mxIsNumeric.restype = c_bool
         is_numeric = self._libmx.mxIsNumeric(pm)
-
-        self._libmx.mxIsComplex.restype = c_bool
         is_complex = self._libmx.mxIsComplex(pm)
-
-        self._libmx.mxGetData.restype = POINTER(c_void_p)
         data = self._libmx.mxGetData(pm)
-
-        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
         imag_data = self._libmx.mxGetImagData(pm)
 
         if is_numeric:
@@ -266,7 +317,6 @@ class MatlabSession(object):
             raise NotImplementedError('{}-arrays are not implemented'.format(class_name))
 
 
-        self._libmx.mxDestroyArray.restype = POINTER(mxArray)
         self._libmx.mxDestroyArray(pm)
 
         return out
@@ -279,8 +329,7 @@ class MatlabSession(object):
 
         """
         if isinstance(value, str):
-            self._libmx.mxCreateString.restype = POINTER(mxArray)
-            pm = self._libmx.mxCreateString(c_char_p(value))
+            pm = self._libmx.mxCreateString(value)
 
         elif isinstance(value, dict):
             raise NotImplementedError('dicts are not supported.')
@@ -289,36 +338,39 @@ class MatlabSession(object):
             value = np.array(value, ndmin=2)
 
 
-        if isinstance(value, np.ndarray) and value.dtype.kind in ['i','u','f','c','b']:
+        if isinstance(value, np.ndarray) and value.dtype.kind in ['i','u','f','c']:
             dim = value.ctypes.shape_as(c_size_t)
             complex_flag = (value.dtype.kind == 'c')
 
-            self._libmx.mxCreateNumericArray.restype = POINTER(mxArray)
             pm = self._libmx.mxCreateNumericArray(
-                c_size_t(value.ndim),
+                value.ndim,
                 dim,
                 np_to_mat(value.dtype),
                 c_int(complex_flag)
             )
 
-            self._libmx.mxGetData.restype = POINTER(c_void_p)
             mat_data = self._libmx.mxGetData(pm)
             np_data = value.real.tostring('F')
             ctypes.memmove(mat_data, np_data, len(np_data))
 
             if complex_flag:
-                self._libmx.mxGetImagData.restype = POINTER(c_void_p)
                 mat_data = self._libmx.mxGetImagData(pm)
                 np_data = value.imag.tostring('F')
                 ctypes.memmove(mat_data, np_data, len(np_data))
 
+        elif isinstance(value, np.ndarray) and value.dtype.kind == 'b':
+            dim = value.ctypes.shape_as(c_size_t)
+
+            pm = self._libmx.mxCreateLogicalArray(value.ndim, dim)
+
+            mat_data = self._libmx.mxGetData(pm)
+            np_data = value.real.tostring('F')
+            ctypes.memmove(mat_data, np_data, len(np_data))
 
         # elif pyvariable.dtype.kind =='S':
         #     dim = pyvariable.ctypes.shape_as(c_size_t)
-        #     self._libmx.mxCreateCharArray.restype=POINTER(mxArray)
         #     mx = self._libmx.mxCreateNumericArray(c_size_t(pyvariable.ndim),
         #                                           dim)
-        #     self._libmx.mxGetData.restype=POINTER(c_void_p)
         #     data_old = self._libmx.mxGetData(mx)
         #     datastring = pyvariable.tostring('F')
         #     n_datastring = len(datastring)
@@ -330,7 +382,18 @@ class MatlabSession(object):
             raise NotImplementedError('Type {} not supported.'.format(value.dtype))
 
 
-        self._libeng.engPutVariable(self._ep, c_char_p(name), pm)
+        self._libeng.engPutVariable(self._ep, name, pm)
 
-        self._libmx.mxDestroyArray.restype = POINTER(mxArray)
         self._libmx.mxDestroyArray(pm)
+
+
+
+def error_check(result, func, arguments):
+    if (isinstance(result, c_int) and result != 0) or (result is None):
+        raise RuntimeError(
+            "MATLAB function {func} failed ({result}) with arguments:\n{arguments}".format(
+                func=str(func),
+                result=str(result),
+                arguments=str(arguments)
+            ))
+    return result
