@@ -9,9 +9,9 @@ New kid on the block...
 Requirements
 ------------
 
-  - Python
-  - Matlab
-  - Numpy
+- Python
+- Matlab
+- Numpy
 
 
 
