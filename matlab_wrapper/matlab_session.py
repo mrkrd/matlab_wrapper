@@ -346,7 +346,7 @@ class MatlabSession(object):
                 value.ndim,
                 dim,
                 np_to_mat(value.dtype),
-                c_int(complex_flag)
+                complex_flag
             )
 
             mat_data = self._libmx.mxGetData(pm)
@@ -387,6 +387,16 @@ class MatlabSession(object):
         self._libmx.mxDestroyArray(pm)
 
 
+    def version(self):
+        """Return string representing MATLAB version."""
+
+        self.eval("VERSION__ = version")
+        ver = self.get('VERSION__')
+
+        return ver
+
+
+
 
 def error_check(result, func, arguments):
     if (isinstance(result, c_int) and result != 0) or (result is None):
@@ -397,3 +407,10 @@ def error_check(result, func, arguments):
                 arguments=str(arguments)
             ))
     return result
+
+
+
+
+class Workspace(object):
+    def __init__(self, engine):
+        self._engine = engine
