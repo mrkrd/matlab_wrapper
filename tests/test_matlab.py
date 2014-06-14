@@ -98,6 +98,12 @@ def test_get_string(session):
     assert s == 'asdf'
 
 
+def test_get_float(session):
+    session.eval("a = 1.")
+    a = session.get('a')
+
+    assert a == 1.
+
 
 
 def test_put_numeric(session):
@@ -163,6 +169,20 @@ def test_put_string(session):
     s = output[-1]
 
     assert s == "asdf"
+
+
+
+
+def test_put_float(session):
+    session.put('a', 3.2)
+    session.eval('a')
+
+    output = session.output_buffer.split()
+
+    a = float(output[-1])
+
+    assert a == 3.2
+
 
 
 
