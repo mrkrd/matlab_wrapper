@@ -26,6 +26,7 @@ import platform
 import sys
 from os.path import join, dirname, isfile, realpath
 import os
+import functools
 
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
@@ -200,6 +201,9 @@ class MatlabSession(object):
         else:
             self._output_buffer = None
 
+
+        ### Workspace object
+        self.workspace = Workspace(self)
 
 
 
@@ -412,5 +416,93 @@ def error_check(result, func, arguments):
 
 
 class Workspace(object):
-    def __init__(self, engine):
-        self._engine = engine
+    def __init__(self, session):
+        self._session = session
+
+
+    def __getattr__(self, attr):
+
+        ### TODO: if attr is var -> return value
+
+        ### TODO: if attr is func
+        out = MatlabFunction(name=attr, session=self._session)
+
+        return out
+
+
+
+
+
+class MatlabFunction(object):
+    def __init__(self, name, session):
+        self.name = name
+        self._session = session
+
+    def __call__(self, *args, **kwargs):
+        session = self._session
+
+
+        ### Left-hand side (returns) string
+        nout = kwargs.get('nout', 1)
+        outs = ["OUT_{}__".format(i) for i in range(nout)]
+        outs_str = ','.join(outs)
+
+
+        ### Right hand side (arguments) string
+        ins = []
+        for i,a in enumerate(args):
+            aname = "ARG_{}__".format(i)
+            session.put(aname, a)
+            ins.append(aname)
+        ins_str = ','.join(ins)
+
+
+        ### MATLAB command
+        cmd = "[{outs}] = {name}({ins})".format(
+            outs=outs_str,
+            name=self.name,
+            ins=ins_str
+        )
+
+
+        ### Run the function
+        session.eval(cmd)
+
+
+        ### Clear input variables in MATLAB
+        session.eval("clear {}".format(' '.join(ins)))
+
+
+        ### Get the resulst from MATLAB
+        rets = []
+        for o in outs:
+            r = session.get(o)
+            rets.append(r)
+
+
+        ### Clear the resutls in MATLAB
+        session.eval("clear {}".format(' '.join(outs)))
+
+
+        ### Return the results
+        if len(rets) == 1:
+            ret = rets[0]
+        else:
+            ret = tuple(rets)
+
+        return ret
+
+    @property
+    def __doc__(self):
+
+        session = self._session
+
+        session.eval(
+            "DOC__ = help('{}')".format(self.name)
+        )
+
+        doc = session.get('DOC__')
+
+        session.eval("clear DOC__")
+
+        return doc

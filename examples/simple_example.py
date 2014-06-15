@@ -57,5 +57,11 @@ def main():
     #     print(out)
 
 
+    a = matlab.workspace.sin(np.arange(10.))
+    print(a)
+
+    help(matlab.workspace.sin)
+
+
 if __name__ == "__main__":
     main()
