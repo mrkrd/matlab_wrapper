@@ -40,17 +40,17 @@ class Engine(ctypes.Structure):
     pass
 
 wrap_script = r"""
-ERRORSTR = '';
+ERRSTR__ = '';
 try
     {0}
 catch err
-    ERRORSTR = sprintf('%s: %s\n', err.identifier, err.message);
+    ERRSTR__ = sprintf('%s: %s\n', err.identifier, err.message);
     for i = 1:length(err.stack)
-        ERRORSTR = sprintf('%sError: in fuction %s in file %s line %i\n', ERRORSTR, err.stack(i,1).name, err.stack(i,1).file, err.stack(i,1).line);
+        ERRSTR__ = sprintf('%sError: in fuction %s in file %s line %i\n', ERRSTR__, err.stack(i,1).name, err.stack(i,1).file, err.stack(i,1).line);
     end
 end
-if exist('ERRORSTR','var') == 0
-    ERRORSTR='';
+if exist('ERRSTR__','var') == 0
+    ERRSTR__='';
 end
 """
 
@@ -246,7 +246,7 @@ class MatlabSession(object):
         self._libeng.engEvalString(self._ep, expression_wrapped)
 
         ### Check for exceptions in MATLAB
-        mxresult = self._libeng.engGetVariable(self._ep, 'ERRORSTR')
+        mxresult = self._libeng.engGetVariable(self._ep, 'ERRSTR__')
 
         error_string = self._libmx.mxArrayToString(mxresult)
 
@@ -410,6 +410,7 @@ class MatlabSession(object):
 
         self.eval("VERSION__ = version")
         ver = self.get('VERSION__')
+        self.eval("clear VERSION__")
 
         return ver
 

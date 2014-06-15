@@ -71,6 +71,8 @@ def main():
 
     #help(matlab.workspace.sin)
 
+    matlab.eval("whos")
+    print(matlab.output_buffer)
 
 if __name__ == "__main__":
     main()
