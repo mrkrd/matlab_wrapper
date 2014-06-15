@@ -141,7 +141,7 @@ def test_put_logical(session):
 
 @pytest.mark.xfail
 def test_put_complex(session):
-    """TODO: fix the test"""
+    """TODO: fix the test (problem with parsing of the output buffer)"""
     for dtype in ('complex128', 'complex64'):
         a = np.random.randn(2,3)*10 + np.random.randn(2,3)*10j
         a = a.astype(dtype)
@@ -229,3 +229,24 @@ def test_put_get_string(session):
     ss = session.get('s')
 
     assert s == ss
+
+
+
+def test_workspace_func(session):
+
+    x = np.arange(10, dtype=float)
+    y = np.sin(x)
+
+    ymatlab = session.workspace.sin(x)
+
+    assert_equal(y, ymatlab)
+
+
+
+def test_workspace_nout(session):
+    a = np.array([2,1,3])
+
+    y,i = session.workspace.sort(a, nout=2)
+
+    assert_equal(y, [1,2,3])
+    assert_equal(i, a)

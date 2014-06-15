@@ -70,6 +70,20 @@ class MatlabSession(object):
         MATLAB output buffer size.  The output buffer can be accessed
         through `output_buffer` property.
 
+    Attributes
+    ----------
+    output_buffer : str
+        Access to the MATLAB output buffer.
+    workspace : Workspace object
+        Easy access to MATLAB workspace, e.g. `workspace.sin([1.,2.,3.])`
+
+    Methods
+    -------
+    get()
+    put()
+    eval()
+    version()
+
     """
     def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
         system = platform.system()

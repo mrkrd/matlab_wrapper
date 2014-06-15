@@ -60,7 +60,10 @@ def main():
     a = matlab.workspace.sin(np.arange(10.))
     print(a)
 
-    help(matlab.workspace.sin)
+    y,i = matlab.workspace.sort([2,1,3], nout=2)
+    print(y,i)
+
+    #help(matlab.workspace.sin)
 
 
 if __name__ == "__main__":
