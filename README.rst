@@ -12,8 +12,8 @@ your Python scripts.  The MATLAB session is started in the background
 and appears as a regular Python module.
 
 **matlab_wrapper** uses standard `MATLAB engine library`_ and talks
-directly to the binaries through `ctypes module`_. (you do not need to
-compile anything!)
+directly to the binaries through `ctypes module`_.  You do not need to
+compile anything!
 
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
@@ -96,6 +96,6 @@ Alternatives
 Acknowledgments
 ---------------
 
-matlab_wrapper was forked from pymatlab_.
+**matlab_wrapper** was forked from pymatlab_.
 
 .. _pymatlab: http://pymatlab.sourceforge.net/
