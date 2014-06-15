@@ -7,26 +7,25 @@ MATLAB wrapper for Python
 Usage
 -----
 
-::
-   import matlab_wrapper
-   matlab = matlab_wrapper.MatlabSession()
+Initialize::
+
+  import matlab_wrapper
+  matlab = matlab_wrapper.MatlabSession()
 
 
-Low level
+Low level::
 
-::
-   matlab.put('a', 12.3)
-   matlab.eval('b = a * 2')
-   b = matlab.get('b')
+  matlab.put('a', 12.3)
+  matlab.eval('b = a * 2')
+  b = matlab.get('b')
 
 
-Workspace
+Workspace::
 
-::
-   s = matlab.workspace.sin([0.1, 0.2, 0.3])
+  s = matlab.workspace.sin([0.1, 0.2, 0.3])
 
-   matlab.workspace.a = 12.3
-   b = matlab.workspace.b
+  matlab.workspace.a = 12.3
+  b = matlab.workspace.b
 
 
 
@@ -43,6 +42,7 @@ Installation
 ------------
 
 ::
+
    pip install matlab_wrapper
 
 
