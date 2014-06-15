@@ -74,5 +74,9 @@ def main():
     matlab.eval("whos")
     print(matlab.output_buffer)
 
+
+    print(matlab)
+
+
 if __name__ == "__main__":
     main()

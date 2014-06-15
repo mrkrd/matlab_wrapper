@@ -103,6 +103,8 @@ class MatlabSession(object):
         if matlab_root is None:
             raise RuntimeError("MATLAB location is unknown (set matlab_root)")
 
+        self._matlab_root = matlab_root
+
 
         ### Load libraries and start engine
         if system in ('Linux', 'Darwin'):
@@ -424,6 +426,12 @@ class MatlabSession(object):
 
         return ver
 
+
+
+    def __repr__(self):
+        r = '<MatlabSession:{root}>'.format(root=self._matlab_root)
+
+        return r
 
 
 
