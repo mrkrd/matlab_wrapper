@@ -496,7 +496,7 @@ class MatlabFunction(object):
             name=self.name,
             ins=ins_str
         )
-        print(cmd)
+
 
         ### Run the function
         session.eval(cmd)
