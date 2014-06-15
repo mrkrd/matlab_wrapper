@@ -101,7 +101,7 @@ class MatlabSession(object):
                     break
 
         if matlab_root is None:
-            raise RuntimeError("MATLAB location is unknown (set matlab_root)")
+            raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root properly set)")
 
         self._matlab_root = matlab_root
 
