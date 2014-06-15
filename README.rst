@@ -66,7 +66,7 @@ Installation
 Limitations
 -----------
 
-- Cells are not yet supported.
+- Cells are not yet supported (coming soon).
 - Struct arrays are not yet supported.
 - Support on Windows and OSX is not as good as on GNU/Linux (I'm
   looking forward to contributors).
@@ -84,9 +84,29 @@ Alternatives
 ------------
 
 - pymatlab_
+
+  - pure Python, no compilation, using ctypes (good)
+  - quite raw (ugly)
+  - memory leaks (bad)
+
 - mlabwrap_
+
+  - cool interface, mlab.sin() (good)
+  - needs compilation (bad)
+  - not much development (bad)
+
 - mlab_
+
+  - similar interface to mlabwrap (good)
+  - using raw pipes (hmm)
+
 - pymatbridge_
+
+  - actively developed (good)
+  - client-server architecture with ZeroMQ and JSON, complex (ugly)
+  - missing basic functions, either get or put (bad)
+  - nice ipython notebook support (good)
+
 
 .. _mlabwrap: http://mlabwrap.sourceforge.net/
 .. _mlab: https://github.com/ewiger/mlab
