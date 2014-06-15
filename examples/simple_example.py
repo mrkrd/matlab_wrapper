@@ -21,7 +21,7 @@ def main():
         buffer_size=1000,
     )
 
-    print(matlab.version())
+    print(matlab.version)
 
 
     matlab.eval('a = pi * i')

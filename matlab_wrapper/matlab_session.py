@@ -27,6 +27,7 @@ import sys
 from os.path import join, dirname, isfile, realpath
 import os
 import functools
+import warnings
 
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
@@ -75,14 +76,15 @@ class MatlabSession(object):
     output_buffer : str
         Access to the MATLAB output buffer.
     workspace : Workspace object
-        Easy access to MATLAB workspace, e.g. `workspace.sin([1.,2.,3.])`
+        Easy access to MATLAB workspace, e.g. `workspace.sin([1.,2.,3.])`.
+    version : str
+        MATLAB version number.
 
     Methods
     -------
     get()
     put()
     eval()
-    version()
 
     """
     def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
@@ -218,6 +220,13 @@ class MatlabSession(object):
 
         ### Workspace object
         self.workspace = Workspace(self)
+
+
+        ### Check MATLAB version
+        version = self.version
+        if 'R2014b' in version:
+            warnings.warn("You are using MATLAB version R2014a, which appears to have a bug in engGetVariable().  You will only be able to get arrays of type double.")
+
 
 
 
@@ -405,6 +414,7 @@ class MatlabSession(object):
         self._libmx.mxDestroyArray(pm)
 
 
+    @property
     def version(self):
         """Return string representing MATLAB version."""
 
