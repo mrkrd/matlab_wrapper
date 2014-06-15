@@ -11,7 +11,7 @@ setup(
     author = "Marek Rudnicki",
     author_email = "marekrud@gmail.com",
 
-    description = "MATLAB wrapper",
+    description = "MATLAB wrapper for Python",
     license = "GPLv3",
     url = "https://github.com/mrkrd/matlab_wrapper",
 
