@@ -1,7 +1,7 @@
 matlab_wrapper
 ==============
 
-MATLAB wrapper for Python
+*MATLAB wrapper for Python*
 
 
 Description
