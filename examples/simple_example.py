@@ -63,6 +63,12 @@ def main():
     y,i = matlab.workspace.sort([2,1,3], nout=2)
     print(y,i)
 
+    print(matlab.workspace.pi())
+
+    matlab.workspace.a = [123, 12, 1]
+    matlab.eval("b = a*2")
+    print(matlab.workspace.b)
+
     #help(matlab.workspace.sin)
 
 

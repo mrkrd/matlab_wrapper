@@ -250,3 +250,21 @@ def test_workspace_nout(session):
 
     assert_equal(y, [1,2,3])
     assert_equal(i, a)
+
+
+def test_workspace_pi(session):
+
+    pi = session.workspace.pi()
+
+    assert pi == np.pi
+
+
+def test_workspace_set_get(session):
+
+    session.workspace.a = 12.
+
+    session.eval("b = a*2")
+
+    b = session.workspace.b
+
+    assert b == 24

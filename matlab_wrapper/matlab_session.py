@@ -436,14 +436,33 @@ class Workspace(object):
 
     def __getattr__(self, attr):
 
-        ### TODO: if attr is var -> return value
+        session = self._session
 
-        ### TODO: if attr is func
-        out = MatlabFunction(name=attr, session=self._session)
+        session.eval("KIND__ = exist('{}')".format(attr))
+        kind = session.get('KIND__')
+        session.eval("clear KIND__")
+
+        if kind == 0:
+            raise RuntimeError("No such variable/function in MATLAB workspace: {}".format(attr))
+
+        elif kind == 1:         # Variable
+            out = session.get(attr)
+
+        elif kind in (2, 3, 5, 6): # Function
+            out = MatlabFunction(name=attr, session=self._session)
+
+        else:
+            raise NotImplemented("Unknown variable/function type in MATLAB workspace: {}".format(attr))
 
         return out
 
 
+    def __setattr__(self, name, value):
+
+        if name.startswith('_'):
+            object.__setattr__(self, name, value)
+        else:
+            self._session.put(name, value)
 
 
 
@@ -477,14 +496,15 @@ class MatlabFunction(object):
             name=self.name,
             ins=ins_str
         )
-
+        print(cmd)
 
         ### Run the function
         session.eval(cmd)
 
 
         ### Clear input variables in MATLAB
-        session.eval("clear {}".format(' '.join(ins)))
+        if ins:
+            session.eval("clear {}".format(' '.join(ins)))
 
 
         ### Get the resulst from MATLAB
@@ -495,7 +515,8 @@ class MatlabFunction(object):
 
 
         ### Clear the resutls in MATLAB
-        session.eval("clear {}".format(' '.join(outs)))
+        if outs:
+            session.eval("clear {}".format(' '.join(outs)))
 
 
         ### Return the results
