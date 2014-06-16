@@ -12,12 +12,12 @@ your Python scripts.  The MATLAB session is started in the background
 and appears as a regular Python module.
 
 **matlab_wrapper** uses standard `MATLAB engine library`_ and talks
-directly to the binaries through `ctypes module`_.  You do not need to
-compile anything!
+directly to the binaries through ctypes_.  You do not need to compile
+anything!
 
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
-.. _`ctypes module`: https://docs.python.org/2/library/ctypes.html
+.. _ctypes: https://docs.python.org/2/library/ctypes.html
 
 
 Usage
@@ -99,6 +99,9 @@ Alternatives
 
   - similar interface to mlabwrap (good)
   - using raw pipes (hmm)
+  - there is another very old package with `the same name
+    <http://claymore.engineer.gvsu.edu/~steriana/Python/pymat.html>`_
+    (ugly)
 
 - pymatbridge_
 
