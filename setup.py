@@ -14,6 +14,7 @@ setup(
     description = "MATLAB wrapper for Python",
     license = "GPLv3",
     url = "https://github.com/mrkrd/matlab_wrapper",
+    download_url = "https://github.com/mrkrd/matlab_wrapper/tarball/master",
 
     packages = find_packages(),
     long_description = long_description,
