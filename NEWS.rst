@@ -1,0 +1,17 @@
+matlab_wrapper -- history of user-visible changes
+=================================================
+
+
+
+Changes in version 0.5
+----------------------
+
++ MATLAB cell-array support
+
+
+
+Changes in version 0.4 and before
+---------------------------------
+
++ Basic numerical array support
++ Unit tests
