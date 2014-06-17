@@ -8,8 +8,8 @@ Description
 -----------
 
 *matlab_wrapper* allows you to use MATLAB in an convenient way from
-your Python scripts and interactive shell.  The MATLAB session is
-started in the background and appears as a regular Python module.
+your Python scripts and interactive shell.  MATLAB session is started
+in the background and appears as a regular Python module.
 
 *matlab_wrapper* talks to `MATLAB engine library`_ using ctypes_, so
 you do not have to compile anything!
