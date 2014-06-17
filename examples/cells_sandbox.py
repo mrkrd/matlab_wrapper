@@ -21,7 +21,7 @@ def main():
     )
 
 
-    matlab.eval("c = {1, 2, 3; 'text', rand(5,10,2), {11; 22; 33}}")
+    matlab.eval("c = {1, 2, 3; 'text', eye(2,3), {11; 22; 33}}")
 
     print(matlab.get('c'))
 

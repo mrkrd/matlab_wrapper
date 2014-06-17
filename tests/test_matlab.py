@@ -25,96 +25,96 @@ np.random.seed(0)
 
 
 @pytest.fixture(scope='module')
-def session():
-    session = matlab_wrapper.MatlabSession(
+def matlab():
+    matlab = matlab_wrapper.MatlabSession(
         options='-nojvm',
         buffer_size=1024
     )
-    return session
+    return matlab
 
 
 
-def test_eval_ok(session):
+def test_eval_ok(matlab):
     command = "a = ones(10)"
-    session.eval(command)
+    matlab.eval(command)
 
 
 
-def test_eval_error(session):
+def test_eval_error(matlab):
     command = "a = onesBLA(10)"
 
     with pytest.raises(RuntimeError):
-        session.eval(command)
+        matlab.eval(command)
 
 
-def test_clear(session):
+def test_clear(matlab):
     command = "clear all"
-    session.eval(command)
+    matlab.eval(command)
 
 
-def test_longscript(session):
+def test_longscript(matlab):
     command = """
     for i=1:10
     sprintf('aoeu %i',i);
     end
     """
-    session.eval(command)
+    matlab.eval(command)
 
 
-def test_get_numeric(session):
+def test_get_numeric(matlab):
     for dtype in NUMERIC_DTYPES:
 
         a = np.eye(4,5, dtype=dtype)
-        session.eval("b = eye(4,5, '{}')".format(dtype))
-        b = session.get('b')
+        matlab.eval("b = eye(4,5, '{}')".format(dtype))
+        b = matlab.get('b')
 
-        assert a.dtype == b.dtype
+        assert_equal(a.dtype, b.dtype)
         assert_equal(a, b)
 
 
-def test_get_logical(session):
+def test_get_logical(matlab):
     a = np.eye(4,5, dtype='bool')
-    session.eval("b = eye(4,5) > 0")
-    b = session.get('b')
+    matlab.eval("b = eye(4,5) > 0")
+    b = matlab.get('b')
 
-    assert a.dtype == b.dtype
+    assert_equal(a.dtype, b.dtype)
     assert_equal(a, b)
 
 
-def test_get_comples(session):
+def test_get_comples(matlab):
     for dtype in ('single', 'double'):
         a = np.eye(4,5, dtype=dtype) + np.eye(4,5, dtype=dtype)*1j
-        session.eval("b = eye(4,5, '{0}') + eye(4,5, '{0}')*j".format(dtype))
-        b = session.get('b')
+        matlab.eval("b = eye(4,5, '{0}') + eye(4,5, '{0}')*j".format(dtype))
+        b = matlab.get('b')
 
-        assert a.dtype == b.dtype
+        assert_equal(a.dtype, b.dtype)
         assert_equal(a, b)
 
 
-def test_get_string(session):
-    session.eval("s = 'asdf'")
-    s = session.get('s')
+def test_get_string(matlab):
+    matlab.eval("s = 'asdf'")
+    s = matlab.get('s')
 
-    assert s == 'asdf'
-
-
-def test_get_float(session):
-    session.eval("a = 1.")
-    a = session.get('a')
-
-    assert a == 1.
+    assert_equal(s, 'asdf')
 
 
+def test_get_float(matlab):
+    matlab.eval("a = 1.")
+    a = matlab.get('a')
 
-def test_put_numeric(session):
+    assert_equal(a, 1.)
+
+
+
+def test_put_numeric(matlab):
     for dtype in NUMERIC_DTYPES:
         a = np.random.randn(2,3) * 10
         a = a.astype(dtype)
 
-        session.put('a', a)
-        session.eval('a')
+        matlab.put('a', a)
+        matlab.eval('a')
 
-        output = session.output_buffer
+        output = matlab.output_buffer
 
         numbers = output.split()[-6:]
         numbers = np.array(numbers, dtype=dtype)
@@ -123,13 +123,13 @@ def test_put_numeric(session):
         assert_almost_equal(a, numbers, decimal=4)
 
 
-def test_put_logical(session):
+def test_put_logical(matlab):
     a = np.random.randn(2,3)>0
 
-    session.put('a', a)
-    session.eval('a')
+    matlab.put('a', a)
+    matlab.eval('a')
 
-    output = session.output_buffer
+    output = matlab.output_buffer
 
     numbers = output.split()[-6:]
     numbers = np.array(numbers, dtype=int).astype('bool')
@@ -140,16 +140,16 @@ def test_put_logical(session):
 
 
 @pytest.mark.xfail
-def test_put_complex(session):
+def test_put_complex(matlab):
     """TODO: fix the test (problem with parsing of the output buffer)"""
     for dtype in ('complex128', 'complex64'):
         a = np.random.randn(2,3)*10 + np.random.randn(2,3)*10j
         a = a.astype(dtype)
 
-        session.put('a', a)
-        session.eval('a')
+        matlab.put('a', a)
+        matlab.eval('a')
 
-        output = session.output_buffer.split()
+        output = matlab.output_buffer.split()
         print(output)
         numbers = output[-6:]
         print(numbers)
@@ -160,111 +160,131 @@ def test_put_complex(session):
 
 
 
-def test_put_string(session):
-    session.put('s', "asdf")
-    session.eval('s')
+def test_put_string(matlab):
+    matlab.put('s', "asdf")
+    matlab.eval('s')
 
-    output = session.output_buffer.split()
+    output = matlab.output_buffer.split()
 
     s = output[-1]
 
-    assert s == "asdf"
+    assert_equal(s, "asdf")
 
 
 
 
-def test_put_float(session):
-    session.put('a', 3.2)
-    session.eval('a')
+def test_put_float(matlab):
+    matlab.put('a', 3.2)
+    matlab.eval('a')
 
-    output = session.output_buffer.split()
+    output = matlab.output_buffer.split()
 
     a = float(output[-1])
 
-    assert a == 3.2
+    assert_equal(a, 3.2)
 
 
 
 
-def test_put_get_numeric(session):
+def test_put_get_numeric(matlab):
     for dtype in NUMERIC_DTYPES:
         a = np.random.randn(3,2,4) * 10
         a = a.astype(dtype)
 
-        session.put('a', a)
-        aa = session.get('a')
+        matlab.put('a', a)
+        aa = matlab.get('a')
 
-        assert a.dtype == aa.dtype
+        assert_equal(a.dtype, aa.dtype)
         assert_equal(a, aa)
 
 
 
-def test_put_get_logical(session):
+def test_put_get_logical(matlab):
     a = np.random.randn(3,2,4)>0
 
-    session.put('a', a)
-    aa = session.get('a')
+    matlab.put('a', a)
+    aa = matlab.get('a')
 
-    assert a.dtype == aa.dtype
+    assert_equal(a.dtype, aa.dtype)
     assert_equal(a, aa)
 
 
-def test_put_get_complex(session):
+def test_put_get_complex(matlab):
     for datatype in ("complex64", "complex128"):
         a = np.random.randn(2,4,3) + np.random.randn(2,4,3)*1j
         a = a.astype(datatype)
 
-        session.put('a',a)
-        aa = session.get('a')
+        matlab.put('a',a)
+        aa = matlab.get('a')
 
-        assert a.dtype == aa.dtype
+        assert_equal(a.dtype, aa.dtype)
         assert_equal(a, aa)
 
 
 
-def test_put_get_string(session):
+def test_put_get_string(matlab):
     s = "test string\n one more string"
 
-    session.put('s', s)
-    ss = session.get('s')
+    matlab.put('s', s)
+    ss = matlab.get('s')
 
-    assert s == ss
+    assert_equal(s, ss)
 
 
 
-def test_workspace_func(session):
+def test_workspace_func(matlab):
 
     x = np.arange(10, dtype=float)
     y = np.sin(x)
 
-    ymatlab = session.workspace.sin(x)
+    ymatlab = matlab.workspace.sin(x)
 
     assert_equal(y, ymatlab)
 
 
 
-def test_workspace_nout(session):
+def test_workspace_nout(matlab):
     a = np.array([2,1,3])
 
-    y,i = session.workspace.sort(a, nout=2)
+    y,i = matlab.workspace.sort(a, nout=2)
 
     assert_equal(y, [1,2,3])
     assert_equal(i, a)
 
 
-def test_workspace_pi(session):
+def test_workspace_pi(matlab):
 
-    pi = session.workspace.pi()
+    pi = matlab.workspace.pi()
 
-    assert pi == np.pi
+    assert_equal(pi, np.pi)
 
 
-def test_workspace_set_get(session):
+def test_workspace_set_get(matlab):
 
-    session.workspace.a = 12.
+    matlab.workspace.a = 12.
 
-    session.eval("b = a*2")
+    matlab.eval("b = a*2")
 
-    b = session.workspace.b
+    b = matlab.workspace.b
 
-    assert b == 24
+    assert_equal(b, 24)
+
+
+def test_get_cell(matlab):
+
+    matlab.eval("c = {1, 2, 3; 'text', eye(2,3), {11; 22; 33}}")
+    actual = matlab.workspace.c
+
+    target = np.array(
+        [
+            [1., 2., 3.],
+            ['text', np.eye(2,3), np.array([11.,22.,33.], dtype='O')]
+        ],
+        dtype='O'
+    )
+
+    assert_equal(actual.shape, target.shape)
+    assert_equal(actual.dtype, target.dtype)
+
+    for a,t in zip(actual.flatten(),target.flatten()):
+        assert_equal(a,t)

@@ -294,63 +294,7 @@ class MatlabSession(object):
         imag_data = self._libmx.mxGetImagData(pm)
 
 
-        if class_name == 'cell':
-            out = convert_mat_to_np(self._libmx, pm)
-
-
-        if is_numeric:
-            datasize = numelems*elem_size
-
-            real_buffer = ctypes.create_string_buffer(datasize)
-            ctypes.memmove(real_buffer, data, datasize)
-            pyarray = np.ndarray(
-                buffer=real_buffer,
-                shape=dims[:ndims],
-                dtype=class_name,
-                order='F'
-            )
-
-            if is_complex:
-                imag_buffer = ctypes.create_string_buffer(datasize)
-                ctypes.memmove(imag_buffer, imag_data, datasize)
-                pyarray_imag = np.ndarray(
-                    buffer=imag_buffer,
-                    shape=dims[:ndims],
-                    dtype=class_name,
-                    order='F'
-                )
-
-                pyarray = pyarray + pyarray_imag * 1j
-
-            out = pyarray.squeeze()
-
-
-        elif class_name == 'char':
-            datasize = numelems + 1
-
-            pystring = ctypes.create_string_buffer(datasize+1)
-            self._libmx.mxGetString(pm, pystring, datasize)
-
-            out = pystring.value
-
-
-        elif class_name == 'logical':
-            datasize = numelems*elem_size
-
-            buf = ctypes.create_string_buffer(datasize)
-            ctypes.memmove(buf, data, datasize)
-
-            pyarray = np.ndarray(
-                buffer=buf,
-                shape=dims[:ndims],
-                dtype='bool',
-                order='F'
-            )
-
-            out = pyarray.squeeze()
-
-        else:
-            raise NotImplementedError('{}-arrays are not supported'.format(class_name))
+        out = convert_mat_to_ndarray(self._libmx, pm)
 
 
         self._libmx.mxDestroyArray(pm)
@@ -570,7 +514,7 @@ class MatlabFunction(object):
 
 
 
-def convert_mat_to_np(libmx, pm):
+def convert_mat_to_ndarray(libmx, pm):
     """Convert MATLAB object `pm` to numpy equivalent."""
 
     ndims = libmx.mxGetNumberOfDimensions(pm)
@@ -582,8 +526,6 @@ def convert_mat_to_np(libmx, pm):
     is_complex = libmx.mxIsComplex(pm)
     data = libmx.mxGetData(pm)
     imag_data = libmx.mxGetImagData(pm)
-
-    print(ndims, dims[:ndims], numelems, elem_size, class_name, is_numeric)
 
     if is_numeric:
         datasize = numelems*elem_size
@@ -641,13 +583,14 @@ def convert_mat_to_np(libmx, pm):
         for i in range(numelems):
             cell = libmx.mxGetCell(pm, i)
 
-            o = convert_mat_to_np(libmx, cell)
+            o = convert_mat_to_ndarray(libmx, cell)
             out.append(o)
 
         out = np.array(out, dtype='O')
+        out = out.reshape(dims[:ndims], order='F')
+        out = out.squeeze()
 
     else:
         raise NotImplementedError('{}-arrays are not supported'.format(class_name))
 
-    print(out)
     return out
