@@ -66,7 +66,6 @@ Installation
 Limitations
 -----------
 
-- Cells are not yet supported (coming soon).
 - Struct arrays are not yet supported.
 - Support on Windows and OSX is not as good as on GNU/Linux (I'm
   looking forward to contributors).
