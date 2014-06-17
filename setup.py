@@ -7,7 +7,7 @@ with open('README.rst') as file:
 
 setup(
     name = "matlab_wrapper",
-    version = "0.4",
+    version = "0.5",
     author = "Marek Rudnicki",
     author_email = "marekrud@gmail.com",
 
