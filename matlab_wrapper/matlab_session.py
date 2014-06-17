@@ -185,6 +185,9 @@ class MatlabSession(object):
         self._libmx.mxGetCell.restype = POINTER(mxArray)
         self._libmx.mxGetCell.errcheck = error_check
 
+        self._libmx.mxSetCell.argtypes = (POINTER(mxArray), c_size_t, POINTER(mxArray))
+        self._libmx.mxSetCell.restype = None
+
         self._libmx.mxArrayToString.argtypes = (POINTER(mxArray),)
         self._libmx.mxArrayToString.restype = c_char_p
         self._libmx.mxArrayToString.errcheck = error_check
@@ -200,6 +203,10 @@ class MatlabSession(object):
         self._libmx.mxCreateLogicalArray.argtypes = (c_size_t, POINTER(c_size_t))
         self._libmx.mxCreateLogicalArray.restype = POINTER(mxArray)
         self._libmx.mxCreateLogicalArray.errcheck = error_check
+
+        self._libmx.mxCreateCellArray.argtypes = (c_size_t, POINTER(c_size_t))
+        self._libmx.mxCreateCellArray.restype = POINTER(mxArray)
+        self._libmx.mxCreateCellArray.errcheck = error_check
 
         self._libmx.mxDestroyArray.argtypes = (POINTER(mxArray),)
         self._libmx.mxDestroyArray.restype = None
@@ -308,59 +315,8 @@ class MatlabSession(object):
         """Put a variable to MATLAB workspace.
 
         """
-        if isinstance(value, str):
-            pm = self._libmx.mxCreateString(value)
 
-        elif isinstance(value, dict):
-            raise NotImplementedError('dicts are not supported.')
-
-        else:
-            value = np.array(value, ndmin=2)
-
-
-        if isinstance(value, np.ndarray) and value.dtype.kind in ['i','u','f','c']:
-            dim = value.ctypes.shape_as(c_size_t)
-            complex_flag = (value.dtype.kind == 'c')
-
-            pm = self._libmx.mxCreateNumericArray(
-                value.ndim,
-                dim,
-                dtype_to_mat(value.dtype),
-                complex_flag
-            )
-
-            mat_data = self._libmx.mxGetData(pm)
-            np_data = value.real.tostring('F')
-            ctypes.memmove(mat_data, np_data, len(np_data))
-
-            if complex_flag:
-                mat_data = self._libmx.mxGetImagData(pm)
-                np_data = value.imag.tostring('F')
-                ctypes.memmove(mat_data, np_data, len(np_data))
-
-        elif isinstance(value, np.ndarray) and value.dtype.kind == 'b':
-            dim = value.ctypes.shape_as(c_size_t)
-
-            pm = self._libmx.mxCreateLogicalArray(value.ndim, dim)
-
-            mat_data = self._libmx.mxGetData(pm)
-            np_data = value.real.tostring('F')
-            ctypes.memmove(mat_data, np_data, len(np_data))
-
-        # elif pyvariable.dtype.kind =='S':
-        #     dim = pyvariable.ctypes.shape_as(c_size_t)
-        #     mx = self._libmx.mxCreateNumericArray(c_size_t(pyvariable.ndim),
-        #                                           dim)
-        #     data_old = self._libmx.mxGetData(mx)
-        #     datastring = pyvariable.tostring('F')
-        #     n_datastring = len(datastring)
-        #     memmove(data_old,datastring,n_datastring)
-        # elif pyvariable.dtype.kind =='O':
-        #     raise NotImplementedError('Object arrays are not supported')
-
-        elif isinstance(value, np.ndarray):
-            raise NotImplementedError('Type {} not supported.'.format(value.dtype))
-
+        pm = convert_ndarray_to_mat(self._libmx, value)
 
         self._libeng.engPutVariable(self._ep, name, pm)
 
@@ -594,3 +550,72 @@ def convert_mat_to_ndarray(libmx, pm):
         raise NotImplementedError('{}-arrays are not supported'.format(class_name))
 
     return out
+
+
+
+
+def convert_ndarray_to_mat(libmx, arr):
+
+    if isinstance(arr, str):
+        pm = libmx.mxCreateString(arr)
+
+    elif isinstance(arr, dict):
+        raise NotImplementedError('dicts are not supported.')
+
+    else:
+        arr = np.array(arr, ndmin=2)
+
+
+    if isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
+        dim = arr.ctypes.shape_as(c_size_t)
+        complex_flag = (arr.dtype.kind == 'c')
+
+        pm = libmx.mxCreateNumericArray(
+            arr.ndim,
+            dim,
+            dtype_to_mat(arr.dtype),
+            complex_flag
+        )
+
+        mat_data = libmx.mxGetData(pm)
+        np_data = arr.real.tostring('F')
+        ctypes.memmove(mat_data, np_data, len(np_data))
+
+        if complex_flag:
+            mat_data = libmx.mxGetImagData(pm)
+            np_data = arr.imag.tostring('F')
+            ctypes.memmove(mat_data, np_data, len(np_data))
+
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind == 'b':
+        dim = arr.ctypes.shape_as(c_size_t)
+
+        pm = libmx.mxCreateLogicalArray(arr.ndim, dim)
+
+        mat_data = libmx.mxGetData(pm)
+        np_data = arr.real.tostring('F')
+        ctypes.memmove(mat_data, np_data, len(np_data))
+
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind == 'O':
+        dim = arr.ctypes.shape_as(c_size_t)
+
+        pm = libmx.mxCreateCellArray(arr.ndim, dim)
+
+        for i,el in enumerate(arr.flatten('F')):
+            p = convert_ndarray_to_mat(libmx, el)
+            libmx.mxSetCell(pm, i, p)
+
+    # elif pyvariable.dtype.kind =='S':
+    #     dim = pyvariable.ctypes.shape_as(c_size_t)
+    #     mx = libmx.mxCreateNumericArray(c_size_t(pyvariable.ndim),
+    #                                           dim)
+    #     data_old = libmx.mxGetData(mx)
+    #     datastring = pyvariable.tostring('F')
+    #     n_datastring = len(datastring)
+    #     memmove(data_old,datastring,n_datastring)
+    # elif pyvariable.dtype.kind =='O':
+    #     raise NotImplementedError('Object arrays are not supported')
+
+    elif isinstance(arr, np.ndarray):
+        raise NotImplementedError('Type {} not supported.'.format(arr.dtype))
+
+    return pm

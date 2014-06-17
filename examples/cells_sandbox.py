@@ -26,5 +26,10 @@ def main():
     print(matlab.get('c'))
 
 
+    matlab.put('a', np.array([[1,'asdf'], [3, np.array([1,2,3],dtype='O')]], dtype='O'))
+    matlab.eval('a')
+    print(matlab.output_buffer)
+
+
 if __name__ == "__main__":
     main()
