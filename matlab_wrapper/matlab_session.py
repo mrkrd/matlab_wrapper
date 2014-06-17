@@ -32,7 +32,7 @@ import warnings
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
 
-from matlab_wrapper.typeconv import np_to_mat
+from matlab_wrapper.typeconv import dtype_to_mat
 
 class mxArray(ctypes.Structure):
     pass
@@ -164,26 +164,33 @@ class MatlabSession(object):
         self._libmx.mxGetClassName.argtypes = (POINTER(mxArray),)
         self._libmx.mxGetClassName.restype = c_char_p
 
-        self._libmx.mxIsNumeric.restype = c_bool
         self._libmx.mxIsNumeric.argtypes = (POINTER(mxArray),)
+        self._libmx.mxIsNumeric.restype = c_bool
 
-        self._libmx.mxIsComplex.restype = c_bool
+        self._libmx.mxIsCell.argtypes = (POINTER(mxArray),)
+        self._libmx.mxIsCell.restype = c_bool
+
         self._libmx.mxIsComplex.argtypes = (POINTER(mxArray),)
+        self._libmx.mxIsComplex.restype = c_bool
 
-        self._libmx.mxGetData.restype = POINTER(c_void_p)
         self._libmx.mxGetData.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetData.restype = POINTER(c_void_p)
         self._libmx.mxGetData.errcheck = error_check
 
-        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
         self._libmx.mxGetImagData.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
         self._libmx.mxGetImagData.errcheck = error_check
+
+        self._libmx.mxGetCell.argtypes = (POINTER(mxArray), c_size_t)
+        self._libmx.mxGetCell.restype = POINTER(mxArray)
+        self._libmx.mxGetCell.errcheck = error_check
 
         self._libmx.mxArrayToString.argtypes = (POINTER(mxArray),)
         self._libmx.mxArrayToString.restype = c_char_p
         self._libmx.mxArrayToString.errcheck = error_check
 
-        self._libmx.mxCreateString.restype = POINTER(mxArray)
         self._libmx.mxCreateString.argtypes = (c_char_p,)
+        self._libmx.mxCreateString.restype = POINTER(mxArray)
         self._libmx.mxCreateString.errcheck = error_check
 
         self._libmx.mxCreateNumericArray.argtypes = (c_size_t, POINTER(c_size_t), c_int, c_int)
@@ -193,12 +200,6 @@ class MatlabSession(object):
         self._libmx.mxCreateLogicalArray.argtypes = (c_size_t, POINTER(c_size_t))
         self._libmx.mxCreateLogicalArray.restype = POINTER(mxArray)
         self._libmx.mxCreateLogicalArray.errcheck = error_check
-
-        self._libmx.mxGetData.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetData.restype = POINTER(c_void_p)
-
-        self._libmx.mxGetImagData.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
 
         self._libmx.mxDestroyArray.argtypes = (POINTER(mxArray),)
         self._libmx.mxDestroyArray.restype = None
@@ -281,6 +282,7 @@ class MatlabSession(object):
 
         """
         pm = self._libeng.engGetVariable(self._ep, name)
+
         ndims = self._libmx.mxGetNumberOfDimensions(pm)
         dims = self._libmx.mxGetDimensions(pm)
         numelems = self._libmx.mxGetNumberOfElements(pm)
@@ -290,6 +292,11 @@ class MatlabSession(object):
         is_complex = self._libmx.mxIsComplex(pm)
         data = self._libmx.mxGetData(pm)
         imag_data = self._libmx.mxGetImagData(pm)
+
+
+        if class_name == 'cell':
+            out = convert_mat_to_np(self._libmx, pm)
+
 
         if is_numeric:
             datasize = numelems*elem_size
@@ -343,7 +350,7 @@ class MatlabSession(object):
             out = pyarray.squeeze()
 
         else:
-            raise NotImplementedError('{}-arrays are not implemented'.format(class_name))
+            raise NotImplementedError('{}-arrays are not supported'.format(class_name))
 
 
         self._libmx.mxDestroyArray(pm)
@@ -374,7 +381,7 @@ class MatlabSession(object):
             pm = self._libmx.mxCreateNumericArray(
                 value.ndim,
                 dim,
-                np_to_mat(value.dtype),
+                dtype_to_mat(value.dtype),
                 complex_flag
             )
 
@@ -560,3 +567,87 @@ class MatlabFunction(object):
         session.eval("clear DOC__")
 
         return doc
+
+
+
+def convert_mat_to_np(libmx, pm):
+    """Convert MATLAB object `pm` to numpy equivalent."""
+
+    ndims = libmx.mxGetNumberOfDimensions(pm)
+    dims = libmx.mxGetDimensions(pm)
+    numelems = libmx.mxGetNumberOfElements(pm)
+    elem_size = libmx.mxGetElementSize(pm)
+    class_name = libmx.mxGetClassName(pm)
+    is_numeric = libmx.mxIsNumeric(pm)
+    is_complex = libmx.mxIsComplex(pm)
+    data = libmx.mxGetData(pm)
+    imag_data = libmx.mxGetImagData(pm)
+
+    print(ndims, dims[:ndims], numelems, elem_size, class_name, is_numeric)
+
+    if is_numeric:
+        datasize = numelems*elem_size
+
+        real_buffer = ctypes.create_string_buffer(datasize)
+        ctypes.memmove(real_buffer, data, datasize)
+        pyarray = np.ndarray(
+            buffer=real_buffer,
+            shape=dims[:ndims],
+            dtype=class_name,
+            order='F'
+        )
+
+        if is_complex:
+            imag_buffer = ctypes.create_string_buffer(datasize)
+            ctypes.memmove(imag_buffer, imag_data, datasize)
+            pyarray_imag = np.ndarray(
+                buffer=imag_buffer,
+                shape=dims[:ndims],
+                dtype=class_name,
+                order='F'
+            )
+
+            pyarray = pyarray + pyarray_imag * 1j
+
+        out = pyarray.squeeze()
+
+
+    elif class_name == 'char':
+        datasize = numelems + 1
+
+        pystring = ctypes.create_string_buffer(datasize+1)
+        libmx.mxGetString(pm, pystring, datasize)
+
+        out = pystring.value
+
+
+    elif class_name == 'logical':
+        datasize = numelems*elem_size
+
+        buf = ctypes.create_string_buffer(datasize)
+        ctypes.memmove(buf, data, datasize)
+
+        pyarray = np.ndarray(
+            buffer=buf,
+            shape=dims[:ndims],
+            dtype='bool',
+            order='F'
+        )
+
+        out = pyarray.squeeze()
+
+    elif class_name == 'cell':
+        out = []
+        for i in range(numelems):
+            cell = libmx.mxGetCell(pm, i)
+
+            o = convert_mat_to_np(libmx, cell)
+            out.append(o)
+
+        out = np.array(out, dtype='O')
+
+    else:
+        raise NotImplementedError('{}-arrays are not supported'.format(class_name))
+
+    print(out)
+    return out

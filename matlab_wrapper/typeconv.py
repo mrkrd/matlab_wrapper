@@ -83,7 +83,7 @@ def mat_to_ctype(classname):
     return ctype
 
 
-def np_to_mat(dtype):
+def dtype_to_mat(dtype):
 
     #Typedef enum
     #{
