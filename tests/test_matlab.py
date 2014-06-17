@@ -288,3 +288,26 @@ def test_get_cell(matlab):
 
     for a,t in zip(actual.flatten(),target.flatten()):
         assert_equal(a,t)
+
+
+@pytest.mark.xfail
+def test_put_cell(matlab):
+    # TODO: implement the test
+    raise NotImplementedError
+
+
+def test_put_get_cell(matlab):
+
+    a = np.array(
+        [
+            [1., 2., 3.],
+            ['text', np.eye(2,3), np.array([11.,22.,33.], dtype='O')]
+        ],
+        dtype='O'
+    )
+
+    matlab.workspace.a = a
+    aa = matlab.workspace.a
+
+    for el,elel in zip(a.flatten(),aa.flatten()):
+        assert_equal(el,elel)
