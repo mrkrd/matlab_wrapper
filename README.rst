@@ -7,13 +7,12 @@ matlab_wrapper
 Description
 -----------
 
-**matlab_wrapper** allows you to use MATLAB in an convenient way from
+*matlab_wrapper* allows you to use MATLAB in an convenient way from
 your Python scripts.  The MATLAB session is started in the background
 and appears as a regular Python module.
 
-**matlab_wrapper** uses standard `MATLAB engine library`_ and talks
-directly to the binaries through ctypes_.  You do not need to compile
-anything!
+*matlab_wrapper* talks to `MATLAB engine library`_ using ctypes_, so
+you do not have to compile anything!
 
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
@@ -120,6 +119,6 @@ Alternatives
 Acknowledgments
 ---------------
 
-**matlab_wrapper** was forked from pymatlab_.
+*matlab_wrapper* was forked from pymatlab_.
 
 .. _pymatlab: http://pymatlab.sourceforge.net/
