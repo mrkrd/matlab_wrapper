@@ -109,7 +109,7 @@ Alternatives
 
   - actively developed (good)
   - client-server architecture with ZeroMQ and JSON, complex (ugly)
-  - missing basic functions, either get or put (bad)
+  - missing basic functions, there's no ``put`` (bad)
   - nice ipython notebook support (good)
 
 
