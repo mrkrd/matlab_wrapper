@@ -4,6 +4,14 @@ matlab_wrapper
 *MATLAB wrapper for Python*
 
 
+
+:Author: Marek Rudnicki
+:Email: marekrud@gmail.com
+:URL: https://github.com/mrkrd/matlab_wrapper
+:License: GNU General Public License v3 or later (GPLv3+)
+
+
+
 Description
 -----------
 
@@ -17,6 +25,8 @@ you do not have to compile anything!
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
 .. _ctypes: https://docs.python.org/2/library/ctypes.html
+
+
 
 
 Usage
@@ -55,6 +65,15 @@ Requirements
 
 
 
+Platforms
+---------
+
+- GNU/Linux (working)
+- Windows (coming soon)
+- OSX (unknown)
+
+
+
 Installation
 ------------
 
@@ -62,14 +81,6 @@ Installation
 
    pip install matlab_wrapper
 
-
-
-Limitations
------------
-
-- Struct arrays are not yet supported.
-- Support on Windows and OSX is not as good as on GNU/Linux (I'm
-  looking forward to contributors).
 
 
 
