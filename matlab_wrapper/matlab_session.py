@@ -202,6 +202,14 @@ class MatlabSession(object):
         ### Errors has to be handled elswhere, because of NULL on uninitialized fields
         # self._libmx.mxGetField.errcheck = error_check
 
+        # void mxSetField(mxArray *pm, mwIndex index, const char *fieldname, mxArray *pvalue);
+        self._libmx.mxSetField.argtypes = (POINTER(mxArray), c_size_t, c_char_p, POINTER(mxArray))
+        self._libmx.mxSetField.restype = None
+
+        self._libmx.mxCreateStructArray.argtypes = (c_size_t, POINTER(c_size_t), c_int, POINTER(c_char_p))
+        self._libmx.mxCreateStructArray.restype = POINTER(mxArray)
+        self._libmx.mxCreateStructArray.errcheck = error_check
+
         self._libmx.mxArrayToString.argtypes = (POINTER(mxArray),)
         self._libmx.mxArrayToString.restype = c_char_p
         self._libmx.mxArrayToString.errcheck = error_check
@@ -613,6 +621,8 @@ def mxarray_to_ndarray(libmx, pm):
         for arr in arrays:
             contains_ndarray = np.any([isinstance(el, np.ndarray) for el in arr])
 
+            ## This loop is necessary, because np.rec.fromarrays()
+            ## cannot handle well a list of arrays of the same size
             if contains_ndarray:
                 newarr = np.empty(len(arr), dtype='O')
                 for i,a in enumerate(arr):
@@ -669,6 +679,7 @@ def ndarray_to_mxarray(libmx, arr):
             np_data = arr.imag.tostring('F')
             ctypes.memmove(mat_data, np_data, len(np_data))
 
+
     elif isinstance(arr, np.ndarray) and arr.dtype.kind == 'b':
         dim = arr.ctypes.shape_as(c_size_t)
 
@@ -678,6 +689,7 @@ def ndarray_to_mxarray(libmx, arr):
         np_data = arr.real.tostring('F')
         ctypes.memmove(mat_data, np_data, len(np_data))
 
+
     elif isinstance(arr, np.ndarray) and arr.dtype.kind == 'O':
         dim = arr.ctypes.shape_as(c_size_t)
 
@@ -686,6 +698,28 @@ def ndarray_to_mxarray(libmx, arr):
         for i,el in enumerate(arr.flatten('F')):
             p = ndarray_to_mxarray(libmx, el)
             libmx.mxSetCell(pm, i, p)
+
+
+    elif isinstance(arr, np.ndarray) and len(arr.dtype) > 0:
+        dim = arr.ctypes.shape_as(c_size_t)
+
+        name_num = len(arr.dtype.names)
+
+        names_p = (c_char_p*name_num)(*[c_char_p(name) for name in arr.dtype.names])
+
+        pm = libmx.mxCreateStructArray(
+            arr.ndim,
+            dim,
+            name_num,
+            names_p,
+        )
+
+        for i,record in enumerate(arr.flatten('F')):
+            for name in arr.dtype.names:
+                el = record[name]
+                p = ndarray_to_mxarray(libmx, el)
+
+                libmx.mxSetField(pm, i, name, p)
 
     # elif pyvariable.dtype.kind =='S':
     #     dim = pyvariable.ctypes.shape_as(c_size_t)

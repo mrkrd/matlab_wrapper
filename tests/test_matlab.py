@@ -309,7 +309,6 @@ def test_get_uninitialized_cell(matlab):
 
 @pytest.mark.xfail
 def test_put_cell(matlab):
-    # TODO: implement the test
     raise NotImplementedError
 
 
@@ -332,4 +331,22 @@ def test_put_get_cell(matlab):
 
 @pytest.mark.xfail
 def test_get_struct(matlab):
+    raise NotImplementedError
+
+
+
+@pytest.mark.xfail
+def test_get_uninitialized_struct(matlab):
+    raise NotImplementedError
+
+
+
+@pytest.mark.xfail
+def test_put_struct(matlab):
+    raise NotImplementedError
+
+
+
+@pytest.mark.xfail
+def test_put_get_struct(matlab):
     raise NotImplementedError

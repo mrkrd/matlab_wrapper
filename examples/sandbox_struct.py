@@ -48,9 +48,14 @@ def main():
     s = matlab.get('s')
     print(s, s.dtype)
 
-    # matlab.put('a', np.array([[1,'asdf'], [3, np.array([1,2,3],dtype='O')]], dtype='O'))
-    # matlab.eval('a')
-    # print(matlab.output_buffer)
+    print("="*70)
+
+    a = np.array([(1,'a'), (2,'b')], dtype=[('x', '<i8'), ('y', 'S1')])
+
+    matlab.put('a', a)
+
+    matlab.eval('a\n a(1)\n a(2)')
+    print(matlab.output_buffer)
 
 
 if __name__ == "__main__":
