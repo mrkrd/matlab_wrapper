@@ -183,10 +183,24 @@ class MatlabSession(object):
 
         self._libmx.mxGetCell.argtypes = (POINTER(mxArray), c_size_t)
         self._libmx.mxGetCell.restype = POINTER(mxArray)
-        self._libmx.mxGetCell.errcheck = error_check
+        ### Errors has to be handled elswhere, because of NULL on uninitialized cells
+        # self._libmx.mxGetCell.errcheck = error_check
 
         self._libmx.mxSetCell.argtypes = (POINTER(mxArray), c_size_t, POINTER(mxArray))
         self._libmx.mxSetCell.restype = None
+
+        self._libmx.mxGetNumberOfFields.argtypes = (POINTER(mxArray),)
+        self._libmx.mxGetNumberOfFields.restype = c_int
+        self._libmx.mxGetNumberOfFields.errcheck = error_check
+
+        self._libmx.mxGetFieldNameByNumber.argtypes = (POINTER(mxArray), c_int)
+        self._libmx.mxGetFieldNameByNumber.restype = c_char_p
+        self._libmx.mxGetFieldNameByNumber.errcheck = error_check
+
+        self._libmx.mxGetField.argtypes = (POINTER(mxArray), c_size_t, c_char_p)
+        self._libmx.mxGetField.restype = POINTER(mxArray)
+        ### Errors has to be handled elswhere, because of NULL on uninitialized fields
+        # self._libmx.mxGetField.errcheck = error_check
 
         self._libmx.mxArrayToString.argtypes = (POINTER(mxArray),)
         self._libmx.mxArrayToString.restype = c_char_p
@@ -195,6 +209,10 @@ class MatlabSession(object):
         self._libmx.mxCreateString.argtypes = (c_char_p,)
         self._libmx.mxCreateString.restype = POINTER(mxArray)
         self._libmx.mxCreateString.errcheck = error_check
+
+        self._libmx.mxGetString.argtypes = (POINTER(mxArray), c_char_p, c_size_t)
+        self._libmx.mxGetString.restype = c_int
+        self._libmx.mxGetString.errcheck = error_check
 
         self._libmx.mxCreateNumericArray.argtypes = (c_size_t, POINTER(c_size_t), c_int, c_int)
         self._libmx.mxCreateNumericArray.restype = POINTER(mxArray)
@@ -269,6 +287,10 @@ class MatlabSession(object):
 
         error_string = self._libmx.mxArrayToString(mxresult)
 
+        # TODO: possible memory leak, error_string should be freed
+        # (alternatively use mxGetString), perhaps error_string is
+        # handled by python (?)
+
         if error_string != "":
             raise RuntimeError("Error from MATLAB\n{0}".format(error_string))
 
@@ -301,7 +323,7 @@ class MatlabSession(object):
         imag_data = self._libmx.mxGetImagData(pm)
 
 
-        out = convert_mat_to_ndarray(self._libmx, pm)
+        out = mxarray_to_ndarray(self._libmx, pm)
 
 
         self._libmx.mxDestroyArray(pm)
@@ -316,7 +338,7 @@ class MatlabSession(object):
 
         """
 
-        pm = convert_ndarray_to_mat(self._libmx, value)
+        pm = ndarray_to_mxarray(self._libmx, value)
 
         self._libeng.engPutVariable(self._ep, name, pm)
 
@@ -343,7 +365,7 @@ class MatlabSession(object):
 
 
 def error_check(result, func, arguments):
-    if (isinstance(result, c_int) and result != 0) or (result is None):
+    if (isinstance(result, c_int) and result != 0) or (isinstance(result, POINTER(mxArray)) and not bool(result)):
         raise RuntimeError(
             "MATLAB function {func} failed ({result}) with arguments:\n{arguments}".format(
                 func=str(func),
@@ -470,7 +492,7 @@ class MatlabFunction(object):
 
 
 
-def convert_mat_to_ndarray(libmx, pm):
+def mxarray_to_ndarray(libmx, pm):
     """Convert MATLAB object `pm` to numpy equivalent."""
 
     ndims = libmx.mxGetNumberOfDimensions(pm)
@@ -509,6 +531,8 @@ def convert_mat_to_ndarray(libmx, pm):
 
         out = pyarray.squeeze()
 
+        if out.ndim == 0:
+            out, = np.atleast_1d(out)
 
     elif class_name == 'char':
         datasize = numelems + 1
@@ -517,7 +541,6 @@ def convert_mat_to_ndarray(libmx, pm):
         libmx.mxGetString(pm, pystring, datasize)
 
         out = pystring.value
-
 
     elif class_name == 'logical':
         datasize = numelems*elem_size
@@ -533,18 +556,71 @@ def convert_mat_to_ndarray(libmx, pm):
         )
 
         out = pyarray.squeeze()
+        if out.ndim == 0:
+            out, = np.atleast_1d(out)
 
     elif class_name == 'cell':
         out = []
         for i in range(numelems):
             cell = libmx.mxGetCell(pm, i)
 
-            o = convert_mat_to_ndarray(libmx, cell)
+            if bool(cell):
+                o = mxarray_to_ndarray(libmx, cell)
+            else:
+                ### uninitialized cell
+                o = None
+
             out.append(o)
 
         out = np.array(out, dtype='O')
         out = out.reshape(dims[:ndims], order='F')
         out = out.squeeze()
+        if out.ndim == 0:
+            out, = np.atleast_1d(out)
+
+    elif class_name == 'struct':
+        field_num = libmx.mxGetNumberOfFields(pm)
+
+        ### Get all field names
+        field_names = []
+        for i in range(field_num):
+            field_name = libmx.mxGetFieldNameByNumber(pm, i)
+            field_names.append(field_name)
+
+        ### Get all fields
+        records = []
+        for i in range(numelems):
+            record = []
+            for field_name in field_names:
+                field = libmx.mxGetField(pm, i, field_name)
+
+                if bool(field):
+                    el = mxarray_to_ndarray(libmx, field)
+                else:
+                    ### uninitialized cell
+                    el = None
+
+                record.append(el)
+            records.append(record)
+
+
+        ### Set the dtypes right (if there is any ndarray, we want dtype=object)
+        arrays = zip(*records)
+        new_arrays = []
+        for arr in arrays:
+            contains_ndarray = np.any([isinstance(el, np.ndarray) for el in arr])
+
+            if contains_ndarray:
+                newarr = np.empty(len(arr), dtype='O')
+                for i,a in enumerate(arr):
+                    newarr[i] = a
+
+            else:
+                newarr = np.array(arr)
+
+            new_arrays.append(newarr)
+
+        out = np.rec.fromarrays(new_arrays, names=field_names)
 
     else:
         raise NotImplementedError('{}-arrays are not supported'.format(class_name))
@@ -554,7 +630,7 @@ def convert_mat_to_ndarray(libmx, pm):
 
 
 
-def convert_ndarray_to_mat(libmx, arr):
+def ndarray_to_mxarray(libmx, arr):
 
     if isinstance(arr, str):
         pm = libmx.mxCreateString(arr)
@@ -601,7 +677,7 @@ def convert_ndarray_to_mat(libmx, arr):
         pm = libmx.mxCreateCellArray(arr.ndim, dim)
 
         for i,el in enumerate(arr.flatten('F')):
-            p = convert_ndarray_to_mat(libmx, el)
+            p = ndarray_to_mxarray(libmx, el)
             libmx.mxSetCell(pm, i, p)
 
     # elif pyvariable.dtype.kind =='S':
