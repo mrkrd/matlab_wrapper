@@ -290,6 +290,23 @@ def test_get_cell(matlab):
         assert_equal(a,t)
 
 
+def test_get_uninitialized_cell(matlab):
+
+    matlab.eval("c = {}; c{3} = 1")
+    actual = matlab.workspace.c
+
+    target = np.array(
+        [None, None, np.array(1.)],
+        dtype='O'
+    )
+
+    assert_equal(actual.shape, target.shape)
+    assert_equal(actual.dtype, target.dtype)
+
+    for a,t in zip(actual.flatten(),target.flatten()):
+        assert_equal(a,t)
+
+
 @pytest.mark.xfail
 def test_put_cell(matlab):
     # TODO: implement the test
