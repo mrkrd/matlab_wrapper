@@ -328,3 +328,8 @@ def test_put_get_cell(matlab):
 
     for el,elel in zip(a.flatten(),aa.flatten()):
         assert_equal(el,elel)
+
+
+@pytest.mark.xfail
+def test_get_struct(matlab):
+    raise NotImplementedError

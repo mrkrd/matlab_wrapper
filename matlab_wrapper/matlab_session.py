@@ -505,6 +505,7 @@ def mxarray_to_ndarray(libmx, pm):
     data = libmx.mxGetData(pm)
     imag_data = libmx.mxGetImagData(pm)
 
+
     if is_numeric:
         datasize = numelems*elem_size
 
@@ -534,6 +535,7 @@ def mxarray_to_ndarray(libmx, pm):
         if out.ndim == 0:
             out, = np.atleast_1d(out)
 
+
     elif class_name == 'char':
         datasize = numelems + 1
 
@@ -541,6 +543,7 @@ def mxarray_to_ndarray(libmx, pm):
         libmx.mxGetString(pm, pystring, datasize)
 
         out = pystring.value
+
 
     elif class_name == 'logical':
         datasize = numelems*elem_size
@@ -559,6 +562,7 @@ def mxarray_to_ndarray(libmx, pm):
         if out.ndim == 0:
             out, = np.atleast_1d(out)
 
+
     elif class_name == 'cell':
         out = []
         for i in range(numelems):
@@ -575,8 +579,7 @@ def mxarray_to_ndarray(libmx, pm):
         out = np.array(out, dtype='O')
         out = out.reshape(dims[:ndims], order='F')
         out = out.squeeze()
-        if out.ndim == 0:
-            out, = np.atleast_1d(out)
+
 
     elif class_name == 'struct':
         field_num = libmx.mxGetNumberOfFields(pm)
@@ -621,9 +624,13 @@ def mxarray_to_ndarray(libmx, pm):
             new_arrays.append(newarr)
 
         out = np.rec.fromarrays(new_arrays, names=field_names)
+        out = out.reshape(dims[:ndims], order='F')
+        out = out.squeeze()
+
 
     else:
         raise NotImplementedError('{}-arrays are not supported'.format(class_name))
+
 
     return out
 
