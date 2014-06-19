@@ -23,10 +23,8 @@ from __future__ import print_function, division, absolute_import
 
 import numpy as np
 import platform
-import sys
 from os.path import join, dirname, isfile, realpath
 import os
-import functools
 import warnings
 
 import ctypes
@@ -322,17 +320,6 @@ class MatlabSession(object):
 
         """
         pm = self._libeng.engGetVariable(self._ep, name)
-
-        ndims = self._libmx.mxGetNumberOfDimensions(pm)
-        dims = self._libmx.mxGetDimensions(pm)
-        numelems = self._libmx.mxGetNumberOfElements(pm)
-        elem_size = self._libmx.mxGetElementSize(pm)
-        class_name = self._libmx.mxGetClassName(pm)
-        is_numeric = self._libmx.mxIsNumeric(pm)
-        is_complex = self._libmx.mxIsComplex(pm)
-        data = self._libmx.mxGetData(pm)
-        imag_data = self._libmx.mxGetImagData(pm)
-
 
         out = mxarray_to_ndarray(self._libmx, pm)
 
