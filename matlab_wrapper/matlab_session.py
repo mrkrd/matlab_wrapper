@@ -272,7 +272,10 @@ class MatlabSession(object):
 
     @property
     def output_buffer(self):
-        return self._output_buffer.value
+        if self._output_buffer is None:
+            raise RuntimeError("Output buffer was not initialized properly.")
+        else:
+            return self._output_buffer.value
 
 
     def eval(self, expression):
@@ -433,25 +436,31 @@ class MatlabFunction(object):
 
         ### Left-hand side (returns) string
         nout = kwargs.get('nout', 1)
-        outs = ["OUT_{}__".format(i) for i in range(nout)]
+        outs = ["OUT{}__".format(i) for i in range(nout)]
         outs_str = ','.join(outs)
 
 
         ### Right hand side (arguments) string
         ins = []
         for i,a in enumerate(args):
-            aname = "ARG_{}__".format(i)
+            aname = "ARG{}__".format(i)
             session.put(aname, a)
             ins.append(aname)
         ins_str = ','.join(ins)
 
 
         ### MATLAB command
-        cmd = "[{outs}] = {name}({ins})".format(
-            outs=outs_str,
-            name=self.name,
-            ins=ins_str
-        )
+        if outs:
+            cmd = "[{outs}] = {name}({ins})".format(
+                outs=outs_str,
+                name=self.name,
+                ins=ins_str
+            )
+        else:
+            cmd = "{name}({ins})".format(
+                name=self.name,
+                ins=ins_str
+            )
 
 
         ### Run the function

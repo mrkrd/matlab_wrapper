@@ -4,7 +4,7 @@ matlab_wrapper
 *MATLAB wrapper for Python*
 
 
-
+:Name: matlab_wrapper
 :Author: Marek Rudnicki
 :Email: marekrud@gmail.com
 :URL: https://github.com/mrkrd/matlab_wrapper
