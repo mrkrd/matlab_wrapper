@@ -699,7 +699,7 @@ def ndarray_to_mxarray(libmx, arr):
         ctypes.memmove(mat_data, np_data, len(np_data))
 
 
-    elif isinstance(arr, np.ndarray) and arr.dtype.kind == 'O':
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ('O', 'S'):
         dim = arr.ctypes.shape_as(c_size_t)
 
         pm = libmx.mxCreateCellArray(arr.ndim, dim)
@@ -729,17 +729,6 @@ def ndarray_to_mxarray(libmx, arr):
                 p = ndarray_to_mxarray(libmx, el)
 
                 libmx.mxSetField(pm, i, name, p)
-
-    # elif pyvariable.dtype.kind =='S':
-    #     dim = pyvariable.ctypes.shape_as(c_size_t)
-    #     mx = libmx.mxCreateNumericArray(c_size_t(pyvariable.ndim),
-    #                                           dim)
-    #     data_old = libmx.mxGetData(mx)
-    #     datastring = pyvariable.tostring('F')
-    #     n_datastring = len(datastring)
-    #     memmove(data_old,datastring,n_datastring)
-    # elif pyvariable.dtype.kind =='O':
-    #     raise NotImplementedError('Object arrays are not supported')
 
     elif isinstance(arr, np.ndarray):
         raise NotImplementedError('Type {} not supported.'.format(arr.dtype))

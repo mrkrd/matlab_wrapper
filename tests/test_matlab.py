@@ -350,3 +350,9 @@ def test_put_struct(matlab):
 @pytest.mark.xfail
 def test_put_get_struct(matlab):
     raise NotImplementedError
+
+
+
+@pytest.mark.xfail
+def test_put_strings(matlab):
+    raise NotImplementedError

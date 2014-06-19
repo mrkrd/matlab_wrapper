@@ -78,6 +78,16 @@ def main():
     print(matlab)
 
 
+    print()
+    print('='*70)
+    print()
+
+
+    matlab.workspace.a = ['asdf', 'strings']
+
+    matlab.eval('a')
+    print(matlab.output_buffer)
+
 
 if __name__ == "__main__":
     main()
