@@ -1,10 +1,8 @@
 matlab_wrapper
 ==============
 
-*MATLAB wrapper for Python*
-
-
 :Name: matlab_wrapper
+:Description: MATLAB wrapper for Python
 :Author: Marek Rudnicki
 :Email: marekrud@gmail.com
 :URL: https://github.com/mrkrd/matlab_wrapper
