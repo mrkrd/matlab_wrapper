@@ -24,13 +24,32 @@ def main():
     print(matlab.version)
 
 
-    matlab.eval('a = pi * i')
+    print()
+    print('='*70)
+    print()
+
+
+    matlab.eval("a = pi * 2")
+    print(matlab.output_buffer)
     a = matlab.get('a')
     print(a)
+
+
+    print()
+    print('='*70)
+    print()
+
+
 
     matlab.eval("s = 'asdf'")
     s = matlab.get('s')
     print(s)
+
+
+
+    print()
+    print('='*70)
+    print()
 
 
 
@@ -40,9 +59,22 @@ def main():
 
     print(matlab.output_buffer)
 
+
+
+    print()
+    print('='*70)
+    print()
+
+
     matlab.put('m', 'asdf')
     m = matlab.get('m')
     print(m)
+
+
+
+    print()
+    print('='*70)
+    print()
 
 
     # matlab.put('m', np.array('asdf'))
@@ -60,10 +92,27 @@ def main():
     a = matlab.workspace.sin(np.arange(10.))
     print(a)
 
+
+    print()
+    print('='*70)
+    print()
+
+
     y,i = matlab.workspace.sort([2,1,3], nout=2)
     print(y,i)
 
+
+    print()
+    print('='*70)
+    print()
+
+
     print(matlab.workspace.pi())
+
+
+    print()
+    print('='*70)
+    print()
 
     matlab.workspace.a = [123, 12, 1]
     matlab.eval("b = a*2")
@@ -71,8 +120,19 @@ def main():
 
     #help(matlab.workspace.sin)
 
+
+    print()
+    print('='*70)
+    print()
+
+
     matlab.eval("whos")
     print(matlab.output_buffer)
+
+
+    print()
+    print('='*70)
+    print()
 
 
     print(matlab)
