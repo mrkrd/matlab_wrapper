@@ -258,7 +258,7 @@ class MatlabSession(object):
 
         ### Check MATLAB version
         version = self.version
-        if 'R2014b' in version:
+        if 'R2014a' in version:
             warnings.warn("You are using MATLAB version R2014a, which appears to have a bug in engGetVariable().  You will only be able to get arrays of type double.")
 
 
