@@ -398,7 +398,7 @@ class Workspace(object):
             out = MatlabFunction(name=attr, session=self._session)
 
         else:
-            raise NotImplemented("Unknown variable/function type in MATLAB workspace: {}".format(attr))
+            raise NotImplementedError("Unknown variable/function type in MATLAB workspace: {}".format(attr))
 
         return out
 
