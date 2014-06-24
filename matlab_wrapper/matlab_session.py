@@ -88,15 +88,8 @@ class MatlabSession(object):
     def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
         system = platform.system()
 
-
-        ### Find MATLAB's root path
-        if matlab_root is None:
-            path_dirs = os.environ.get("PATH").split(os.pathsep)
-            for path_dir in path_dirs:
-                candidate = realpath(join(path_dir, 'matlab'))
-                if isfile(candidate):
-                    matlab_root = dirname(dirname(candidate))
-                    break
+        matlab_root = find_matlab_root()
+        lib_dir = find_lib_dir(matlab_root)
 
         if matlab_root is None:
             raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root properly set)")
@@ -104,24 +97,31 @@ class MatlabSession(object):
         self._matlab_root = matlab_root
 
 
-        ### Load libraries and start engine
-        if system in ('Linux', 'Darwin'):
+        ### Load libraries the libraries
+        if system == 'Linux':
             self._libeng = ctypes.CDLL(
-                join(matlab_root, 'bin', 'glnxa64', 'libeng.so')
+                join(lib_dir, 'libeng.so')
             )
             self._libmx = ctypes.CDLL(
-                join(matlab_root, 'bin', 'glnxa64', 'libmx.so')
+                join(lib_dir, 'libmx.so')
             )
-            executable = join(matlab_root, 'bin', 'matlab')
-            command = "{} {}".format(executable, options)
 
-        # elif system=='Windows':
-        #     self.engine = CDLL(join(matlab_root,'bin','glnxa64','libeng.dll'))
-        #     self.mx = CDLL(join(matlab_root,'bin','glnxa64','libmx.dll'))
-        #     self.ep = self.engine.engOpen(None)
+            command = "{executable} {options}".format(
+                executable=join(matlab_root, 'bin', 'matlab'),
+                options=options
+            )
+
+        elif system=='Windows':
+            if lib_dir not in os.environ['PATH']:
+                os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
+                
+            self._libeng = ctypes.CDLL('libeng')
+            self._libmx = ctypes.CDLL('libmx')
+
+            command = None
 
         else:
-            raise NotImplementedError("System {} not supported".format(system))
+            raise NotImplementedError("System {} not yet supported.".format(system))
 
 
 
@@ -146,7 +146,7 @@ class MatlabSession(object):
         self._libeng.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
         self._libeng.engOutputBuffer.restype = c_int
 
-
+        # mwSize mxGetNumberOfDimensions(const mxArray *pm);
         self._libmx.mxGetNumberOfDimensions.argtypes = (POINTER(mxArray),)
         self._libmx.mxGetNumberOfDimensions.restype = c_size_t
 
@@ -374,6 +374,38 @@ def error_check(result, func, arguments):
 
 
 
+def find_matlab_root():
+    """Look for matlab binary and return root directory of MATLAB installation."""
+    matlab_root = None
+    
+    path_dirs = os.environ.get("PATH").split(os.pathsep)
+    for path_dir in path_dirs:
+        candidate = realpath(join(path_dir, 'matlab'))
+        if isfile(candidate) or isfile(candidate + '.exe'):
+            matlab_root = dirname(dirname(candidate))
+            break
+    
+    return matlab_root
+
+
+def find_lib_dir(matlab_root):
+    """Locate the directory where libraries are located, which is OS and architecture dependent."""
+    bits, linkage = platform.architecture()
+    system = platform.system()
+    
+    if (system == 'Linux') and (bits == '64bit'):
+        lib_dir = join(matlab_root, "bin", "glnxa64")
+    elif (system == 'Linux') and (bits == '32bit'):
+        lib_dir = join(matlab_root, "bin", "glnx86")
+    elif (system == 'Windows') and (bits == '64bit'):
+        lib_dir = join(matlab_root, "bin", "win64")
+    elif (system == 'Windows') and (bits == '32bit'):
+        lib_dir = join(matlab_root, "bin", "win32")
+    else:
+        raise RuntimeError("Unsopported OS or architecture: {} {}".format(system, bits))
+    
+    return lib_dir        
+        
 
 class Workspace(object):
     def __init__(self, session):
