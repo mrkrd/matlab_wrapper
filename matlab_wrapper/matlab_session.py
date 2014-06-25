@@ -131,6 +131,7 @@ class MatlabSession(object):
 
 
         ### Setup function types for args and returns
+        ## libeng
         self._libeng.engOpen.argtypes = (c_char_p,)
         self._libeng.engOpen.restype = POINTER(Engine)
         self._libeng.engOpen.errcheck = error_check
@@ -151,9 +152,12 @@ class MatlabSession(object):
         self._libeng.engOutputBuffer.restype = c_int
 
 
+        ## libmx
+        self._libmx.mxGetNumberOfDimensions = self._libmx.mxGetNumberOfDimensions_730
         self._libmx.mxGetNumberOfDimensions.argtypes = (POINTER(mxArray),)
         self._libmx.mxGetNumberOfDimensions.restype = mwSize
 
+        self._libmx.mxGetDimensions = self._libmx.mxGetDimensions_730
         self._libmx.mxGetDimensions.argtypes = (POINTER(mxArray),)
         self._libmx.mxGetDimensions.restype = POINTER(mwSize)
 
@@ -183,11 +187,13 @@ class MatlabSession(object):
         self._libmx.mxGetImagData.restype = POINTER(c_void_p)
         self._libmx.mxGetImagData.errcheck = error_check
 
+        self._libmx.mxGetCell = self._libmx.mxGetCell_730
         self._libmx.mxGetCell.argtypes = (POINTER(mxArray), mwIndex)
         self._libmx.mxGetCell.restype = POINTER(mxArray)
         ### Errors has to be handled elswhere, because of NULL on uninitialized cells
         # self._libmx.mxGetCell.errcheck = error_check
 
+        self._libmx.mxSetCell = self._libmx.mxSetCell_730
         self._libmx.mxSetCell.argtypes = (POINTER(mxArray), mwIndex, POINTER(mxArray))
         self._libmx.mxSetCell.restype = None
 
@@ -199,14 +205,17 @@ class MatlabSession(object):
         self._libmx.mxGetFieldNameByNumber.restype = c_char_p
         self._libmx.mxGetFieldNameByNumber.errcheck = error_check
 
+        self._libmx.mxGetField = self._libmx.mxGetField_730
         self._libmx.mxGetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p)
         self._libmx.mxGetField.restype = POINTER(mxArray)
         ### Errors has to be handled elswhere, because of NULL on uninitialized fields
         # self._libmx.mxGetField.errcheck = error_check
 
+        self._libmx.mxSetField = self._libmx.mxSetField_730
         self._libmx.mxSetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p, POINTER(mxArray))
         self._libmx.mxSetField.restype = None
 
+        self._libmx.mxCreateStructArray = self._libmx.mxCreateStructArray_730
         self._libmx.mxCreateStructArray.argtypes = (mwSize, POINTER(mwSize), c_int, POINTER(c_char_p))
         self._libmx.mxCreateStructArray.restype = POINTER(mxArray)
         self._libmx.mxCreateStructArray.errcheck = error_check
@@ -219,18 +228,22 @@ class MatlabSession(object):
         self._libmx.mxCreateString.restype = POINTER(mxArray)
         self._libmx.mxCreateString.errcheck = error_check
 
+        self._libmx.mxGetString = self._libmx.mxGetString_730
         self._libmx.mxGetString.argtypes = (POINTER(mxArray), c_char_p, mwSize)
         self._libmx.mxGetString.restype = c_int
         self._libmx.mxGetString.errcheck = error_check
 
+        self._libmx.mxCreateNumericArray = self._libmx.mxCreateNumericArray_730
         self._libmx.mxCreateNumericArray.argtypes = (mwSize, POINTER(mwSize), c_int, c_int)
         self._libmx.mxCreateNumericArray.restype = POINTER(mxArray)
         self._libmx.mxCreateNumericArray.errcheck = error_check
 
+        self._libmx.mxCreateLogicalArray = self._libmx.mxCreateLogicalArray_730
         self._libmx.mxCreateLogicalArray.argtypes = (mwSize, POINTER(mwSize))
         self._libmx.mxCreateLogicalArray.restype = POINTER(mxArray)
         self._libmx.mxCreateLogicalArray.errcheck = error_check
 
+        self._libmx.mxCreateCellArray = self._libmx.mxCreateCellArray_730
         self._libmx.mxCreateCellArray.argtypes = (mwSize, POINTER(mwSize))
         self._libmx.mxCreateCellArray.restype = POINTER(mxArray)
         self._libmx.mxCreateCellArray.errcheck = error_check
