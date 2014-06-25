@@ -263,8 +263,8 @@ class MatlabSession(object):
 
         ### Check MATLAB version
         version = self.version
-        if 'R2014a' in version:
-            warnings.warn("You are using MATLAB version R2014a, which appears to have a bug in engGetVariable().  You will only be able to get arrays of type double.")
+        if ('R2014a' in version) and system == 'Linux':
+            warnings.warn("You are using MATLAB version R2014a on Linux, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
 
 
 
@@ -402,12 +402,12 @@ def find_lib_dir(matlab_root):
 
     if (system == 'Linux') and (bits == '64bit'):
         lib_dir = join(matlab_root, "bin", "glnxa64")
-    elif (system == 'Linux') and (bits == '32bit'):
-        lib_dir = join(matlab_root, "bin", "glnx86")
+    # elif (system == 'Linux') and (bits == '32bit'):
+    #     lib_dir = join(matlab_root, "bin", "glnx86")
     elif (system == 'Windows') and (bits == '64bit'):
         lib_dir = join(matlab_root, "bin", "win64")
-    elif (system == 'Windows') and (bits == '32bit'):
-        lib_dir = join(matlab_root, "bin", "win32")
+    # elif (system == 'Windows') and (bits == '32bit'):
+    #     lib_dir = join(matlab_root, "bin", "win32")
     else:
         raise RuntimeError("Unsopported OS or architecture: {} {}".format(system, bits))
 

@@ -68,9 +68,17 @@ Requirements
 Platforms
 ---------
 
-- GNU/Linux (working)
-- Windows (coming soon)
+- GNU/Linux (working, well supported)
+- Windows (working, supported)
 - OSX (unknown)
+
+Note: I have tested only 64-bit systems.  If you are interested in
+32-bit version, please contact me per email or open an issue on
+GitHub.
+
+The library should work on OSX with just small changes.
+Unfortunately, I have no way to test it.  If you would like support
+for OSX, please contact me.
 
 
 
