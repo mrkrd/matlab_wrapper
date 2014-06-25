@@ -387,7 +387,10 @@ def error_check(result, func, arguments):
 
 
 def find_matlab_root():
-    """Look for matlab binary and return root directory of MATLAB installation."""
+    """Look for matlab binary and return root directory of MATLAB
+    installation.
+
+    """
     matlab_root = None
 
     path_dirs = os.environ.get("PATH").split(os.pathsep)
@@ -401,7 +404,10 @@ def find_matlab_root():
 
 
 def find_lib_dir(matlab_root):
-    """Locate the directory where libraries are located, which is OS and architecture dependent."""
+    """Locate the directory where libraries are located, which is OS and
+    architecture dependent.
+
+    """
     bits, linkage = platform.architecture()
     system = platform.system()
 
