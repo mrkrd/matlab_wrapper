@@ -312,10 +312,6 @@ class MatlabSession(object):
 
         error_string = self._libmx.mxArrayToString(mxresult)
 
-        # TODO: possible memory leak, error_string should be freed
-        # (alternatively use mxGetString), perhaps error_string is
-        # handled by python (?)
-
         if error_string != "":
             raise RuntimeError("Error from MATLAB\n{0}".format(error_string))
 
