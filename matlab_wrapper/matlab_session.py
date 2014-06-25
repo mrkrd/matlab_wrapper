@@ -38,6 +38,10 @@ class mxArray(ctypes.Structure):
 class Engine(ctypes.Structure):
     pass
 
+mwSize = c_size_t
+mwIndex = c_size_t
+
+
 wrap_script = r"""
 ERRSTR__ = '';
 try
@@ -114,7 +118,7 @@ class MatlabSession(object):
         elif system=='Windows':
             if lib_dir not in os.environ['PATH']:
                 os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
-                
+
             self._libeng = ctypes.CDLL('libeng')
             self._libmx = ctypes.CDLL('libmx')
 
@@ -146,12 +150,12 @@ class MatlabSession(object):
         self._libeng.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
         self._libeng.engOutputBuffer.restype = c_int
 
-        # mwSize mxGetNumberOfDimensions(const mxArray *pm);
+
         self._libmx.mxGetNumberOfDimensions.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetNumberOfDimensions.restype = c_size_t
+        self._libmx.mxGetNumberOfDimensions.restype = mwSize
 
         self._libmx.mxGetDimensions.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetDimensions.restype = POINTER(c_size_t)
+        self._libmx.mxGetDimensions.restype = POINTER(mwSize)
 
         self._libmx.mxGetNumberOfElements.argtypes = (POINTER(mxArray),)
         self._libmx.mxGetNumberOfElements.restype = c_size_t
@@ -179,12 +183,12 @@ class MatlabSession(object):
         self._libmx.mxGetImagData.restype = POINTER(c_void_p)
         self._libmx.mxGetImagData.errcheck = error_check
 
-        self._libmx.mxGetCell.argtypes = (POINTER(mxArray), c_size_t)
+        self._libmx.mxGetCell.argtypes = (POINTER(mxArray), mwIndex)
         self._libmx.mxGetCell.restype = POINTER(mxArray)
         ### Errors has to be handled elswhere, because of NULL on uninitialized cells
         # self._libmx.mxGetCell.errcheck = error_check
 
-        self._libmx.mxSetCell.argtypes = (POINTER(mxArray), c_size_t, POINTER(mxArray))
+        self._libmx.mxSetCell.argtypes = (POINTER(mxArray), mwIndex, POINTER(mxArray))
         self._libmx.mxSetCell.restype = None
 
         self._libmx.mxGetNumberOfFields.argtypes = (POINTER(mxArray),)
@@ -195,16 +199,15 @@ class MatlabSession(object):
         self._libmx.mxGetFieldNameByNumber.restype = c_char_p
         self._libmx.mxGetFieldNameByNumber.errcheck = error_check
 
-        self._libmx.mxGetField.argtypes = (POINTER(mxArray), c_size_t, c_char_p)
+        self._libmx.mxGetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p)
         self._libmx.mxGetField.restype = POINTER(mxArray)
         ### Errors has to be handled elswhere, because of NULL on uninitialized fields
         # self._libmx.mxGetField.errcheck = error_check
 
-        # void mxSetField(mxArray *pm, mwIndex index, const char *fieldname, mxArray *pvalue);
-        self._libmx.mxSetField.argtypes = (POINTER(mxArray), c_size_t, c_char_p, POINTER(mxArray))
+        self._libmx.mxSetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p, POINTER(mxArray))
         self._libmx.mxSetField.restype = None
 
-        self._libmx.mxCreateStructArray.argtypes = (c_size_t, POINTER(c_size_t), c_int, POINTER(c_char_p))
+        self._libmx.mxCreateStructArray.argtypes = (mwSize, POINTER(mwSize), c_int, POINTER(c_char_p))
         self._libmx.mxCreateStructArray.restype = POINTER(mxArray)
         self._libmx.mxCreateStructArray.errcheck = error_check
 
@@ -216,19 +219,19 @@ class MatlabSession(object):
         self._libmx.mxCreateString.restype = POINTER(mxArray)
         self._libmx.mxCreateString.errcheck = error_check
 
-        self._libmx.mxGetString.argtypes = (POINTER(mxArray), c_char_p, c_size_t)
+        self._libmx.mxGetString.argtypes = (POINTER(mxArray), c_char_p, mwSize)
         self._libmx.mxGetString.restype = c_int
         self._libmx.mxGetString.errcheck = error_check
 
-        self._libmx.mxCreateNumericArray.argtypes = (c_size_t, POINTER(c_size_t), c_int, c_int)
+        self._libmx.mxCreateNumericArray.argtypes = (mwSize, POINTER(mwSize), c_int, c_int)
         self._libmx.mxCreateNumericArray.restype = POINTER(mxArray)
         self._libmx.mxCreateNumericArray.errcheck = error_check
 
-        self._libmx.mxCreateLogicalArray.argtypes = (c_size_t, POINTER(c_size_t))
+        self._libmx.mxCreateLogicalArray.argtypes = (mwSize, POINTER(mwSize))
         self._libmx.mxCreateLogicalArray.restype = POINTER(mxArray)
         self._libmx.mxCreateLogicalArray.errcheck = error_check
 
-        self._libmx.mxCreateCellArray.argtypes = (c_size_t, POINTER(c_size_t))
+        self._libmx.mxCreateCellArray.argtypes = (mwSize, POINTER(mwSize))
         self._libmx.mxCreateCellArray.restype = POINTER(mxArray)
         self._libmx.mxCreateCellArray.errcheck = error_check
 
@@ -377,14 +380,14 @@ def error_check(result, func, arguments):
 def find_matlab_root():
     """Look for matlab binary and return root directory of MATLAB installation."""
     matlab_root = None
-    
+
     path_dirs = os.environ.get("PATH").split(os.pathsep)
     for path_dir in path_dirs:
         candidate = realpath(join(path_dir, 'matlab'))
         if isfile(candidate) or isfile(candidate + '.exe'):
             matlab_root = dirname(dirname(candidate))
             break
-    
+
     return matlab_root
 
 
@@ -392,7 +395,7 @@ def find_lib_dir(matlab_root):
     """Locate the directory where libraries are located, which is OS and architecture dependent."""
     bits, linkage = platform.architecture()
     system = platform.system()
-    
+
     if (system == 'Linux') and (bits == '64bit'):
         lib_dir = join(matlab_root, "bin", "glnxa64")
     elif (system == 'Linux') and (bits == '32bit'):
@@ -403,9 +406,9 @@ def find_lib_dir(matlab_root):
         lib_dir = join(matlab_root, "bin", "win32")
     else:
         raise RuntimeError("Unsopported OS or architecture: {} {}".format(system, bits))
-    
-    return lib_dir        
-        
+
+    return lib_dir
+
 
 class Workspace(object):
     def __init__(self, session):
