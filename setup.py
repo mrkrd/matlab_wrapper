@@ -25,9 +25,10 @@ setup(
         "Intended Audience :: Science/Research",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: POSIX",
+        "Operating System :: Microsoft :: Windows",
         "Programming Language :: Python",
     ],
 
-    platforms = ["Linux"],
+    platforms = ["Linux", "Windows"],
     install_requires=["numpy"],
 )
