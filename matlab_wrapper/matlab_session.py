@@ -691,7 +691,7 @@ def ndarray_to_mxarray(libmx, arr):
 
 
     if isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
-        dim = arr.ctypes.shape_as(c_size_t)
+        dim = arr.ctypes.shape_as(mwSize)
         complex_flag = (arr.dtype.kind == 'c')
 
         pm = libmx.mxCreateNumericArray(
@@ -712,7 +712,7 @@ def ndarray_to_mxarray(libmx, arr):
 
 
     elif isinstance(arr, np.ndarray) and arr.dtype.kind == 'b':
-        dim = arr.ctypes.shape_as(c_size_t)
+        dim = arr.ctypes.shape_as(mwSize)
 
         pm = libmx.mxCreateLogicalArray(arr.ndim, dim)
 
@@ -722,7 +722,7 @@ def ndarray_to_mxarray(libmx, arr):
 
 
     elif isinstance(arr, np.ndarray) and arr.dtype.kind in ('O', 'S'):
-        dim = arr.ctypes.shape_as(c_size_t)
+        dim = arr.ctypes.shape_as(mwSize)
 
         pm = libmx.mxCreateCellArray(arr.ndim, dim)
 
@@ -732,7 +732,7 @@ def ndarray_to_mxarray(libmx, arr):
 
 
     elif isinstance(arr, np.ndarray) and len(arr.dtype) > 0:
-        dim = arr.ctypes.shape_as(c_size_t)
+        dim = arr.ctypes.shape_as(mwSize)
 
         name_num = len(arr.dtype.names)
 
