@@ -2,6 +2,13 @@ matlab_wrapper -- history of user-visible changes
 =================================================
 
 
+Changes in version 0.7.1
+------------------------
+
++ FIX: MatlabSession was ignoring ``matlab_root`` argument
+
+
+
 Changes in version 0.7
 ----------------------
 
