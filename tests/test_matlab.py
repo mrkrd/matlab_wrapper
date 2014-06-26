@@ -139,24 +139,21 @@ def test_put_logical(matlab):
 
 
 
-@pytest.mark.xfail
-def test_put_complex(matlab):
-    """TODO: fix the test (problem with parsing of the output buffer)"""
+
+def test_put_complex128(matlab):
     for dtype in ('complex128', 'complex64'):
-        a = np.random.randn(2,3)*10 + np.random.randn(2,3)*10j
+        nums = np.linspace(0.1, 10, 6).reshape(2,3)
+
+        a = nums + nums*1j
         a = a.astype(dtype)
 
         matlab.put('a', a)
         matlab.eval('a')
 
-        output = matlab.output_buffer.split()
-        print(output)
-        numbers = output[-6:]
-        print(numbers)
-        numbers = np.array(numbers, dtype=dtype)
-        numbers.shape = (2,3)
+        output = matlab.output_buffer.split('\n')
 
-        assert_almost_equal(a, numbers, decimal=4)
+        assert_equal(output[3], '   0.1000 + 0.1000i   2.0800 + 2.0800i   4.0600 + 4.0600i')
+        assert_equal(output[4], '   6.0400 + 6.0400i   8.0200 + 8.0200i  10.0000 +10.0000i')
 
 
 
@@ -307,9 +304,36 @@ def test_get_uninitialized_cell(matlab):
         assert_equal(a,t)
 
 
-@pytest.mark.xfail
+
 def test_put_cell(matlab):
-    raise NotImplementedError
+
+    sub = np.array([3, 4.,'b'], dtype='O')
+    c = np.array([
+        [1 , 'a'],
+        [2., sub]
+    ], dtype='O')
+
+
+    matlab.put('c', c)
+
+    ### check the main array
+    matlab.eval('c')
+
+    output = matlab.output_buffer.split('\n')
+
+    assert_equal(output[3], "    [1]    'a'       ")
+    assert_equal(output[4], "    [2]    {1x3 cell}")
+
+
+    ### check the sub-array
+    matlab.eval('c{2,2}')
+
+    output = matlab.output_buffer.split('\n')
+
+    assert_equal(output[3], "    [3]    [4]    'b'")
+
+
+
 
 
 def test_put_get_cell(matlab):
@@ -329,15 +353,34 @@ def test_put_get_cell(matlab):
         assert_equal(el,elel)
 
 
+
+
 @pytest.mark.xfail
 def test_get_struct(matlab):
     raise NotImplementedError
 
 
 
-@pytest.mark.xfail
+
 def test_get_uninitialized_struct(matlab):
-    raise NotImplementedError
+
+    matlab.eval("""
+    s = struct()
+    s(1).x = 1
+    s(2).x = 2
+    s(2).y = 'a'
+    """)
+
+    s = matlab.get('s')
+
+
+    desired = np.array([
+        (1, None),
+        (2, 'a')
+    ], dtype=[('x', '<f8'), ('y', 'O')])
+
+    assert_equal(s, desired)
+
 
 
 
@@ -353,6 +396,13 @@ def test_put_get_struct(matlab):
 
 
 
-@pytest.mark.xfail
+
 def test_put_strings(matlab):
-    raise NotImplementedError
+    s = ['asdf', 'a', 'BBB']
+
+    matlab.put('s', s)
+    matlab.eval('s')
+
+    output = matlab.output_buffer.split('\n')
+
+    assert_equal(output[3], "    'asdf'    'a'    'BBB'")
