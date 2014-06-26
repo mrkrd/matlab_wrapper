@@ -68,7 +68,8 @@ class MatlabSession(object):
     matlab_root : str or None, optional
         Root of the MATLAB installation.  If unsure, then start MATLAB
         and type `matlabroot`.  If `None`, then will be determined
-        based on the `matlab` binary location.
+        based on the `matlab` binary location.  Alternatively, you can
+        set MATLABROOT environment variable.
     buffer_size : int, optional
         MATLAB output buffer size.  The output buffer can be accessed
         through `output_buffer` property.
@@ -92,14 +93,19 @@ class MatlabSession(object):
     def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
         system = platform.system()
 
+
+        if (matlab_root is None) and ('MATLABROOT' in os.environ):
+            matlab_root = os.environ['MATLABROOT']
+
         if matlab_root is None:
             matlab_root = find_matlab_root()
-        lib_dir = find_lib_dir(matlab_root)
 
         if matlab_root is None:
             raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root properly set)")
 
         self._matlab_root = matlab_root
+
+        lib_dir = find_lib_dir(matlab_root)
 
 
         ### Load libraries the libraries
