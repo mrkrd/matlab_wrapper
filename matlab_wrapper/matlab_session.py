@@ -92,7 +92,8 @@ class MatlabSession(object):
     def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
         system = platform.system()
 
-        matlab_root = find_matlab_root()
+        if matlab_root is None:
+            matlab_root = find_matlab_root()
         lib_dir = find_lib_dir(matlab_root)
 
         if matlab_root is None:
