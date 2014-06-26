@@ -355,10 +355,25 @@ def test_put_get_cell(matlab):
 
 
 
-@pytest.mark.xfail
-def test_get_struct(matlab):
-    raise NotImplementedError
 
+def test_get_struct(matlab):
+
+    matlab.eval("""
+    s = struct()
+    s(1).x = 1
+    s(1).y = 'a'
+    s(2).x = 2i
+    s(2).y = 'b'
+    """)
+
+    s = matlab.get('s')
+
+    desired = np.array([
+        (1, 'a'),
+        (2*1j, 'b')
+    ], dtype=[('x', 'complex'), ('y', 'S1')])
+
+    assert_equal(s, desired)
 
 
 
@@ -366,34 +381,67 @@ def test_get_uninitialized_struct(matlab):
 
     matlab.eval("""
     s = struct()
-    s(1).x = 1
-    s(2).x = 2
-    s(2).y = 'a'
+    s(1,1).x = 1
+    s(2,2).x = 2
+    s(2,2).y = 'a'
     """)
 
     s = matlab.get('s')
 
 
     desired = np.array([
-        (1, None),
-        (2, 'a')
-    ], dtype=[('x', '<f8'), ('y', 'O')])
+        [(1, None), (None, None)],
+        [(None, None), (2, 'a')]
+    ], dtype=[('x', 'O'), ('y', 'O')])
 
     assert_equal(s, desired)
 
 
 
 
-@pytest.mark.xfail
 def test_put_struct(matlab):
-    raise NotImplementedError
+
+    a = np.rec.fromrecords([
+        (1, 'a', 1.),
+        (2, 'bb', 2.),
+    ])
+
+    matlab.put('a', a)
+
+    ### 1st element
+    matlab.eval('a(1)')
+
+    output = matlab.output_buffer.split('\n')
+
+    assert_equal(output[3], "    f0: 1")
+    assert_equal(output[4], "    f1: 'a'")
+    assert_equal(output[5], "    f2: 1")
+
+
+    ### 2nd element
+    matlab.eval('a(2)')
+
+    output = matlab.output_buffer.split('\n')
+
+    assert_equal(output[3], "    f0: 2")
+    assert_equal(output[4], "    f1: 'bb'")
+    assert_equal(output[5], "    f2: 2")
 
 
 
-@pytest.mark.xfail
+
 def test_put_get_struct(matlab):
-    raise NotImplementedError
 
+    a = np.rec.fromrecords([
+        (1, 'a', 1.),
+        (2, 'bb', 2.),
+    ])
+
+    matlab.put('a', a)
+
+    aa = matlab.get('a')
+
+    assert_equal(a, aa)
 
 
 
