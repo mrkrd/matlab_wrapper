@@ -1,0 +1,25 @@
+#+TITLE: TODOs for matlab_wrapper
+#+AUTHOR: Marek Rudnicki
+
+
+* Pandas' DataFrame and Series support
+
+* Support matrix
+
+It should be a table in README telling which OS and MATLAB
+combinations were confirmed to work.
+
+| OS        | MATLAB | Bits | Status         |
+|-----------+--------+------+----------------|
+| GNU/Linux | 2013b  |   64 | working/tested |
+| Windows   | 2014a  |   64 | working/tested |
+
+Optionally, it could issue a warning during session initialization,
+that the status of the given system is unknown.  It could encourage
+the user to report back about a working configuration.
+
+* Donation info
+
+* Better examples
+
+* IPython notebook support
