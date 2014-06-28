@@ -15,12 +15,16 @@ matlab_wrapper
 Description
 -----------
 
-*matlab_wrapper* allows you to use MATLAB in an convenient way from
-your Python scripts and interactive shell.  MATLAB session is started
-in the background and appears as a regular Python module.
+*matlab_wrapper* allows you to use MATLAB in a convenient way in
+Python.  You can call MATLAB functions and access workspace variables
+directly from your Python scripts and interactive shell.  MATLAB
+session is started in the background and appears as a regular Python
+module.
 
 *matlab_wrapper* talks to `MATLAB engine library`_ using ctypes_, so
 you do not have to compile anything!
+
+Numerical, logical, struct and cell arrays are supported.
 
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
