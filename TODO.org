@@ -40,6 +40,9 @@ the user to report back about a working configuration.
 ** StackOverflow
 
 https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python
+https://stackoverflow.com/questions/13311415/run-a-matlab-script-from-python-pass-args
+https://stackoverflow.com/questions/13457751/calling-matlab-m-files-and-functions-in-python-script?lq=1
+https://stackoverflow.com/questions/9675386/running-m-files-from-python?rq=1
 
 ** Research Gate
 
