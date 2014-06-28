@@ -133,14 +133,13 @@ Alternatives
 
 
 
-Note: Lukas_ gave a nice overview of the `available packages`_ at
+Note: There is a nice overview of the `available packages`_ at
 StackOverflow.
 
 
 .. _mlabwrap: http://mlabwrap.sourceforge.net/
 .. _mlab: https://github.com/ewiger/mlab
 .. _pymatbridge: https://github.com/arokem/python-matlab-bridge
-.. _Lukas: https://stackoverflow.com/users/283255/lukas
 .. _`available packages`: https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python/23762412#23762412
 
 
