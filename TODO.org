@@ -23,3 +23,30 @@ the user to report back about a working configuration.
 * Better examples
 
 * IPython notebook support
+
+* Documentation
+
+** Sphinx
+
+** Read the Docs
+
+* Spread the word
+
+** reddit
+
+   - python
+   - matlab
+
+** StackOverflow
+
+https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python
+
+** Research Gate
+
+http://www.researchgate.net/post/Can_we_call_MATLAB_functions_from_Python
+http://www.researchgate.net/post/Can_we_call_MATLAB_functions_from_Python2
+
+
+** comp.soft-sys.matlab
+
+https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
