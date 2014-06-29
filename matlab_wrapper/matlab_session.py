@@ -299,8 +299,8 @@ def load_engine_and_libs(matlab_root, options):
         if lib_dir not in os.environ['PATH']:
             os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
 
-        self._libeng = Library('libeng')
-        self._libmx = Library('libmx')
+        libeng = Library('libeng')
+        libmx = Library('libmx')
 
         command = None
 
