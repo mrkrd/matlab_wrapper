@@ -485,7 +485,7 @@ def test_put_get_series(matlab):
 
     desired = np.rec.fromarrays(
         [np.arange(10), np.arange(10.)],
-        dtype=[('index', '<i8'), ('0', '<i8')]
+        dtype=[('index', '<i8'), ('0', '<f8')]
     )
 
     assert_equal(a, desired)
