@@ -478,13 +478,13 @@ def test_put_get_dataframe(matlab):
 
 
 def test_put_get_series(matlab):
-    s = pd.Series(np.arange(10))
+    s = pd.Series(np.arange(10.))
 
     matlab.put('s', s)
     a = matlab.get('s')
 
     desired = np.rec.fromarrays(
-        [np.arange(10), np.arange(10)],
+        [np.arange(10), np.arange(10.)],
         dtype=[('index', '<i8'), ('0', '<i8')]
     )
 
