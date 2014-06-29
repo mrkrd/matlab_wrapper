@@ -72,13 +72,17 @@ Requirements
 Platforms
 ---------
 
-==========  ==========  ==========  ==========
-OS [#]_     MATLAB      Bits [#]_   Status
-==========  ==========  ==========  ==========
-GNU/Linux   2013b       64          working (py.test OK)
-GNU/Linux   2014a       64          only double arrays working [#]_
-Windows     2014a       64          working (py.test OK)
-==========  ==========  ==========  ==========
+If you are using *matlab_wrapper* with MATLAB version and OS not
+listed below, please let us know and we will update the table.
+
+==========  ===========  ==========  ==========
+OS [#]_     MATLAB       Bits [#]_   Status
+==========  ===========  ==========  ==========
+GNU/Linux   2013a (8.1)  64          working (py.test OK)
+GNU/Linux   2013b (8.2)  64          working (py.test OK)
+GNU/Linux   2014a (8.3)  64          only double arrays working [#]_
+Windows     2014a (8.3)  64          working (py.test OK)
+==========  ===========  ==========  ==========
 
 
 .. [#] The library should work on OSX with just small changes.

@@ -102,155 +102,17 @@ class MatlabSession(object):
             matlab_root = find_matlab_root()
 
         if matlab_root is None:
-            raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root properly set)")
+            raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root set properly).")
 
         self._matlab_root = matlab_root
 
-        lib_dir = find_lib_dir(matlab_root)
 
+        engine, libeng, libmx = load_engine_and_libs(matlab_root, options)
 
-        ### Load libraries the libraries
-        if system == 'Linux':
-            self._libeng = ctypes.CDLL(
-                join(lib_dir, 'libeng.so')
-            )
-            self._libmx = Library(
-                join(lib_dir, 'libmx.so')
-            )
+        self._libeng = libeng
+        self._libmx = libmx
+        self._ep = engine
 
-            command = "{executable} {options}".format(
-                executable=join(matlab_root, 'bin', 'matlab'),
-                options=options
-            )
-
-        elif system=='Windows':
-            if lib_dir not in os.environ['PATH']:
-                os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
-
-            self._libeng = ctypes.CDLL('libeng')
-            self._libmx = Library('libmx')
-
-            command = None
-
-        else:
-            raise NotImplementedError("System {} not yet supported.".format(system))
-
-
-
-
-        ### Setup function types for args and returns
-        ## libeng
-        self._libeng.engOpen.argtypes = (c_char_p,)
-        self._libeng.engOpen.restype = POINTER(Engine)
-        self._libeng.engOpen.errcheck = error_check
-
-        self._libeng.engPutVariable.argtypes = (POINTER(Engine), c_char_p, POINTER(mxArray))
-        self._libeng.engPutVariable.restype = c_int
-        self._libeng.engPutVariable.errcheck = error_check
-
-        self._libeng.engGetVariable.argtypes = (POINTER(Engine), c_char_p)
-        self._libeng.engGetVariable.restype = POINTER(mxArray)
-        self._libeng.engGetVariable.errcheck = error_check
-
-        self._libeng.engEvalString.argtypes = (POINTER(Engine), c_char_p)
-        self._libeng.engEvalString.restype = c_int
-        self._libeng.engEvalString.errcheck = error_check
-
-        self._libeng.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
-        self._libeng.engOutputBuffer.restype = c_int
-
-
-        ## libmx
-        self._libmx.mxGetNumberOfDimensions.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetNumberOfDimensions.restype = mwSize
-
-        self._libmx.mxGetDimensions.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetDimensions.restype = POINTER(mwSize)
-
-        self._libmx.mxGetNumberOfElements.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetNumberOfElements.restype = c_size_t
-
-        self._libmx.mxGetElementSize.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetElementSize.restype = c_size_t
-
-        self._libmx.mxGetClassName.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetClassName.restype = c_char_p
-
-        self._libmx.mxIsNumeric.argtypes = (POINTER(mxArray),)
-        self._libmx.mxIsNumeric.restype = c_bool
-
-        self._libmx.mxIsCell.argtypes = (POINTER(mxArray),)
-        self._libmx.mxIsCell.restype = c_bool
-
-        self._libmx.mxIsComplex.argtypes = (POINTER(mxArray),)
-        self._libmx.mxIsComplex.restype = c_bool
-
-        self._libmx.mxGetData.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetData.restype = POINTER(c_void_p)
-        self._libmx.mxGetData.errcheck = error_check
-
-        self._libmx.mxGetImagData.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetImagData.restype = POINTER(c_void_p)
-        self._libmx.mxGetImagData.errcheck = error_check
-
-        self._libmx.mxGetCell.argtypes = (POINTER(mxArray), mwIndex)
-        self._libmx.mxGetCell.restype = POINTER(mxArray)
-        ### Errors has to be handled elswhere, because of NULL on uninitialized cells
-        # self._libmx.mxGetCell.errcheck = error_check
-
-        self._libmx.mxSetCell.argtypes = (POINTER(mxArray), mwIndex, POINTER(mxArray))
-        self._libmx.mxSetCell.restype = None
-
-        self._libmx.mxGetNumberOfFields.argtypes = (POINTER(mxArray),)
-        self._libmx.mxGetNumberOfFields.restype = c_int
-        self._libmx.mxGetNumberOfFields.errcheck = error_check
-
-        self._libmx.mxGetFieldNameByNumber.argtypes = (POINTER(mxArray), c_int)
-        self._libmx.mxGetFieldNameByNumber.restype = c_char_p
-        self._libmx.mxGetFieldNameByNumber.errcheck = error_check
-
-        self._libmx.mxGetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p)
-        self._libmx.mxGetField.restype = POINTER(mxArray)
-        ### Errors has to be handled elswhere, because of NULL on uninitialized fields
-        # self._libmx.mxGetField.errcheck = error_check
-
-        self._libmx.mxSetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p, POINTER(mxArray))
-        self._libmx.mxSetField.restype = None
-
-        self._libmx.mxCreateStructArray.argtypes = (mwSize, POINTER(mwSize), c_int, POINTER(c_char_p))
-        self._libmx.mxCreateStructArray.restype = POINTER(mxArray)
-        self._libmx.mxCreateStructArray.errcheck = error_check
-
-        self._libmx.mxArrayToString.argtypes = (POINTER(mxArray),)
-        self._libmx.mxArrayToString.restype = c_char_p
-        self._libmx.mxArrayToString.errcheck = error_check
-
-        self._libmx.mxCreateString.argtypes = (c_char_p,)
-        self._libmx.mxCreateString.restype = POINTER(mxArray)
-        self._libmx.mxCreateString.errcheck = error_check
-
-        self._libmx.mxGetString.argtypes = (POINTER(mxArray), c_char_p, mwSize)
-        self._libmx.mxGetString.restype = c_int
-        self._libmx.mxGetString.errcheck = error_check
-
-        self._libmx.mxCreateNumericArray.argtypes = (mwSize, POINTER(mwSize), c_int, c_int)
-        self._libmx.mxCreateNumericArray.restype = POINTER(mxArray)
-        self._libmx.mxCreateNumericArray.errcheck = error_check
-
-        self._libmx.mxCreateLogicalArray.argtypes = (mwSize, POINTER(mwSize))
-        self._libmx.mxCreateLogicalArray.restype = POINTER(mxArray)
-        self._libmx.mxCreateLogicalArray.errcheck = error_check
-
-        self._libmx.mxCreateCellArray.argtypes = (mwSize, POINTER(mwSize))
-        self._libmx.mxCreateCellArray.restype = POINTER(mxArray)
-        self._libmx.mxCreateCellArray.errcheck = error_check
-
-        self._libmx.mxDestroyArray.argtypes = (POINTER(mxArray),)
-        self._libmx.mxDestroyArray.restype = None
-
-
-        ### Start the engine
-        self._ep = self._libeng.engOpen(command)
 
 
         ### Setup the output buffer
@@ -268,11 +130,6 @@ class MatlabSession(object):
         ### Workspace object
         self.workspace = Workspace(self)
 
-
-        ### Check MATLAB version
-        version = self.version
-        if ('R2014a' in version) and system == 'Linux':
-            warnings.warn("You are using MATLAB version R2014a on Linux, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
 
 
 
@@ -321,7 +178,6 @@ class MatlabSession(object):
         ----------
         name : str
             Name of the variable in MATLAB workspace.
-
         Returns
         -------
         array_like
@@ -400,29 +256,103 @@ def find_matlab_root():
     return matlab_root
 
 
-def find_lib_dir(matlab_root):
-    """Locate the directory where libraries are located, which is OS and
-    architecture dependent.
+
+def load_engine_and_libs(matlab_root, options):
+    """Load and return `libeng` and `libmx`.  Start and return MATLAB
+    engine.
+
+    Returns
+    -------
+    engine
+    libeng
+    libmx
 
     """
     bits, linkage = platform.architecture()
     system = platform.system()
 
-    if (system == 'Linux') and (bits == '64bit'):
-        lib_dir = join(matlab_root, "bin", "glnxa64")
-    # elif (system == 'Linux') and (bits == '32bit'):
-    #     lib_dir = join(matlab_root, "bin", "glnx86")
-    elif (system == 'Windows') and (bits == '64bit'):
-        lib_dir = join(matlab_root, "bin", "win64")
-    # elif (system == 'Windows') and (bits == '32bit'):
-    #     lib_dir = join(matlab_root, "bin", "win32")
+    if system == 'Linux':
+        if bits == '64bit':
+            lib_dir = join(matlab_root, "bin", "glnxa64")
+        else:
+            unsopported_paltform()
+
+        libeng = Library(
+            join(lib_dir, 'libeng.so')
+        )
+        libmx = Library(
+            join(lib_dir, 'libmx.so')
+        )
+
+        command = "{executable} {options}".format(
+            executable=join(matlab_root, 'bin', 'matlab'),
+            options=options
+        )
+
+
+    elif system == 'Windows':
+        if bits == '64bit':
+            lib_dir = join(matlab_root, "bin", "win64")
+        else:
+            unsopported_paltform()
+
+        if lib_dir not in os.environ['PATH']:
+            os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
+
+        self._libeng = Library('libeng')
+        self._libmx = Library('libmx')
+
+        command = None
+
+
     else:
-        raise RuntimeError("""Unsopported OS or architecture: {} {}.
+        unsopported_paltform()
 
-Please send an email to the author or check our website about
-supported platforms: https://github.com/mrkrd/matlab_wrapper""".format(system, bits))
 
-    return lib_dir
+
+
+    ### Check MATLAB version
+    try:
+        version_str = c_char_p.in_dll(libeng, "libeng_version").value
+        version = tuple([int(v) for v in version_str.split('.')[:2]])
+
+
+        if (system == 'Linux') and (version == (8,1)) and (bits == '64bit'):
+            pass
+
+        elif (system == 'Linux') and (version == (8,2)) and (bits == '64bit'):
+            pass
+
+        elif (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
+            warnings.warn("You are using MATLAB version 8.3 (R2014a) on Linux, which appears to have a bug in engGetVariable().  You will probably only be able to use arrays of type double.")
+
+        elif (system == 'Windows') and (version == (8,3)) and (bits == '64bit'):
+            pass
+
+        else:
+            warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know, that are using MATLAB version {version} on {os} with {bits}: https://github.com/mrkrd/matlab_wrapper".format(version=version_str,os=system,bits=bits))
+
+    except ValueError:
+        warnings.warn("Unknown MATLAB version, please let us know: https://github.com/mrkrd/matlab_wrapper")
+
+
+
+    ### Start the engine
+    engine = libeng.engOpen(command)
+
+
+    return engine, libeng, libmx
+
+
+
+
+def unsopported_paltform(system, bits):
+    raise RuntimeError("""Unsopported OS or architecture: {} {}.
+
+Please, check our website about supported platforms:
+https://github.com/mrkrd/matlab_wrapper""".format(system, bits))
+
+
 
 
 class Workspace(object):
@@ -788,8 +718,124 @@ class Library(object):
     mwSize problems for those functions.
 
     """
-    def __init__(self, *args, **kwargs):
-        self._lib = ctypes.CDLL(*args, **kwargs)
+    def __init__(self, name, **kwargs):
+        self._lib = ctypes.CDLL(name, **kwargs)
+
+        if 'libeng' in name:
+
+            self.engOpen.argtypes = (c_char_p,)
+            self.engOpen.restype = POINTER(Engine)
+            self.engOpen.errcheck = error_check
+
+            self.engPutVariable.argtypes = (POINTER(Engine), c_char_p, POINTER(mxArray))
+            self.engPutVariable.restype = c_int
+            self.engPutVariable.errcheck = error_check
+
+            self.engGetVariable.argtypes = (POINTER(Engine), c_char_p)
+            self.engGetVariable.restype = POINTER(mxArray)
+            self.engGetVariable.errcheck = error_check
+
+            self.engEvalString.argtypes = (POINTER(Engine), c_char_p)
+            self.engEvalString.restype = c_int
+            self.engEvalString.errcheck = error_check
+
+            self.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
+            self.engOutputBuffer.restype = c_int
+
+
+        elif 'libmx' in name:
+
+            self.mxGetNumberOfDimensions.argtypes = (POINTER(mxArray),)
+            self.mxGetNumberOfDimensions.restype = mwSize
+
+            self.mxGetDimensions.argtypes = (POINTER(mxArray),)
+            self.mxGetDimensions.restype = POINTER(mwSize)
+
+            self.mxGetNumberOfElements.argtypes = (POINTER(mxArray),)
+            self.mxGetNumberOfElements.restype = c_size_t
+
+            self.mxGetElementSize.argtypes = (POINTER(mxArray),)
+            self.mxGetElementSize.restype = c_size_t
+
+            self.mxGetClassName.argtypes = (POINTER(mxArray),)
+            self.mxGetClassName.restype = c_char_p
+
+            self.mxIsNumeric.argtypes = (POINTER(mxArray),)
+            self.mxIsNumeric.restype = c_bool
+
+            self.mxIsCell.argtypes = (POINTER(mxArray),)
+            self.mxIsCell.restype = c_bool
+
+            self.mxIsComplex.argtypes = (POINTER(mxArray),)
+            self.mxIsComplex.restype = c_bool
+
+            self.mxGetData.argtypes = (POINTER(mxArray),)
+            self.mxGetData.restype = POINTER(c_void_p)
+            self.mxGetData.errcheck = error_check
+
+            self.mxGetImagData.argtypes = (POINTER(mxArray),)
+            self.mxGetImagData.restype = POINTER(c_void_p)
+            self.mxGetImagData.errcheck = error_check
+
+            self.mxGetCell.argtypes = (POINTER(mxArray), mwIndex)
+            self.mxGetCell.restype = POINTER(mxArray)
+            ### Errors has to be handled elswhere, because of NULL on uninitialized cells
+            # self.mxGetCell.errcheck = error_check
+
+            self.mxSetCell.argtypes = (POINTER(mxArray), mwIndex, POINTER(mxArray))
+            self.mxSetCell.restype = None
+
+            self.mxGetNumberOfFields.argtypes = (POINTER(mxArray),)
+            self.mxGetNumberOfFields.restype = c_int
+            self.mxGetNumberOfFields.errcheck = error_check
+
+            self.mxGetFieldNameByNumber.argtypes = (POINTER(mxArray), c_int)
+            self.mxGetFieldNameByNumber.restype = c_char_p
+            self.mxGetFieldNameByNumber.errcheck = error_check
+
+            self.mxGetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p)
+            self.mxGetField.restype = POINTER(mxArray)
+            ### Errors has to be handled elswhere, because of NULL on uninitialized fields
+            # self.mxGetField.errcheck = error_check
+
+            self.mxSetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p, POINTER(mxArray))
+            self.mxSetField.restype = None
+
+            self.mxCreateStructArray.argtypes = (mwSize, POINTER(mwSize), c_int, POINTER(c_char_p))
+            self.mxCreateStructArray.restype = POINTER(mxArray)
+            self.mxCreateStructArray.errcheck = error_check
+
+            self.mxArrayToString.argtypes = (POINTER(mxArray),)
+            self.mxArrayToString.restype = c_char_p
+            self.mxArrayToString.errcheck = error_check
+
+            self.mxCreateString.argtypes = (c_char_p,)
+            self.mxCreateString.restype = POINTER(mxArray)
+            self.mxCreateString.errcheck = error_check
+
+            self.mxGetString.argtypes = (POINTER(mxArray), c_char_p, mwSize)
+            self.mxGetString.restype = c_int
+            self.mxGetString.errcheck = error_check
+
+            self.mxCreateNumericArray.argtypes = (mwSize, POINTER(mwSize), c_int, c_int)
+            self.mxCreateNumericArray.restype = POINTER(mxArray)
+            self.mxCreateNumericArray.errcheck = error_check
+
+            self.mxCreateLogicalArray.argtypes = (mwSize, POINTER(mwSize))
+            self.mxCreateLogicalArray.restype = POINTER(mxArray)
+            self.mxCreateLogicalArray.errcheck = error_check
+
+            self.mxCreateCellArray.argtypes = (mwSize, POINTER(mwSize))
+            self.mxCreateCellArray.restype = POINTER(mxArray)
+            self.mxCreateCellArray.errcheck = error_check
+
+            self.mxDestroyArray.argtypes = (POINTER(mxArray),)
+            self.mxDestroyArray.restype = None
+
+        else:
+            raise RuntimeError("Unknown library to configure: {}".format(name))
+
+
 
     def __getattr__(self, attr):
 
