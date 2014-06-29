@@ -2,8 +2,6 @@
 #+AUTHOR: Marek Rudnicki
 
 
-* Pandas' DataFrame and Series support
-
 * Support matrix
 
 It should be a table in README telling which OS and MATLAB
