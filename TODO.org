@@ -2,7 +2,7 @@
 #+AUTHOR: Marek Rudnicki
 
 
-* Support matrix
+* TODO Support matrix
 
 It should be a table in README telling which OS and MATLAB
 combinations were confirmed to work.

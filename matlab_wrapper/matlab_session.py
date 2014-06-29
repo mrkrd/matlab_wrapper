@@ -417,7 +417,9 @@ def find_lib_dir(matlab_root):
     # elif (system == 'Windows') and (bits == '32bit'):
     #     lib_dir = join(matlab_root, "bin", "win32")
     else:
-        raise RuntimeError("Unsopported OS or architecture: {} {}".format(system, bits))
+        raise RuntimeError("""Unsopported OS or architecture: {} {}.  Please send an email to the
+        author or check our website about supported platforms:
+        https://github.com/mrkrd/matlab_wrapper""".format(system, bits))
 
     return lib_dir
 

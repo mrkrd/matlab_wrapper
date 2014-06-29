@@ -72,18 +72,22 @@ Requirements
 Platforms
 ---------
 
-- GNU/Linux (working, well supported)
-- Windows (working, supported)
-- OSX (unknown)
+==========  ==========  ==========  ==========
+OS [#]_     MATLAB      Bits [#]_   Status
+==========  ==========  ==========  ==========
+GNU/Linux   2013b       64          working (py.test OK)
+GNU/Linux   2014a       64          only double arrays working [#]_
+Windows     2014a       64          working (py.test OK)
+==========  ==========  ==========  ==========
 
-Note: I have tested only 64-bit systems.  If you are interested in
-32-bit version, please contact me per email or open an issue on
-GitHub.
 
-The library should work on OSX with just small changes.
-Unfortunately, I have no way to test it.  If you would like support
-for OSX, please contact me.
-
+.. [#] The library should work on OSX with just small changes.
+       Unfortunately, I have no way to test it.  If you would like
+       support for OSX, please contact me.
+.. [#] I have tested only 64-bit systems.  If you are interested in
+       32-bit version, please contact me per email or open an issue on
+       GitHub.
+.. [#] Due to bug in ``engGetVariable``.
 
 
 Installation
