@@ -163,3 +163,13 @@ Acknowledgments
 *matlab_wrapper* was forked from pymatlab_.
 
 .. _pymatlab: http://pymatlab.sourceforge.net/
+
+
+Donations
+---------
+
+If you find *matlab_wrapper* useful, please consider making a
+donation.  It will be a great feedback and will further motivate me to
+improve this software.  Thank you in advance.
+
+- Bitcoin address: 1KwZMQCWJW8VbcmHT2xeMc4wsAeZinLeGe
