@@ -2,6 +2,13 @@ matlab_wrapper -- history of user-visible changes
 =================================================
 
 
+Changes in version (next)
+-------------------------
+
++ Pandas' Series and DataFrame support (put)
+
+
+
 Changes in version 0.7.1
 ------------------------
 

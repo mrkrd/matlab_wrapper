@@ -11,7 +11,7 @@ __author__ = "Marek Rudnicki"
 
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
-import pandas
+import pandas as pd
 
 import matlab_wrapper
 
@@ -468,4 +468,24 @@ def test_put_get_dataframe(matlab):
     matlab.put('df', df)
     a = matlab.get('df')
 
-    print(a)
+    desired = np.array([
+        (0, 1.0, 2, 'asdf'),
+        (1, 1.1, 4, 'marek')
+    ], dtype=[('index', '<i8'), ('a', '<f8'), ('b', '<i8'), ('c', 'S5')])
+
+    assert_equal(a, desired)
+
+
+
+def test_put_get_series(matlab):
+    s = pd.Series(np.arange(10))
+
+    matlab.put('s', s)
+    a = matlab.get('s')
+
+    desired = np.rec.fromarrays(
+        [np.arange(10), np.arange(10)],
+        dtype=[('index', '<i8'), ('0', '<i8')]
+    )
+
+    assert_equal(a, desired)
