@@ -26,6 +26,7 @@ import platform
 from os.path import join, dirname, isfile, realpath
 import os
 import warnings
+import sys
 
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
@@ -696,6 +697,12 @@ def ndarray_to_mxarray(libmx, arr):
 
     elif isinstance(arr, dict):
         raise NotImplementedError('dicts are not supported.')
+
+    elif ('pandas' in sys.modules) and isinstance(arr, sys.modules['pandas'].DataFrame):
+        arr = arr.to_records()
+
+    elif ('pandas' in sys.modules) and isinstance(arr, sys.modules['pandas'].Series):
+        arr = arr.to_frame().to_records()
 
     else:
         arr = np.array(arr, ndmin=2)

@@ -11,6 +11,7 @@ __author__ = "Marek Rudnicki"
 
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
+import pandas
 
 import matlab_wrapper
 
@@ -454,3 +455,17 @@ def test_put_strings(matlab):
     output = matlab.output_buffer.split('\n')
 
     assert_equal(output[3], "    'asdf'    'a'    'BBB'")
+
+
+
+
+def test_put_get_dataframe(matlab):
+    df = pd.DataFrame([
+        {'a': 1, 'b': 2, 'c': 'asdf'},
+        {'a': 1.1, 'b': 4, 'c': 'marek'},
+    ])
+
+    matlab.put('df', df)
+    a = matlab.get('df')
+
+    print(a)
