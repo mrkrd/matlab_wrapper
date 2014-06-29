@@ -76,22 +76,24 @@ If you are using *matlab_wrapper* with MATLAB version and OS not
 listed below, please let us know and we will update the table.
 
 ==========  ===========  ==========  ==========
-OS [#]_     MATLAB       Bits [#]_   Status
+OS [#os]_   MATLAB       Bits [#b]_  Status
 ==========  ===========  ==========  ==========
 GNU/Linux   2013a (8.1)  64          working (py.test OK)
 GNU/Linux   2013b (8.2)  64          working (py.test OK)
-GNU/Linux   2014a (8.3)  64          only double arrays working [#]_
+GNU/Linux   2014a (8.3)  64          only double arrays working [#doub]_
 Windows     2014a (8.3)  64          working (py.test OK)
 ==========  ===========  ==========  ==========
 
 
-.. [#] The library should work on OSX with just small changes.
-       Unfortunately, I have no way to test it.  If you would like
-       support for OSX, please contact me.
-.. [#] I have tested only 64-bit systems.  If you are interested in
-       32-bit version, please contact me per email or open an issue on
-       GitHub.
-.. [#] Due to bug in ``engGetVariable``.
+.. [#os] The library should work on OSX with just small changes.
+	 Unfortunately, I have no way to test it.  If you would like
+	 support for OSX, please contact me.
+
+.. [#b] I have tested only 64-bit systems.  If you are interested in
+        32-bit version, please contact me per email or open an issue
+        on GitHub.
+
+.. [#doub] Due to bug in ``engGetVariable``.
 
 
 Installation
