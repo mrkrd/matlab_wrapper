@@ -2,6 +2,13 @@ matlab_wrapper -- history of user-visible changes
 =================================================
 
 
+Changes in version (next)
+-------------------------
+
++ Initial OS X support (thanks to grahamj1978)
+
+
+
 Changes in version 0.8
 ----------------------
 
