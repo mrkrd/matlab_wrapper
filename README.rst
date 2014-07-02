@@ -177,4 +177,4 @@ donation.  It will be a great feedback and will further motivate me to
 improve this software.  Thank you in advance.
 
 - Flattr: https://flattr.com/submit/auto?user_id=mrkrd&url=https://github.com/mrkrd/matlab_wrapper
-- Bitcoin address: 1KwZMQCWJW8VbcmHT2xeMc4wsAeZinLeGe
+- Bitcoin: 1KwZMQCWJW8VbcmHT2xeMc4wsAeZinLeGe
