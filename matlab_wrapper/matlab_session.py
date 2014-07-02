@@ -305,6 +305,25 @@ def load_engine_and_libs(matlab_root, options):
         command = None
 
 
+    elif system == 'Darwin':
+	if bits == '64bit':
+	    lib_dir = join(matlab_root, "bin", "maci64")
+	else:
+	    unsopported_paltform(system,bits)
+
+	libeng = Library(
+	    join(lib_dir, 'libeng.dylib')
+	)
+	libmx = Library(
+	    join(lib_dir, 'libmx.dylib')
+	)
+
+	command = "{executable} {options}".format(
+	    executable=join(matlab_root, 'bin', 'matlab'),
+	    options=options
+	)
+
+
     else:
         unsopported_paltform()
 
