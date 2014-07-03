@@ -84,7 +84,7 @@ GNU/Linux   2013a (8.1)  64          working (py.test OK)
 
 Windows     2014a (8.3)  64          working (py.test OK)
 
-OSX         2014a (8.3)  64          presumably only double arrays working [#f]_
+OS X        2014a (8.3)  64          only double arrays working [#f]_
 ==========  ===========  ==========  ==========
 
 
