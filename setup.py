@@ -26,9 +26,10 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Operating System :: POSIX",
         "Operating System :: Microsoft :: Windows",
+        "Operating System :: MacOS :: MacOS X",
         "Programming Language :: Python",
     ],
 
-    platforms = ["Linux", "Windows"],
+    platforms = ["Linux", "Windows", "OSX"],
     install_requires=["numpy"],
 )
