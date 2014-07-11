@@ -348,6 +348,9 @@ def load_engine_and_libs(matlab_root, options):
         elif (system == 'Windows') and (version == (8,3)) and (bits == '64bit'):
             pass
 
+        elif (system == 'Darwin') and (version == (8,1)) and (bits == '64bit'):
+            pass
+
         elif (system == 'Darwin') and (version == (8,3)) and (bits == '64bit'):
             warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will probably only be able to use arrays of type double.")
 
