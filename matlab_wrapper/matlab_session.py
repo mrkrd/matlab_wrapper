@@ -759,6 +759,9 @@ class Library(object):
     `_730` to function names on the fly.  It should resolve the int vs
     mwSize problems for those functions.
 
+    It also initializes library functions by setting `artypes`,
+    `restype` and `errcheck` attributes.
+
     """
     def __init__(self, name, **kwargs):
         self._lib = ctypes.CDLL(name, **kwargs)
