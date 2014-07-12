@@ -64,7 +64,7 @@ Requirements
 ------------
 
 - Python (2.7)
-- Matlab (tested with 2013b)
+- Matlab (various versions)
 - Numpy (1.8)
 
 
@@ -90,8 +90,8 @@ OS X        2013a (8.1)  64          working
 
 
 .. [#os] OSX support is not very good, because cannot test it.  It
-	 should work, but if you have problem, let me know and we
-	 might figure it out.
+         should work, but if you have problem, let me know and we
+         might figure it out.
 
 .. [#b] I have tested only 64-bit systems.  If you are interested in
         32-bit version, please contact me per email or open an issue
