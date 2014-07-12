@@ -381,6 +381,23 @@ https://github.com/mrkrd/matlab_wrapper""".format(system, bits))
 
 
 class Workspace(object):
+    """A convenient interface to MATLAB workspace.
+
+    You can use attributes to access MALTAB functions and variables::
+
+      workspace.sin([1., 2., 3.])
+      pi = workspace.pi()
+      a = workspace.a
+
+
+    In MATLAB the output of the function depends on the number of
+    outputs arguments.  By default, we assume that there is one output
+    argument.  If you would like to change that, add `nout` keyward
+    argument to the function, e.g.::
+
+      sorted,idx = workspace.sort([3,1,2], nout=2)
+
+    """
     def __init__(self, session):
         self._session = session
 
