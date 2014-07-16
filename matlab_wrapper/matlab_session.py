@@ -27,6 +27,7 @@ from os.path import join, dirname, isfile, realpath
 import os
 import warnings
 import sys
+import weakref
 
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
@@ -128,7 +129,7 @@ class MatlabSession(object):
 
 
         ### Workspace object
-        self.workspace = Workspace(self)
+        self.workspace = Workspace(weakref.ref(self))
 
 
 
@@ -398,13 +399,23 @@ class Workspace(object):
       sorted,idx = workspace.sort([3,1,2], nout=2)
 
     """
-    def __init__(self, session):
-        self._session = session
+    def __init__(self, session_ref):
+        """Workspace constructor.
+
+        Parameters
+        ----------
+        session_ref : weak referecne to MatlabSession
+            We need weak reference here, because Workspace is an
+            attribute of MatlabSession and we do not want cyclic
+            referencing.
+
+        """
+        self._session_ref = session_ref
 
 
     def __getattr__(self, attr):
 
-        session = self._session
+        session = self._session_ref()
 
         session.eval("KIND__ = exist('{}')".format(attr))
         kind = session.get('KIND__')
@@ -417,7 +428,7 @@ class Workspace(object):
             out = session.get(attr)
 
         elif kind in (2, 3, 5, 6): # Function
-            out = MatlabFunction(name=attr, session=self._session)
+            out = MatlabFunction(name=attr, session=session)
 
         else:
             raise NotImplementedError("Unknown variable/function type in MATLAB workspace: {}".format(attr))
@@ -430,7 +441,8 @@ class Workspace(object):
         if name.startswith('_'):
             object.__setattr__(self, name, value)
         else:
-            self._session.put(name, value)
+            session = self._session_ref()
+            session.put(name, value)
 
 
 
