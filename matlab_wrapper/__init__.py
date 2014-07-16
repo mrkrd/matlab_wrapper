@@ -21,7 +21,7 @@
 
 from __future__ import division, print_function, absolute_import
 
-__version__ = "0.9.1"
+__version__ = "0.9.2"
 
 __author__ = "Marek Rudnicki"
 __license__ = "GPLv3+"
