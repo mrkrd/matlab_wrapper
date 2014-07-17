@@ -12,7 +12,7 @@
 
 ** Sphinx
 
-** Read the Docs
+** Python hosted
 
 * Spread the word
 
@@ -37,3 +37,5 @@ http://www.researchgate.net/post/Can_we_call_MATLAB_functions_from_Python2
 ** comp.soft-sys.matlab
 
 https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
+
+* Python 3 support
