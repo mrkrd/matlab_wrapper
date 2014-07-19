@@ -278,7 +278,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "glnxa64")
         else:
-            unsopported_paltform()
+            unsupported_paltform()
 
         libeng = Library(
             join(lib_dir, 'libeng.so')
@@ -297,7 +297,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "win64")
         else:
-            unsopported_paltform()
+            unsupported_paltform()
 
         if lib_dir not in os.environ['PATH']:
             os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
@@ -312,7 +312,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "maci64")
         else:
-            unsopported_paltform(system,bits)
+            unsupported_paltform(system,bits)
 
         libeng = Library(
             join(lib_dir, 'libeng.dylib')
@@ -328,7 +328,7 @@ def load_engine_and_libs(matlab_root, options):
 
 
     else:
-        unsopported_paltform()
+        unsupported_paltform()
 
 
 
@@ -338,30 +338,30 @@ def load_engine_and_libs(matlab_root, options):
         version_str = c_char_p.in_dll(libeng, "libeng_version").value
         version = tuple([int(v) for v in version_str.split('.')[:2]])
 
-
-        if (system == 'Linux') and (version == (8,1)) and (bits == '64bit'):
-            pass
-
-        elif (system == 'Linux') and (version == (8,2)) and (bits == '64bit'):
-            pass
-
-        elif (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
-            warnings.warn("You are using MATLAB version 8.3 (R2014a) on Linux, which appears to have a bug in engGetVariable().  You will probably only be able to use arrays of type double.")
-
-        elif (system == 'Windows') and (version == (8,3)) and (bits == '64bit'):
-            pass
-
-        elif (system == 'Darwin') and (version == (8,1)) and (bits == '64bit'):
-            pass
-
-        elif (system == 'Darwin') and (version == (8,3)) and (bits == '64bit'):
-            warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will probably only be able to use arrays of type double.")
-
-        else:
-            warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know, that are using MATLAB version {version} on {os} with {bits}: https://github.com/mrkrd/matlab_wrapper".format(version=version_str,os=system,bits=bits))
-
     except ValueError:
-        warnings.warn("Unknown MATLAB version, please let us know: https://github.com/mrkrd/matlab_wrapper")
+        warnings.warn("Unable to identify MATLAB version, please let us know: https://github.com/mrkrd/matlab_wrapper")
+
+
+    if (system == 'Linux') and (version == (8,1)) and (bits == '64bit'):
+        pass
+
+    elif (system == 'Linux') and (version == (8,2)) and (bits == '64bit'):
+        pass
+
+    elif (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
+        warnings.warn("You are using MATLAB version 8.3 (R2014a) on Linux, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
+
+    elif (system == 'Windows') and (version == (8,3)) and (bits == '64bit'):
+        pass
+
+    elif (system == 'Darwin') and (version == (8,1)) and (bits == '64bit'):
+        pass
+
+    elif (system == 'Darwin') and (version == (8,3)) and (bits == '64bit'):
+        warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
+
+    else:
+        warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know about that and visit out website <https://github.com/mrkrd/matlab_wrapper> or send us an email <marekrud@gmail.com>.  Your MATLAB version is {version} on {os} with {bits}.".format(version=version_str,os=system,bits=bits))
 
 
 
