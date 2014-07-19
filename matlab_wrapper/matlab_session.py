@@ -428,7 +428,7 @@ class Workspace(object):
             out = session.get(attr)
 
         elif kind in (2, 3, 5, 6): # Function
-            out = MatlabFunction(name=attr, session=session)
+            out = MatlabFunction(name=attr, session_ref=self._session_ref)
 
         else:
             raise NotImplementedError("Unknown variable/function type in MATLAB workspace: {}".format(attr))
@@ -447,12 +447,13 @@ class Workspace(object):
 
 
 class MatlabFunction(object):
-    def __init__(self, name, session):
+    def __init__(self, name, session_ref):
         self.name = name
-        self._session = session
+        self._session_ref = session_ref
+
 
     def __call__(self, *args, **kwargs):
-        session = self._session
+        session = self._session_ref()
 
 
         ### Left-hand side (returns) string
@@ -516,7 +517,7 @@ class MatlabFunction(object):
     @property
     def __doc__(self):
 
-        session = self._session
+        session = self._session_ref()
 
         session.eval(
             "DOC__ = help('{}')".format(self.name)
