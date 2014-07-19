@@ -2,6 +2,13 @@ matlab_wrapper -- history of user-visible changes
 =================================================
 
 
+Changes in version 0.9.3
+------------------------
+
++ Memory leaks
+
+
+
 Changes in version 0.9
 ----------------------
 
