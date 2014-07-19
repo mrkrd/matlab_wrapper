@@ -2,19 +2,19 @@
 
 # Copyright 2010-2013 Joakim Möller
 # Copyright 2014 Marek Rudnicki
-
+#
 # This file is part of matlab_wrapper.
-
+#
 # matlab_wrapper is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-
+#
 # matlab_wrapper is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-
+#
 # You should have received a copy of the GNU General Public License
 # along with matlab_wrapper.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -24,63 +24,6 @@ from numpy import array,ndarray,dtype
 from os.path import join
 import platform
 import sys,numpy
-
-def numpy_to_ctype(np_variable):
-    dtype = str(np_variable.dtype)
-    ctype = c_double
-    if "uint" in dtype:
-        if '8' in dtype:
-            ctype = c_ubyte
-        elif '16' in dtype:
-            ctype = c_ushort
-        elif '32' in dtype:
-            ctype = c_uint
-        elif '64' in dtype:
-            ctype = c_ulong
-    elif "int" in dtype:
-        if '8' in dtype:
-            ctype = c_byte
-        elif '16' in dtype:
-            ctype = c_short
-        elif '32' in dtype:
-            ctype = c_int
-        elif '64' in dtype:
-            ctype = c_long
-    elif "float" in dtype:
-        if '32' in dtype:
-            ctype = c_float
-        elif '64' in dtype:
-            ctype = c_double
-        else:
-            ctype = c_double
-    return ctype
-
-def mat_to_ctype(classname):
-    dtype = classname
-    ctype = c_double
-    if "uint" in dtype:
-        if '8' in dtype:
-            ctype = c_ubyte
-        elif '16' in dtype:
-            ctype = c_ushort
-        elif '32' in dtype:
-            ctype = c_uint
-        elif '64' in dtype:
-            ctype = c_ulong
-    elif "int" in dtype:
-        if '8' in dtype:
-            ctype = c_byte
-        elif '16' in dtype:
-            ctype = c_short
-        elif '32' in dtype:
-            ctype = c_int
-        elif '64' in dtype:
-            ctype = c_long
-    elif "single" in dtype:
-        ctype = c_float
-    elif "double" in dtype:
-        ctype = c_double
-    return ctype
 
 
 def dtype_to_mat(dtype):
