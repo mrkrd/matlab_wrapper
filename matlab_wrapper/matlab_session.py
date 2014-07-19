@@ -167,6 +167,8 @@ class MatlabSession(object):
 
         error_string = self._libmx.mxArrayToString(mxresult)
 
+        self._libmx.mxDestroyArray(mxresult)
+
         if error_string != "":
             raise RuntimeError("Error from MATLAB\n{0}".format(error_string))
 
