@@ -23,19 +23,19 @@
 
 ** StackOverflow
 
-https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python
-https://stackoverflow.com/questions/13311415/run-a-matlab-script-from-python-pass-args
 https://stackoverflow.com/questions/13457751/calling-matlab-m-files-and-functions-in-python-script?lq=1
 https://stackoverflow.com/questions/9675386/running-m-files-from-python?rq=1
-
-** Research Gate
-
-http://www.researchgate.net/post/Can_we_call_MATLAB_functions_from_Python
-http://www.researchgate.net/post/Can_we_call_MATLAB_functions_from_Python2
-
 
 ** comp.soft-sys.matlab
 
 https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
 
 * Python 3 support
+
+* Auto-detect the number of output arguments (nout)
+
+  - check get_nout() from oct2py:
+
+    https://github.com/blink1073/oct2py/blob/master/oct2py/utils.py
+
+  - check mlabwrap
