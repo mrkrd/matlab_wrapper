@@ -167,7 +167,10 @@ Acknowledgments
 
 *matlab_wrapper* was forked from pymatlab_.
 
+MATLAB is a registered trademark of `The MathWorks, Inc`_.
+
 .. _pymatlab: http://pymatlab.sourceforge.net/
+.. _`The MathWorks, Inc`: http://www.mathworks.com/
 
 
 Donations
