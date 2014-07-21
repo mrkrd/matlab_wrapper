@@ -36,6 +36,8 @@ Numerical, logical, struct and cell arrays are supported.
 Usage
 -----
 
+More examples are in the examples_ directory.
+
 Initialize::
 
   import matlab_wrapper
@@ -58,6 +60,8 @@ Workspace::
   matlab.workspace.a = 12.3
   b = matlab.workspace.b
 
+
+.. _examples: https://github.com/mrkrd/matlab_wrapper/tree/master/examples
 
 
 Requirements

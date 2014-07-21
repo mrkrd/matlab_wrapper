@@ -1,10 +1,8 @@
 #+TITLE: TODOs for matlab_wrapper
 #+AUTHOR: Marek Rudnicki
-
+#+CATEGORY: mlab_wrap
 
 * TODO Donation info
-
-* Better examples
 
 * IPython notebook support
 
