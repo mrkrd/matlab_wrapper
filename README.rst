@@ -36,8 +36,6 @@ Numerical, logical, struct and cell arrays are supported.
 Usage
 -----
 
-More examples are in the examples_ directory.
-
 Initialize::
 
   import matlab_wrapper
@@ -60,6 +58,8 @@ Workspace::
   matlab.workspace.a = 12.3
   b = matlab.workspace.b
 
+
+More examples are in the examples_ directory!
 
 .. _examples: https://github.com/mrkrd/matlab_wrapper/tree/master/examples
 
@@ -180,9 +180,8 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 Donations
 ---------
 
-If you find *matlab_wrapper* useful, please consider making a
-donation.  It will be a great feedback and will further motivate me to
-improve this software.  Thank you in advance.
+If *matlab_wrapper* is useful for your work, please consider making a
+donation.  It would be a great feedback!
 
 - Flattr: https://flattr.com/submit/auto?user_id=mrkrd&url=https://github.com/mrkrd/matlab_wrapper
 - Gittip: https://www.gittip.com/mrkrd/
