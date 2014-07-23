@@ -20,6 +20,12 @@
 
 
 from __future__ import print_function, division, absolute_import
+from __future__ import unicode_literals
+
+__author__ = "Marek Rudnicki"
+__copyright__ = "Copyright 2014, Marek Rudnicki"
+__license__ = "GPLv3+"
+
 
 import numpy as np
 import platform
@@ -335,7 +341,7 @@ def load_engine_and_libs(matlab_root, options):
 
     ### Check MATLAB version
     try:
-        version_str = c_char_p.in_dll(libeng, "libeng_version").value
+        version_str = c_char_p.in_dll(libeng, "libeng_version").value.decode('ascii')
         version = tuple([int(v) for v in version_str.split('.')[:2]])
 
     except ValueError:
@@ -783,7 +789,7 @@ class Library(object):
 
         if 'libeng' in name:
 
-            self.engOpen.argtypes = (c_char_p,)
+            self.engOpen.argtypes = (ToCCharP,)
             self.engOpen.restype = POINTER(Engine)
             self.engOpen.errcheck = error_check
 
@@ -866,7 +872,7 @@ class Library(object):
             self.mxCreateStructArray.errcheck = error_check
 
             self.mxArrayToString.argtypes = (POINTER(mxArray),)
-            self.mxArrayToString.restype = c_char_p
+            self.mxArrayToString.restype = FromCCharP
             self.mxArrayToString.errcheck = error_check
 
             self.mxCreateString.argtypes = (c_char_p,)
@@ -907,3 +913,20 @@ class Library(object):
             out = getattr(self._lib, attr)
 
         return out
+
+
+
+class FromCCharP(object):
+    def __init__(self):
+        raise NotImplementedError
+
+    def __call__(self, *args, **kwargs):
+        raise NotImplementedError
+
+
+class ToCCharP(object):
+    def __init__(self):
+        raise NotImplementedError
+
+    def from_param(self, obj):
+        raise NotImplementedError
