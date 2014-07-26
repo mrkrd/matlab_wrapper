@@ -150,7 +150,7 @@ class MatlabSession(object):
         if self._output_buffer is None:
             raise RuntimeError("Output buffer was not initialized properly.")
         else:
-            return self._output_buffer.value
+            return self._output_buffer.value.decode('ascii')
 
 
     def eval(self, expression):
@@ -584,12 +584,14 @@ def mxarray_to_ndarray(libmx, pm):
 
 
     elif class_name == 'char':
-        datasize = numelems + 1
+        # datasize = numelems + 1
 
-        pystring = ctypes.create_string_buffer(datasize+1)
-        libmx.mxGetString(pm, pystring, datasize)
+        # pystring = ctypes.create_string_buffer(datasize+1)
+        # libmx.mxGetString(pm, pystring, datasize)
 
-        out = pystring.value
+        # out = pystring.value.decode('ascii')
+
+        out = libmx.mxArrayToString(pm)
 
 
     elif class_name == 'logical':
@@ -787,21 +789,24 @@ class Library(object):
     def __init__(self, name, **kwargs):
         self._lib = ctypes.CDLL(name, **kwargs)
 
+        ccharp_to_unicode = CCharP_To_Unicode()
+        unicode_to_ccharp = Unicode_To_CCharP()
+
         if 'libeng' in name:
 
-            self.engOpen.argtypes = (ToCCharP,)
+            self.engOpen.argtypes = (unicode_to_ccharp,)
             self.engOpen.restype = POINTER(Engine)
             self.engOpen.errcheck = error_check
 
-            self.engPutVariable.argtypes = (POINTER(Engine), c_char_p, POINTER(mxArray))
+            self.engPutVariable.argtypes = (POINTER(Engine), unicode_to_ccharp, POINTER(mxArray))
             self.engPutVariable.restype = c_int
             self.engPutVariable.errcheck = error_check
 
-            self.engGetVariable.argtypes = (POINTER(Engine), c_char_p)
+            self.engGetVariable.argtypes = (POINTER(Engine), unicode_to_ccharp)
             self.engGetVariable.restype = POINTER(mxArray)
             self.engGetVariable.errcheck = error_check
 
-            self.engEvalString.argtypes = (POINTER(Engine), c_char_p)
+            self.engEvalString.argtypes = (POINTER(Engine), unicode_to_ccharp)
             self.engEvalString.restype = c_int
             self.engEvalString.errcheck = error_check
 
@@ -856,15 +861,15 @@ class Library(object):
             self.mxGetNumberOfFields.errcheck = error_check
 
             self.mxGetFieldNameByNumber.argtypes = (POINTER(mxArray), c_int)
-            self.mxGetFieldNameByNumber.restype = c_char_p
+            self.mxGetFieldNameByNumber.restype = ccharp_to_unicode
             self.mxGetFieldNameByNumber.errcheck = error_check
 
-            self.mxGetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p)
+            self.mxGetField.argtypes = (POINTER(mxArray), mwIndex, unicode_to_ccharp)
             self.mxGetField.restype = POINTER(mxArray)
             ### Errors has to be handled elswhere, because of NULL on uninitialized fields
             # self.mxGetField.errcheck = error_check
 
-            self.mxSetField.argtypes = (POINTER(mxArray), mwIndex, c_char_p, POINTER(mxArray))
+            self.mxSetField.argtypes = (POINTER(mxArray), mwIndex, unicode_to_ccharp, POINTER(mxArray))
             self.mxSetField.restype = None
 
             self.mxCreateStructArray.argtypes = (mwSize, POINTER(mwSize), c_int, POINTER(c_char_p))
@@ -872,14 +877,14 @@ class Library(object):
             self.mxCreateStructArray.errcheck = error_check
 
             self.mxArrayToString.argtypes = (POINTER(mxArray),)
-            self.mxArrayToString.restype = FromCCharP
+            self.mxArrayToString.restype = ccharp_to_unicode
             self.mxArrayToString.errcheck = error_check
 
-            self.mxCreateString.argtypes = (c_char_p,)
+            self.mxCreateString.argtypes = (unicode_to_ccharp,)
             self.mxCreateString.restype = POINTER(mxArray)
             self.mxCreateString.errcheck = error_check
 
-            self.mxGetString.argtypes = (POINTER(mxArray), c_char_p, mwSize)
+            self.mxGetString.argtypes = (POINTER(mxArray), unicode_to_ccharp, mwSize)
             self.mxGetString.restype = c_int
             self.mxGetString.errcheck = error_check
 
@@ -916,17 +921,19 @@ class Library(object):
 
 
 
-class FromCCharP(object):
+class CCharP_To_Unicode(object):
     def __init__(self):
-        raise NotImplementedError
+        pass
 
-    def __call__(self, *args, **kwargs):
-        raise NotImplementedError
+    def __call__(self, ccharp):
+        u = c_char_p(ccharp).value.decode('ascii')
+        return u
 
 
-class ToCCharP(object):
+class Unicode_To_CCharP(object):
     def __init__(self):
-        raise NotImplementedError
+        pass
 
-    def from_param(self, obj):
-        raise NotImplementedError
+    def from_param(self, unicode_str):
+        ccharp = c_char_p(unicode_str.encode('ascii'))
+        return ccharp
