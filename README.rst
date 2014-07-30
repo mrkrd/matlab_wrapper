@@ -181,7 +181,7 @@ Donations
 ---------
 
 If *matlab_wrapper* is useful for your work, please consider making a
-donation.  It would be a great feedback!
+donation.  It will be a great feedback!
 
 - Flattr: https://flattr.com/submit/auto?user_id=mrkrd&url=https://github.com/mrkrd/matlab_wrapper
 - Gittip: https://www.gittip.com/mrkrd/
