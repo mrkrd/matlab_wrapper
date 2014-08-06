@@ -697,8 +697,6 @@ def ndarray_to_mxarray(libmx, arr):
     elif ('pandas' in sys.modules) and isinstance(arr, sys.modules['pandas'].Series):
         arr = arr.to_frame().to_records()
 
-        arr = np.array(arr, ndmin=2)
-
     elif isinstance(arr, collections.Iterable):
         arr = np.array(arr, ndmin=2)
 
