@@ -2,6 +2,13 @@ matlab_wrapper -- history of user-visible changes
 =================================================
 
 
+Changes in version XXX
+----------------------
+
++ Better handling of unsupported Python types
+
+
+
 Changes in version 0.9.3
 ------------------------
 
