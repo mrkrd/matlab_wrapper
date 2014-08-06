@@ -28,6 +28,7 @@ import os
 import warnings
 import sys
 import weakref
+import collections
 
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
@@ -682,8 +683,10 @@ def mxarray_to_ndarray(libmx, pm):
 
 def ndarray_to_mxarray(libmx, arr):
 
+    ### Prepare `arr` object (convert to ndarray if possible), assert
+    ### data type
     if isinstance(arr, str):
-        pm = libmx.mxCreateString(arr)
+        pass
 
     elif isinstance(arr, dict):
         raise NotImplementedError('dicts are not supported.')
@@ -694,11 +697,25 @@ def ndarray_to_mxarray(libmx, arr):
     elif ('pandas' in sys.modules) and isinstance(arr, sys.modules['pandas'].Series):
         arr = arr.to_frame().to_records()
 
-    else:
         arr = np.array(arr, ndmin=2)
 
+    elif isinstance(arr, collections.Iterable):
+        arr = np.array(arr, ndmin=2)
 
-    if isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
+    elif np.issctype(type(arr)):
+        arr = np.array(arr, ndmin=2)
+
+    else:
+        raise NotImplementedError("Data type not supported: {}".format(type(arr)))
+
+
+
+
+    ### Convert ndarray to mxarray
+    if isinstance(arr, str):
+        pm = libmx.mxCreateString(arr)
+
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
         dim = arr.ctypes.shape_as(mwSize)
         complex_flag = (arr.dtype.kind == 'c')
 
@@ -761,7 +778,7 @@ def ndarray_to_mxarray(libmx, arr):
                 libmx.mxSetField(pm, i, name, p)
 
     elif isinstance(arr, np.ndarray):
-        raise NotImplementedError('Type {} not supported.'.format(arr.dtype))
+        raise NotImplementedError('Unsupported dtype: {}'.format(arr.dtype))
 
     return pm
 

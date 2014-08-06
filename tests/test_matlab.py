@@ -489,3 +489,9 @@ def test_put_get_series(matlab):
     )
 
     assert_equal(a, desired)
+
+
+def test_put_object(matlab):
+
+    with pytest.raises(NotImplementedError):
+        matlab.put('foo', object())
