@@ -1,6 +1,6 @@
 #+TITLE: TODOs for matlab_wrapper
 #+AUTHOR: Marek Rudnicki
-#+CATEGORY: mlab_wrap
+#+CATEGORY: matlab_wrap
 
 * TODO Donation info
 
@@ -49,3 +49,9 @@ may lead to unexpected behaviors.
 Could be activated via by a parameters:
 
 matlab = matlab_wrapper.MatlabSession(auto_int_conversion=True)
+
+* Make sure that the MATLAB process is gone in __del__()
+
+  - add `matlab._pid' (use features('getpid') in MATLAB, might not
+    exist in older versions)
+  - check the standard library for the best kill/terminate functions
