@@ -95,7 +95,7 @@ OS X        2013a (8.1)  64          working
 
 
 .. [#os] OSX support is not very good, because cannot test it.  It
-         should work, but if you have problem, let me know and we
+         should work, but if you have problems, let me know and we
          might figure it out.
 
 .. [#b] I have tested only 64-bit systems.  If you are interested in
