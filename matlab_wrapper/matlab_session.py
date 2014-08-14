@@ -34,6 +34,7 @@ import os
 import warnings
 import sys
 import weakref
+import collections
 
 import ctypes
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
@@ -284,7 +285,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "glnxa64")
         else:
-            unsupported_paltform()
+            unsupported_platforms()
 
         libeng = Library(
             join(lib_dir, 'libeng.so')
@@ -303,7 +304,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "win64")
         else:
-            unsupported_paltform()
+            unsupported_platforms()
 
         if lib_dir not in os.environ['PATH']:
             os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
@@ -318,7 +319,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "maci64")
         else:
-            unsupported_paltform(system,bits)
+            unsupported_platforms(system,bits)
 
         libeng = Library(
             join(lib_dir, 'libeng.dylib')
@@ -334,7 +335,7 @@ def load_engine_and_libs(matlab_root, options):
 
 
     else:
-        unsupported_paltform()
+        unsupported_platforms()
 
 
 
@@ -690,8 +691,10 @@ def mxarray_to_ndarray(libmx, pm):
 
 def ndarray_to_mxarray(libmx, arr):
 
+    ### Prepare `arr` object (convert to ndarray if possible), assert
+    ### data type
     if isinstance(arr, str):
-        pm = libmx.mxCreateString(arr)
+        pass
 
     elif isinstance(arr, dict):
         raise NotImplementedError('dicts are not supported.')
@@ -702,11 +705,23 @@ def ndarray_to_mxarray(libmx, arr):
     elif ('pandas' in sys.modules) and isinstance(arr, sys.modules['pandas'].Series):
         arr = arr.to_frame().to_records()
 
-    else:
+    elif isinstance(arr, collections.Iterable):
         arr = np.array(arr, ndmin=2)
 
+    elif np.issctype(type(arr)):
+        arr = np.array(arr, ndmin=2)
 
-    if isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
+    else:
+        raise NotImplementedError("Data type not supported: {}".format(type(arr)))
+
+
+
+
+    ### Convert ndarray to mxarray
+    if isinstance(arr, str):
+        pm = libmx.mxCreateString(arr)
+
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
         dim = arr.ctypes.shape_as(mwSize)
         complex_flag = (arr.dtype.kind == 'c')
 
@@ -769,7 +784,7 @@ def ndarray_to_mxarray(libmx, arr):
                 libmx.mxSetField(pm, i, name, p)
 
     elif isinstance(arr, np.ndarray):
-        raise NotImplementedError('Type {} not supported.'.format(arr.dtype))
+        raise NotImplementedError('Unsupported dtype: {}'.format(arr.dtype))
 
     return pm
 
