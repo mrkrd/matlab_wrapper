@@ -50,8 +50,31 @@ Could be activated via by a parameters:
 
 matlab = matlab_wrapper.MatlabSession(auto_int_conversion=True)
 
-* Make sure that the MATLAB process is gone in __del__()
+* DONE Make sure that the MATLAB process is gone in __del__()      :canceled:
 
   - add `matlab._pid' (use features('getpid') in MATLAB, might not
     exist in older versions)
   - check the standard library for the best kill/terminate functions
+
+
+<2014-08-14 Thu>
+
+MATLAB is unresponsive during execution of svd().  I did not find a
+way to reasonably kill the process (in destructor), because it hangs
+in the engClose().
+
+
+
+#+BEGIN_SRC matlab
+m.workspace.svd(np.zeros((10000,10000)))
+#+END_SRC
+
+
+#+BEGIN_SRC python
+### Get MATLAB PID
+try:
+    pid = self.workspace.feature('getpid')
+    self._pid = int(pid)
+except RuntimeError:
+    self._pid = None
+#+END_SRC
