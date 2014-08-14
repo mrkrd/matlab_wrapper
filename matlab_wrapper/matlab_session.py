@@ -140,9 +140,10 @@ class MatlabSession(object):
 
 
 
-
     def __del__(self):
         self._libeng.engClose(self._ep)
+
+
 
 
     @property
@@ -151,6 +152,7 @@ class MatlabSession(object):
             raise RuntimeError("Output buffer was not initialized properly.")
         else:
             return self._output_buffer.value
+
 
 
     def eval(self, expression):
@@ -812,7 +814,11 @@ class Library(object):
 
             self.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
             self.engOutputBuffer.restype = c_int
+            self.engOutputBuffer.errcheck = error_check
 
+            self.engClose.argtypes = (POINTER(Engine),)
+            self.engClose.restype = c_int
+            self.engClose.errcheck = error_check
 
         elif 'libmx' in name:
 
