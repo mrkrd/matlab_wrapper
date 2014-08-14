@@ -82,6 +82,7 @@ listed below, please let us know and we will update the table.
 ==========  ===========  ==========  ==========
 OS [#os]_   MATLAB       Bits [#b]_  Status
 ==========  ===========  ==========  ==========
+GNU/Linux   2014b (8.4)  64          working (pre-release, py.test OK)
 GNU/Linux   2014a (8.3)  64          only double arrays working [#f]_
 GNU/Linux   2013b (8.2)  64          working (py.test OK)
 GNU/Linux   2013a (8.1)  64          working (py.test OK)
