@@ -84,7 +84,7 @@ class MatlabSession(object):
     workspace : Workspace object
         Easy access to MATLAB workspace, e.g. `workspace.sin([1.,2.,3.])`.
     version : str
-        MATLAB version number.
+        MATLAB/libeng version number.
 
     Methods
     -------
@@ -114,6 +114,11 @@ class MatlabSession(object):
         self._libeng = libeng
         self._libmx = libmx
         self._ep = engine
+
+
+
+        ### MATLAB/libeng version
+        self.version = c_char_p.in_dll(libeng, "libeng_version").value
 
 
 
@@ -212,15 +217,6 @@ class MatlabSession(object):
         self._libmx.mxDestroyArray(pm)
 
 
-    @property
-    def version(self):
-        """Return string representing MATLAB version."""
-
-        self.eval("VERSION__ = version")
-        ver = self.get('VERSION__')
-        self.eval("clear VERSION__")
-
-        return ver
 
 
 
