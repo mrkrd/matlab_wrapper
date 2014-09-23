@@ -277,7 +277,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "glnxa64")
         else:
-            unsupported_platforms()
+            unsupported_platform(system, bits)
 
         libeng = Library(
             join(lib_dir, 'libeng.so')
@@ -296,7 +296,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "win64")
         else:
-            unsupported_platforms()
+            unsupported_platform(system, bits)
 
         if lib_dir not in os.environ['PATH']:
             os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
@@ -311,7 +311,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "maci64")
         else:
-            unsupported_platforms(system,bits)
+            unsupported_platform(system, bits)
 
         libeng = Library(
             join(lib_dir, 'libeng.dylib')
@@ -327,7 +327,7 @@ def load_engine_and_libs(matlab_root, options):
 
 
     else:
-        unsupported_platforms()
+        unsupported_platform(system, bits)
 
 
 
