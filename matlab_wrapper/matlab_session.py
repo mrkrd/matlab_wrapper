@@ -376,7 +376,7 @@ def load_engine_and_libs(matlab_root, options):
 
 
 
-def unsopported_paltform(system, bits):
+def unsupported_platform(system, bits):
     raise RuntimeError("""Unsopported OS or architecture: {} {}.
 
 Please, check our website about supported platforms:
