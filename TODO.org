@@ -79,7 +79,9 @@ except RuntimeError:
     self._pid = None
 #+END_SRC
 
-* Check for /bin/csh on Linux
+* DONE Check for /bin/csh on Linux
 
 /bin/csh is required by libeng and the lack of it could be detected by
 matlab_wrapper.
+
+<2014-09-29 Mon>
