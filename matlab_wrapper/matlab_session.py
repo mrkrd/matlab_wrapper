@@ -291,6 +291,10 @@ def load_engine_and_libs(matlab_root, options):
             options=options
         )
 
+        ### Check for /bin/csh
+        if not os.path.exists("/bin/csh"):
+            warnings.warn("MATLAB engine requires /bin/csh.  Please, install it on your system or matlab_wrapper will not work properly.")
+
 
     elif system == 'Windows':
         if bits == '64bit':
