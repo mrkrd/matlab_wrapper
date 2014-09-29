@@ -83,7 +83,7 @@ class MatlabSession(object):
         Access to the MATLAB output buffer.
     workspace : Workspace object
         Easy access to MATLAB workspace, e.g. `workspace.sin([1.,2.,3.])`.
-    version : str
+    version : tuple or None
         MATLAB/libeng version number.
 
     Methods
@@ -109,7 +109,7 @@ class MatlabSession(object):
         self._matlab_root = matlab_root
 
 
-        engine, libeng, libmx = load_engine_and_libs(matlab_root, options)
+        engine, libeng, libmx, version = load_engine_and_libs(matlab_root, options)
 
         self._libeng = libeng
         self._libmx = libmx
@@ -118,7 +118,7 @@ class MatlabSession(object):
 
 
         ### MATLAB/libeng version
-        self.version = c_char_p.in_dll(libeng, "libeng_version").value
+        self.version = version
 
 
 
@@ -339,6 +339,7 @@ def load_engine_and_libs(matlab_root, options):
 
     except ValueError:
         warnings.warn("Unable to identify MATLAB version, please let us know: https://github.com/mrkrd/matlab_wrapper")
+        version = None
 
 
     if (system == 'Linux') and (version == (8,1)) and (bits == '64bit'):
@@ -371,7 +372,7 @@ def load_engine_and_libs(matlab_root, options):
     engine = libeng.engOpen(command)
 
 
-    return engine, libeng, libmx
+    return engine, libeng, libmx, version
 
 
 
