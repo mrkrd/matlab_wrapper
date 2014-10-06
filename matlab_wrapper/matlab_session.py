@@ -368,7 +368,7 @@ def load_engine_and_libs(matlab_root, options):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
 
     else:
-        warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know about that and visit out website <https://github.com/mrkrd/matlab_wrapper> or send me an email <marekrud@gmail.com>.  Your MATLAB version is {version} on {os} with {bits}.".format(version=version_str,os=system,bits=bits))
+        warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know about that and visit out website <https://github.com/mrkrd/matlab_wrapper> or send me an email <marekrud@gmail.com>.  Your MATLAB version is {version} on {os} with {bits}.".format(version=version,os=system,bits=bits))
 
 
 
