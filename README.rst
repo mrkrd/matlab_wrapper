@@ -176,14 +176,3 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 
 .. _pymatlab: http://pymatlab.sourceforge.net/
 .. _`The MathWorks, Inc`: http://www.mathworks.com/
-
-
-Donations
----------
-
-If *matlab_wrapper* is useful for your work, please consider making a
-donation.  It will be a great feedback!
-
-- Flattr: https://flattr.com/submit/auto?user_id=mrkrd&url=https://github.com/mrkrd/matlab_wrapper
-- Gittip: https://www.gittip.com/mrkrd/
-- Bitcoin: 1KwZMQCWJW8VbcmHT2xeMc4wsAeZinLeGe

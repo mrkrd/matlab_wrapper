@@ -2,8 +2,6 @@
 #+AUTHOR: Marek Rudnicki
 #+CATEGORY: matlab_wrap
 
-* TODO Donation info
-
 * IPython notebook support
 
 * Documentation
