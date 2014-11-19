@@ -83,3 +83,9 @@ except RuntimeError:
 matlab_wrapper.
 
 <2014-09-29 Mon>
+
+* Enable 32-bit versions
+
+ralili mentioned that it seem to be working on Windows 7, where:
+
+lib_dir = join(matlab_root, "bin", "win32")
