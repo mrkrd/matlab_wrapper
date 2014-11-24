@@ -674,7 +674,7 @@ def ndarray_to_mxarray(libmx, arr):
 
     ### Prepare `arr` object (convert to ndarray if possible), assert
     ### data type
-    if isinstance(arr, str):
+    if isinstance(arr, str) or isinstance(arr, unicode):
         pass
 
     elif isinstance(arr, dict):
@@ -701,6 +701,9 @@ def ndarray_to_mxarray(libmx, arr):
     ### Convert ndarray to mxarray
     if isinstance(arr, str):
         pm = libmx.mxCreateString(arr)
+
+    elif isinstance(arr, unicode):
+        pm = libmx.mxCreateString(arr.encode('utf-8'))
 
     elif isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
         dim = arr.ctypes.shape_as(mwSize)
@@ -733,7 +736,7 @@ def ndarray_to_mxarray(libmx, arr):
         ctypes.memmove(mat_data, np_data, len(np_data))
 
 
-    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ('O', 'S'):
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ('O', 'S', 'U'):
         dim = arr.ctypes.shape_as(mwSize)
 
         pm = libmx.mxCreateCellArray(arr.ndim, dim)
