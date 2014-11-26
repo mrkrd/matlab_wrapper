@@ -89,3 +89,11 @@ matlab_wrapper.
 ralili mentioned that it seem to be working on Windows 7, where:
 
 lib_dir = join(matlab_root, "bin", "win32")
+
+* Proper handling of char arrays (strings)
+
+The equivalent type of MATLAB's strings (char arrays) should be
+ndarray with dtype=S.
+
+At the moment MATLAB's multidimensional char array conversion to
+Python is not correct.
