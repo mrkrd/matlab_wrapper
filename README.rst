@@ -82,7 +82,7 @@ listed below, please let us know and we will update the table.
 ==========  ===========  ==========  ==========
 OS [#os]_   MATLAB       Bits [#b]_  Status
 ==========  ===========  ==========  ==========
-GNU/Linux   2014b (8.4)  64          working (pre-release, py.test OK)
+GNU/Linux   2014b (8.4)  64          working (py.test OK)
 GNU/Linux   2014a (8.3)  64          only double arrays working [#f]_
 GNU/Linux   2013b (8.2)  64          working (py.test OK)
 GNU/Linux   2013a (8.1)  64          working (py.test OK)
@@ -95,13 +95,11 @@ OS X        2013a (8.1)  64          working
 ==========  ===========  ==========  ==========
 
 
-.. [#os] OSX support is not very good, because cannot test it.  It
-         should work, but if you have problems, let me know and we
-         might figure it out.
+.. [#os] OSX version should work, but I'm unable to test it.  If you
+         have problems, let me know and we might figure it out.
 
-.. [#b] I have tested only 64-bit systems.  If you are interested in
-        32-bit version, please contact me per email or open an issue
-        on GitHub.
+.. [#b] I have tested only 64-bit systems.  32-bit architectures are
+        enabled, but not well tested.
 
 .. [#f] Due to bug in ``engGetVariable``: Error using save, Can't
         write file stdio.
@@ -122,6 +120,9 @@ Issues and Bugs
 
 https://github.com/mrkrd/matlab_wrapper/issues
 
+When reporting problems, specify which Python (version, architecture,
+distribution), MATLAB (version, architecture) and OS (version,
+architecture) are you using.
 
 
 Alternatives
