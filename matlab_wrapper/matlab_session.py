@@ -342,33 +342,16 @@ def load_engine_and_libs(matlab_root, options):
         version = tuple([int(v) for v in version_str.split('.')[:2]])
 
     except ValueError:
-        warnings.warn("Unable to identify MATLAB version, please let us know: https://github.com/mrkrd/matlab_wrapper")
+        warnings.warn("Unable to identify MATLAB (libeng) version.")
         version = None
 
 
-    if (system == 'Linux') and (version == (8,1)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Linux') and (version == (8,2)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
+    if (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on Linux, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
-
-    elif (system == 'Linux') and (version == (8,4)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Windows') and (version == (8,3)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Darwin') and (version == (8,1)) and (bits == '64bit'):
-        pass
 
     elif (system == 'Darwin') and (version == (8,3)) and (bits == '64bit'):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
 
-    else:
-        warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know about that and visit out website <https://github.com/mrkrd/matlab_wrapper> or send me an email <marekrud@gmail.com>.  Your MATLAB version is {version} on {os} with {bits}.".format(version=version,os=system,bits=bits))
 
 
 
