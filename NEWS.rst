@@ -1,6 +1,12 @@
 matlab_wrapper -- history of user-visible changes
 =================================================
 
+Changes in version (NEXT)
+-------------------------
+
++ enable 32-bit versions (thanks to Ralili)
++ disable MATLAB version checking
+
 
 Changes in version 0.9.4
 ------------------------
