@@ -97,3 +97,7 @@ ndarray with dtype=S.
 
 At the moment MATLAB's multidimensional char array conversion to
 Python is not correct.
+
+* Error when getting empty Matlab object                             :urgent:
+
+Issue #6 by Jeremy Moreau
