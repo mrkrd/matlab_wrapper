@@ -6,6 +6,8 @@
 
 * Documentation
 
+** Apply guidelines from writethedocs.org
+
 ** Sphinx
 
 ** Python hosted
