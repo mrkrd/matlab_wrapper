@@ -6,9 +6,16 @@
 
 * Documentation
 
+http://docs.writethedocs.org/
+
 ** Sphinx
 
 ** Python hosted
+
+** CONTRIBUTING
+
+   - small code snippet illustrating an issue
+
 
 * Spread the word
 
