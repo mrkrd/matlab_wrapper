@@ -99,6 +99,17 @@ def test_get_string(matlab):
     assert_equal(s, 'asdf')
 
 
+def test_get_string_2d(matlab):
+    matlab.eval("s = char('aaaó', 'bb', 'c')")
+    matlab.eval("s(1,1,3) = 'x'")
+    s = matlab.get('s')
+
+    print()
+    print(s)
+
+    # assert_equal(s, np.array(['aaa', 'bb', 'c'], dtype='S3'))
+
+
 def test_get_float(matlab):
     matlab.eval("a = 1.")
     a = matlab.get('a')

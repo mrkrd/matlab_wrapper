@@ -568,12 +568,82 @@ def mxarray_to_ndarray(libmx, pm):
 
 
     elif class_name == 'char':
-        datasize = numelems + 1
+        datasize = numelems*elem_size
 
-        pystring = ctypes.create_string_buffer(datasize+1)
-        libmx.mxGetString(pm, pystring, datasize)
+        buf = ctypes.create_string_buffer(datasize)
+        ctypes.memmove(buf, data, datasize)
 
-        out = pystring.value
+        # print(dims[:ndims])
+        # print(datasize)
+
+        # print('buf:', buf.raw)
+
+
+        ### utf16 (matlab) -> utf32 (numpy)
+        buf_utf32 = ctypes.create_string_buffer(2*len(buf))
+
+        buf_utf32[::4] = buf[::2]
+        buf_utf32[1::4] = buf[1::2]
+
+        # print(buf_utf32.raw)
+
+
+        ### We need C ordered data to have continues individual
+        ### strings
+        tmp_array_f = np.ndarray(
+            buffer=buf_utf32,
+            shape=dims[:ndims],
+            dtype=np.uint32,
+            order='F'
+        )
+
+        tmp_array_c = tmp_array_f.copy(order='C')
+
+        # print('xxx', pyarray[1][0])
+
+        # print(list(pyarray.data))
+
+
+
+        print(dims[:ndims])
+
+        d = list(dims[:ndims])
+        d.pop(1)
+
+
+        pyarray = np.ndarray(
+            buffer=tmp_array_c.data,
+            shape=d,
+            dtype='U4'
+        )
+
+
+
+        # v = pyarray.view('U1')
+
+        # print("VIEW:\n", v)
+
+        # for r in v:
+        #     r, = r
+        #     print(len(r))
+        #     u = r.decode('utf-16')
+        #     print(u)
+
+        # print(len(s))
+
+        # u = s.decode('utf-16')
+
+        # print(pyarray.dtype)
+
+        # print(pyarray.strides)
+        # print(np.char.decode(pyarray, 'utf-16'))
+
+        out = pyarray
+
+        # pystring = ctypes.create_string_buffer(datasize+1)
+        # libmx.mxGetString(pm, pystring, datasize)
+
+        # out = pystring.value
 
 
     elif class_name == 'logical':
@@ -590,6 +660,7 @@ def mxarray_to_ndarray(libmx, pm):
         )
 
         out = pyarray.squeeze()
+
         if out.ndim == 0:
             out, = np.atleast_1d(out)
 
