@@ -1,8 +1,14 @@
 matlab_wrapper -- history of user-visible changes
 =================================================
 
-Changes in version (NEXT)
--------------------------
+Changes in version 0.9.6
+------------------------
+
++ FIX: proper handling of empty struct arrays (thanks to Jeremy Moreau)
+
+
+Changes in version 0.9.5
+------------------------
 
 + enable 32-bit versions (thanks to Ralili)
 + disable MATLAB version checking
