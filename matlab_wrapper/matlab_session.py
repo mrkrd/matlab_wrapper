@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2010-2013 Joakim Möller
-# Copyright 2014 Marek Rudnicki
+# Copyright 2014-2015 Marek Rudnicki
 #
 # This file is part of matlab_wrapper.
 #
