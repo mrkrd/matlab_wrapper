@@ -436,6 +436,17 @@ def test_get_uninitialized_struct(matlab):
 
 
 
+def test_get_empty_struct(matlab):
+
+    matlab.eval("s = struct([])")
+
+    s = matlab.get('s')
+
+    desired = np.array([])
+
+    assert_equal(s, desired)
+
+
 
 def test_put_struct(matlab):
 

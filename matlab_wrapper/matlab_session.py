@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2010-2013 Joakim Möller
-# Copyright 2014 Marek Rudnicki
+# Copyright 2014-2015 Marek Rudnicki
 #
 # This file is part of matlab_wrapper.
 #
@@ -693,7 +693,7 @@ def mxarray_to_ndarray(libmx, pm):
             field_names.append(field_name)
 
         ### Get all fields
-        records = []
+        records = []            # [(x0, y0, z0), (x1, y1, z1), ... (xN, yN, zN)]
         for i in range(numelems):
             record = []
             for field_name in field_names:
@@ -708,28 +708,30 @@ def mxarray_to_ndarray(libmx, pm):
                 record.append(el)
             records.append(record)
 
-
         ### Set the dtypes right (if there is any ndarray, we want dtype=object)
-        arrays = zip(*records)
+        arrays = zip(*records)  # [(x0, x1, ... xN), (y0, y1, ... yN), (z0, z1, ... zN)]
         new_arrays = []
+
+        ## This loop is necessary, because np.rec.fromarrays() cannot
+        ## handle a list of arrays of the same size well
         for arr in arrays:
             contains_ndarray = np.any([isinstance(el, np.ndarray) for el in arr])
 
-            ## This loop is necessary, because np.rec.fromarrays()
-            ## cannot handle well a list of arrays of the same size
             if contains_ndarray:
                 newarr = np.empty(len(arr), dtype='O')
                 for i,a in enumerate(arr):
                     newarr[i] = a
-
             else:
                 newarr = np.array(arr)
 
             new_arrays.append(newarr)
 
-        out = np.rec.fromarrays(new_arrays, names=field_names)
-        out = out.reshape(dims[:ndims], order='F')
-        out = out.squeeze()
+        if new_arrays:
+            out = np.rec.fromarrays(new_arrays, names=field_names)
+            out = out.reshape(dims[:ndims], order='F')
+            out = out.squeeze()
+        else:
+            out = np.array([])
 
 
     else:
