@@ -110,3 +110,5 @@ Python is not correct.
 * DONE Error when getting empty Matlab object                        :urgent:
 
 Issue #6 by Jeremy Moreau
+
+* Explicit warning when using Python 3
