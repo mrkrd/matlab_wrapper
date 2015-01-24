@@ -4,9 +4,9 @@
 
 * IPython notebook support
 
-* Documentation
+* TODO Documentation
 
-** Apply guidelines from writethedocs.org
+** DONE Apply guidelines from writethedocs.org
 
    http://docs.writethedocs.org/
 
@@ -17,6 +17,15 @@
 ** CONTRIBUTING
 
    - small code snippet illustrating an issue
+   - python setup.py develop --user
+   - py.test
+
+
+** FAQ
+
+   - matlab_root (modify PATH, ln -s)
+   - /bin/csh
+
 
 
 * Spread the word
