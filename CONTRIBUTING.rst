@@ -22,7 +22,7 @@ Reporting Issues
 
 
 
-.. _FAQ: FAQ.rst
+.. _FAQ: https://pythonhosted.org/matlab_wrapper/faq.html
 
 
 
@@ -31,8 +31,9 @@ Reporting Issues
 Contributing new Code
 ---------------------
 
-- The source code is hosted on GitHub_ and patches or pull requests
-  are very welcome!
+- Source code is located at: https://github.com/mrkrd/matlab_wrapper
+
+- Patches or pull requests are very welcome!
 
 - Good place to start is the TODO.org_ file (best viewd in Emacs
   org-mode).  At the moment, all new features and ideas go through
@@ -54,10 +55,11 @@ Contributing new Code
 - Each new feature should have a test case in the tests directory.
   Make sure that tests are passing using py.test_.
 
-- Add your name to AUTHORS.rst
+- Add your name to AUTHORS.rst_ file.
 
 
 .. _GitHub: https://github.com/mrkrd/matlab_wrapper
-.. _TODO.org: TODO.org
+.. _TODO.org: https://raw.githubusercontent.com/mrkrd/matlab_wrapper/master/TODO.org
 .. _email: marekrud@gmail.com
 .. _py.test: http://pytest.org
+.. _AUTHORS.rst: https://github.com/mrkrd/matlab_wrapper/blob/master/AUTHORS.rst

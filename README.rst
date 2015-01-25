@@ -57,7 +57,7 @@ NEWS_.
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
 .. _ctypes: https://docs.python.org/2/library/ctypes.html
-.. _NEWS: NEWS.rst
+.. _NEWS: https://pythonhosted.org/matlab_wrapper/news.html
 
 
 
@@ -78,16 +78,13 @@ installation tool) from your command line::
 
 
 
-
 Contribute
 ----------
 
-First, check our guidelines in CONTRIBUTING.rst_ file.
+Check our CONTRIBUTING_ guidelines.
 
-- Issue Tracker: https://github.com/mrkrd/matlab_wrapper/issues
-- Source Code: https://github.com/mrkrd/matlab_wrapper
+.. _CONTRIBUTING: https://pythonhosted.org/matlab_wrapper/contributing.html
 
-.. _CONTRIBUTING.rst: CONTRIBUTING.rst
 
 
 Support
@@ -100,53 +97,8 @@ If you are having issues, please let us know either by:
 
 Before reporting an issue, check FAQ_ and CONTRIBUTING_.
 
-.. _FAQ: FAQ.rst
-.. _CONTRIBUTING: CONTRIBUTING.rst
-
-
-
-Alternatives
-------------
-
-(last updated on June 17, 2014)
-
-- pymatlab_
-
-  - pure Python, no compilation, using ctypes (good)
-  - quite raw (ugly)
-  - memory leaks (bad)
-
-- mlabwrap_
-
-  - cool interface, mlab.sin() (good)
-  - needs compilation (bad)
-  - not much development (bad)
-
-- mlab_
-
-  - similar interface to mlabwrap (good)
-  - using raw pipes (hmm)
-  - there is another very old package with `the same name
-    <http://claymore.engineer.gvsu.edu/~steriana/Python/pymat.html>`_
-    (ugly)
-
-- pymatbridge_
-
-  - actively developed (good)
-  - client-server architecture with ZeroMQ and JSON, complex (ugly)
-  - missing basic functions, there's no ``put`` (bad)
-  - nice IPython Notebook support (good)
-
-
-
-There is a nice overview of the `available packages`_ at
-StackOverflow.
-
-
-.. _mlabwrap: http://mlabwrap.sourceforge.net/
-.. _mlab: https://github.com/ewiger/mlab
-.. _pymatbridge: https://github.com/arokem/python-matlab-bridge
-.. _`available packages`: https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python/23762412#23762412
+.. _FAQ: https://pythonhosted.org/matlab_wrapper/faq.html
+.. _CONTRIBUTING: https://pythonhosted.org/matlab_wrapper/contributing.html
 
 
 
@@ -165,7 +117,5 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 License
 -------
 
-The project is licensed under the `GNU General Public License v3`_ or
+The project is licensed under the GNU General Public License v3 or
 later (GPLv3+).
-
-.. _`GNU General Public License v3`: COPYING.txt

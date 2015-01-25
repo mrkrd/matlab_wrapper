@@ -189,6 +189,7 @@ class MatlabSession(object):
         ----------
         name : str
             Name of the variable in MATLAB workspace.
+
         Returns
         -------
         array_like

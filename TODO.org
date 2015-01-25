@@ -10,9 +10,9 @@
 
    http://docs.writethedocs.org/
 
-** Sphinx
+** DONE Sphinx
 
-** Python hosted
+** DONE Python hosted
 
 ** DONE CONTRIBUTING
 

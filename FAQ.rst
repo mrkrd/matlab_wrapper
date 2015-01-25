@@ -9,6 +9,9 @@ Error: Unknown MATLAB location?
 
 TODO: explain how to fix it
 
+At the moment, you can check the documentation of the MatlabSession
+class (``matlab_root`` parameter).
+
 
 
 Error using save, Can't write file stdio?
@@ -69,3 +72,48 @@ OS X        2013a (8.1)  64          working
 
 .. [#f] Due to bug in ``engGetVariable``: Error using save, Can't
         write file stdio.
+
+
+
+Is there alternative software?
+------------------------------
+
+(last updated on June 17, 2014)
+
+- pymatlab_
+
+  - pure Python, no compilation, using ctypes (good)
+  - quite raw (ugly)
+  - memory leaks (bad)
+
+- mlabwrap_
+
+  - cool interface, mlab.sin() (good)
+  - needs compilation (bad)
+  - not much development (bad)
+
+- mlab_
+
+  - similar interface to mlabwrap (good)
+  - using raw pipes (hmm)
+  - there is another very old package with `the same name
+    <http://claymore.engineer.gvsu.edu/~steriana/Python/pymat.html>`_
+    (ugly)
+
+- pymatbridge_
+
+  - actively developed (good)
+  - client-server architecture with ZeroMQ and JSON, complex (ugly)
+  - missing basic functions, there's no ``put`` (bad)
+  - nice IPython Notebook support (good)
+
+
+
+There is a nice overview of the `available packages`_ at
+StackOverflow.
+
+
+.. _mlabwrap: http://mlabwrap.sourceforge.net/
+.. _mlab: https://github.com/ewiger/mlab
+.. _pymatbridge: https://github.com/arokem/python-matlab-bridge
+.. _`available packages`: https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python/23762412#23762412
