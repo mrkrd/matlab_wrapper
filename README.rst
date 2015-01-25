@@ -6,6 +6,8 @@ matlab_wrapper
 scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
 
+:Homepage: https://github.com/mrkrd/matlab_wrapper
+:Documentation: https://pythonhosted.org/matlab_wrapper/
 
 
 Usage
@@ -80,17 +82,18 @@ installation tool) from your command line::
 Contribute
 ----------
 
-- Guidelines: https://github.com/mrkrd/matlab_wrapper/CONTRIBUTING.rst
+First, check our guidelines in CONTRIBUTING.rst_ file.
+
 - Issue Tracker: https://github.com/mrkrd/matlab_wrapper/issues
 - Source Code: https://github.com/mrkrd/matlab_wrapper
 
-
+.. _CONTRIBUTING.rst: CONTRIBUTING.rst
 
 
 Support
 -------
 
-If you are having issues, please let us know by either:
+If you are having issues, please let us know either by:
 
 - opening a new issue: https://github.com/mrkrd/matlab_wrapper/issues
 - per email: Marek Rudnicki <marekrud@gmail.com>
