@@ -83,8 +83,6 @@ Contribute
 
 Check our CONTRIBUTING_ guidelines.
 
-.. _CONTRIBUTING: https://pythonhosted.org/matlab_wrapper/contributing.html
-
 
 
 Support
