@@ -121,3 +121,5 @@ Python is not correct.
 Issue #6 by Jeremy Moreau
 
 * Explicit warning when using Python 3
+
+* Setup a mailing list
