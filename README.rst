@@ -44,6 +44,7 @@ Features
 --------
 
 - Access MATLAB variables and functions from Python
+- Multiplatform: GNU/Linux, Windows, OS X
 - On-the-fly conversion between MATLAB and Numpy data types
 - Support for MATLAB's numerical, logical, struct and cell arrays
 - Pure Python, no need to compile anything (*matlab_wrapper* talks to
@@ -76,42 +77,10 @@ installation tool) from your command line::
 
 
 
-Platforms
----------
-
-If you are using *matlab_wrapper* with MATLAB version or OS, which are
-not listed below, please let us know and we will update the table.
-
-==========  ===========  ==========  ==========
-OS [#os]_   MATLAB       Bits [#b]_  Status
-==========  ===========  ==========  ==========
-GNU/Linux   2014b (8.4)  64          working (py.test OK)
-GNU/Linux   2014a (8.3)  64          only double arrays working [#f]_
-GNU/Linux   2013b (8.2)  64          working (py.test OK)
-GNU/Linux   2013a (8.1)  64          working (py.test OK)
-
-Windows     2014b (8.4)  32          reported working
-Windows     2014a (8.3)  64          working (py.test OK)
-
-OS X        2014a (8.3)  64          only double arrays working [#f]_
-OS X        2013a (8.1)  64          working
-==========  ===========  ==========  ==========
-
-
-.. [#os] OSX version should work, but I'm unable to test it.  If you
-         have problems, let me know and we might figure it out.
-
-.. [#b] We have tested only 64-bit systems.  32-bit architectures are
-        enabled, but not well tested.
-
-.. [#f] Due to bug in ``engGetVariable``: Error using save, Can't
-        write file stdio.
-
-
-
 Contribute
 ----------
 
+- Guidelines: https://github.com/mrkrd/matlab_wrapper/CONTRIBUTING.rst
 - Issue Tracker: https://github.com/mrkrd/matlab_wrapper/issues
 - Source Code: https://github.com/mrkrd/matlab_wrapper
 
@@ -126,10 +95,10 @@ If you are having issues, please let us know by either:
 - opening a new issue: https://github.com/mrkrd/matlab_wrapper/issues
 - per email: Marek Rudnicki <marekrud@gmail.com>
 
-When reporting problems, specify which Python (version, architecture,
-distribution), MATLAB (version, architecture) and OS (version,
-architecture) are you using.
+Before reporting an issue, check FAQ_ and CONTRIBUTING_.
 
+.. _FAQ: FAQ.rst
+.. _CONTRIBUTING: CONTRIBUTING.rst
 
 
 

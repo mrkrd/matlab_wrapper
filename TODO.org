@@ -14,14 +14,14 @@
 
 ** Python hosted
 
-** CONTRIBUTING
+** DONE CONTRIBUTING
 
    - small code snippet illustrating an issue
    - python setup.py develop --user
    - py.test
 
 
-** FAQ
+** TODO FAQ
 
    - matlab_root (modify PATH, ln -s)
    - /bin/csh
