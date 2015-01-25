@@ -6,7 +6,7 @@ scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
 
 The documentation is located at
-https://pythonhosted.org/matlab_wrapper/
+https://pythonhosted.org/matlab_wrapper/.
 
 
 
