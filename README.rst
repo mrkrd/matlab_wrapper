@@ -1,13 +1,13 @@
 matlab_wrapper
 ==============
 
-
 *matlab_wrapper* allows you to use MATLAB directly from your Python
 scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
 
-:Homepage: https://github.com/mrkrd/matlab_wrapper
-:Documentation: https://pythonhosted.org/matlab_wrapper/
+The documentation is located at
+https://pythonhosted.org/matlab_wrapper/
+
 
 
 Usage
