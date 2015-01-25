@@ -4,17 +4,28 @@
 
 * IPython notebook support
 
-* Documentation
+* TODO Documentation
 
-http://docs.writethedocs.org/
+** DONE Apply guidelines from writethedocs.org
 
-** Sphinx
+   http://docs.writethedocs.org/
 
-** Python hosted
+** DONE Sphinx
 
-** CONTRIBUTING
+** DONE Python hosted
+
+** DONE CONTRIBUTING
 
    - small code snippet illustrating an issue
+   - python setup.py develop --user
+   - py.test
+
+
+** TODO FAQ
+
+   - matlab_root (modify PATH, ln -s)
+   - /bin/csh
+
 
 
 * Spread the word
@@ -108,3 +119,7 @@ Python is not correct.
 * DONE Error when getting empty Matlab object                        :urgent:
 
 Issue #6 by Jeremy Moreau
+
+* Explicit warning when using Python 3
+
+* Setup a mailing list

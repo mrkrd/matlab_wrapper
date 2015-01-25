@@ -104,7 +104,7 @@ class MatlabSession(object):
             matlab_root = find_matlab_root()
 
         if matlab_root is None:
-            raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root set properly).")
+            raise RuntimeError("Unknown MATLAB location: try to initialize MatlabSession with matlab_root set properly.")
 
         self._matlab_root = matlab_root
 
@@ -189,6 +189,7 @@ class MatlabSession(object):
         ----------
         name : str
             Name of the variable in MATLAB workspace.
+
         Returns
         -------
         array_like
