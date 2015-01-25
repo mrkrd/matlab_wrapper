@@ -54,6 +54,7 @@ Contributing new Code
 - Each new feature should have a test case in the tests directory.
   Make sure that tests are passing using py.test_.
 
+- Add your name to AUTHORS.rst
 
 
 .. _GitHub: https://github.com/mrkrd/matlab_wrapper
