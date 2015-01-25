@@ -78,6 +78,8 @@ OS X        2013a (8.1)  64          working
 Is there alternative software?
 ------------------------------
 
+Yes.  Here's a little compilation:
+
 (last updated on June 17, 2014)
 
 - pymatlab_
@@ -113,6 +115,7 @@ There is a nice overview of the `available packages`_ at
 StackOverflow.
 
 
+.. _pymatlab: http://pymatlab.sourceforge.net/
 .. _mlabwrap: http://mlabwrap.sourceforge.net/
 .. _mlab: https://github.com/ewiger/mlab
 .. _pymatbridge: https://github.com/arokem/python-matlab-bridge
