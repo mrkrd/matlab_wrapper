@@ -18,9 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with matlab_wrapper.  If not, see <http://www.gnu.org/licenses/>.
 
-
+#Python 2.x compability
 from __future__ import print_function, division, absolute_import
 from __future__ import unicode_literals
+
+import six
+from six import string_types
+
+if six.PY2:
+    from future_builtins import zip
+
 
 __author__ = "Marek Rudnicki"
 __copyright__ = "Copyright 2014, Marek Rudnicki"
@@ -55,7 +62,7 @@ mwIndex = c_size_t
 
 # Use the system's default encoding for en-/decoding strings 
 import sys
-encd_str = sys.getdefaultencoding()
+encd_str = 'utf-8'
 
 wrap_script = r"""
 ERRSTR__ = '';
@@ -579,14 +586,7 @@ def mxarray_to_ndarray(libmx, pm):
 
 
     elif class_name == 'char':
-        # datasize = numelems + 1
-
-        # pystring = ctypes.create_string_buffer(datasize+1)
-        # libmx.mxGetString(pm, pystring, datasize)
-
-        # out = pystring.value.decode('ascii')
-
-        out = libmx.mxArrayToString(pm)
+        out= libmx.mxArrayToString(pm)
 
 
     elif class_name == 'logical':
@@ -689,7 +689,7 @@ def ndarray_to_mxarray(libmx, arr):
 
     ### Prepare `arr` object (convert to ndarray if possible), assert
     ### data type
-    if isinstance(arr, str):
+    if isinstance(arr, string_types):
         pass
 
     elif isinstance(arr, dict):
@@ -711,7 +711,7 @@ def ndarray_to_mxarray(libmx, arr):
         raise NotImplementedError("Data type not supported: {}".format(type(arr)))
 
     ### Convert ndarray to mxarray
-    if isinstance(arr, str):
+    if isinstance(arr, string_types):
         pm = libmx.mxCreateString(arr)
 
     elif isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
