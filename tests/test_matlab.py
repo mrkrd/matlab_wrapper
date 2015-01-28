@@ -178,7 +178,7 @@ def test_put_unicode(matlab):
 
     output = matlab.output_buffer.split()
 
-    s = output[-1].decode('utf-8')
+    s = output[-1]
 
     assert_equal(s, u"Łódź")
 

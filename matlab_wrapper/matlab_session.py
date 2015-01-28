@@ -53,6 +53,9 @@ class Engine(ctypes.Structure):
 mwSize = c_size_t
 mwIndex = c_size_t
 
+# Use the system's default encoding for en-/decoding strings 
+import sys
+encd_str = sys.getdefaultencoding()
 
 wrap_script = r"""
 ERRSTR__ = '';
@@ -160,7 +163,7 @@ class MatlabSession(object):
         if self._output_buffer is None:
             raise RuntimeError("Output buffer was not initialized properly.")
         else:
-            return self._output_buffer.value.decode('ascii')
+            return self._output_buffer.value.decode(encd_str)
 
 
 
@@ -538,7 +541,7 @@ def mxarray_to_ndarray(libmx, pm):
     dims = libmx.mxGetDimensions(pm)
     numelems = libmx.mxGetNumberOfElements(pm)
     elem_size = libmx.mxGetElementSize(pm)
-    class_name = libmx.mxGetClassName(pm)
+    class_name = libmx.mxGetClassName(pm).decode('ascii')
     is_numeric = libmx.mxIsNumeric(pm)
     is_complex = libmx.mxIsComplex(pm)
     data = libmx.mxGetData(pm)
@@ -686,7 +689,7 @@ def ndarray_to_mxarray(libmx, arr):
 
     ### Prepare `arr` object (convert to ndarray if possible), assert
     ### data type
-    if isinstance(arr, str) or isinstance(arr, unicode):
+    if isinstance(arr, str):
         pass
 
     elif isinstance(arr, dict):
@@ -707,15 +710,9 @@ def ndarray_to_mxarray(libmx, arr):
     else:
         raise NotImplementedError("Data type not supported: {}".format(type(arr)))
 
-
-
-
     ### Convert ndarray to mxarray
     if isinstance(arr, str):
         pm = libmx.mxCreateString(arr)
-
-    elif isinstance(arr, unicode):
-        pm = libmx.mxCreateString(arr.encode('utf-8'))
 
     elif isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
         dim = arr.ctypes.shape_as(mwSize)
@@ -763,7 +760,7 @@ def ndarray_to_mxarray(libmx, arr):
 
         name_num = len(arr.dtype.names)
 
-        names_p = (c_char_p*name_num)(*[c_char_p(name) for name in arr.dtype.names])
+        names_p = (c_char_p*name_num)(*[c_char_p(name.encode('ascii')) for name in arr.dtype.names])
 
         pm = libmx.mxCreateStructArray(
             arr.ndim,
@@ -941,7 +938,7 @@ class CCharP_To_Unicode(object):
         pass
 
     def __call__(self, ccharp):
-        u = c_char_p(ccharp).value.decode('ascii')
+        u = c_char_p(ccharp).value.decode(encd_str)
         return u
 
 
@@ -950,5 +947,5 @@ class Unicode_To_CCharP(object):
         pass
 
     def from_param(self, unicode_str):
-        ccharp = c_char_p(unicode_str.encode('ascii'))
+        ccharp = c_char_p(unicode_str.encode(encd_str))
         return ccharp
