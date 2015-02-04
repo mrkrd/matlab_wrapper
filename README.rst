@@ -1,35 +1,9 @@
 matlab_wrapper
 ==============
 
-*MATLAB wrapper for Python*
-
-
-:Name: matlab_wrapper
-:Author: Marek Rudnicki
-:Email: marekrud@gmail.com
-:URL: https://github.com/mrkrd/matlab_wrapper
-:License: GNU General Public License v3 or later (GPLv3+)
-
-
-
-Description
------------
-
-*matlab_wrapper* allows you to use MATLAB in a convenient way in
-Python.  You can call MATLAB functions and access workspace variables
-directly from your Python scripts and interactive shell.  MATLAB
-session is started in the background and appears as a regular Python
-module.
-
-*matlab_wrapper* talks to `MATLAB engine library`_ using ctypes_, so
-you do not have to compile anything!
-
-Numerical, logical, struct and cell arrays are supported.
-
-
-.. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
-.. _ctypes: https://docs.python.org/2/library/ctypes.html
-
+*matlab_wrapper* allows you to use MATLAB directly from your Python
+scripts and an interactive shell.  MATLAB session is started in the
+background and appears as a regular Python module.
 
 
 
@@ -64,106 +38,64 @@ More examples are in the examples_ directory!
 .. _examples: https://github.com/mrkrd/matlab_wrapper/tree/master/examples
 
 
-Requirements
-------------
 
-- Python (2.7)
-- Matlab (various versions)
-- Numpy (1.8)
+Features
+--------
 
+- Access MATLAB variables and functions from Python
+- Multiplatform: GNU/Linux, Windows, OS X
+- On-the-fly conversion between MATLAB and Numpy data types
+- Support for MATLAB's numerical, logical, struct and cell arrays
+- Pure Python, no need to compile anything (*matlab_wrapper* talks to
+  `MATLAB engine library`_ using ctypes_)
 
+For a complete list of changes including new features, check the
+NEWS.rst_ file.
 
-Platforms
----------
+.. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
+.. _ctypes: https://docs.python.org/2/library/ctypes.html
+.. _NEWS.rst: NEWS.rst
 
-If you are using *matlab_wrapper* with MATLAB version and OS not
-listed below, please let us know and we will update the table.
-
-==========  ===========  ==========  ==========
-OS [#os]_   MATLAB       Bits [#b]_  Status
-==========  ===========  ==========  ==========
-GNU/Linux   2014a (8.3)  64          only double arrays working [#f]_
-GNU/Linux   2013b (8.2)  64          working (py.test OK)
-GNU/Linux   2013a (8.1)  64          working (py.test OK)
-
-Windows     2014a (8.3)  64          working (py.test OK)
-
-OS X        2014a (8.3)  64          only double arrays working [#f]_
-OS X        2013a (8.1)  64          working
-==========  ===========  ==========  ==========
-
-
-.. [#os] OSX support is not very good, because cannot test it.  It
-         should work, but if you have problem, let me know and we
-         might figure it out.
-
-.. [#b] I have tested only 64-bit systems.  If you are interested in
-        32-bit version, please contact me per email or open an issue
-        on GitHub.
-
-.. [#f] Due to bug in ``engGetVariable``: Error using save, Can't
-        write file stdio.
 
 
 Installation
 ------------
 
-::
+First, make sure that you have the following components installed:
+
+- Python (2.7, no Python 3 support yet)
+- MATLAB (various versions)
+- Numpy
+
+
+Next, install *matlab_wrapper* using pip (the standard Python package
+installation tool) from your command line::
 
    pip install matlab_wrapper
 
 
 
+Contribute
+----------
 
-Issues and Bugs
----------------
+Check our CONTRIBUTING_ guidelines.
 
-https://github.com/mrkrd/matlab_wrapper/issues
-
-
-
-Alternatives
-------------
-
-(last updated on June 17, 2014)
-
-- pymatlab_
-
-  - pure Python, no compilation, using ctypes (good)
-  - quite raw (ugly)
-  - memory leaks (bad)
-
-- mlabwrap_
-
-  - cool interface, mlab.sin() (good)
-  - needs compilation (bad)
-  - not much development (bad)
-
-- mlab_
-
-  - similar interface to mlabwrap (good)
-  - using raw pipes (hmm)
-  - there is another very old package with `the same name
-    <http://claymore.engineer.gvsu.edu/~steriana/Python/pymat.html>`_
-    (ugly)
-
-- pymatbridge_
-
-  - actively developed (good)
-  - client-server architecture with ZeroMQ and JSON, complex (ugly)
-  - missing basic functions, there's no ``put`` (bad)
-  - nice ipython notebook support (good)
+- Issue Tracker: https://github.com/mrkrd/matlab_wrapper/issues
+- Source Code: https://github.com/mrkrd/matlab_wrapper
 
 
 
-Note: There is a nice overview of the `available packages`_ at
-StackOverflow.
+Support
+-------
 
+If you are having issues, please let us know.  We have a mailing list
+located at: matlab_wrapper@googlegroups.com
 
-.. _mlabwrap: http://mlabwrap.sourceforge.net/
-.. _mlab: https://github.com/ewiger/mlab
-.. _pymatbridge: https://github.com/arokem/python-matlab-bridge
-.. _`available packages`: https://stackoverflow.com/questions/2883189/calling-matlab-functions-from-python/23762412#23762412
+Before reporting an issue, check FAQ_ and CONTRIBUTING_.
+
+.. _FAQ: FAQ.rst
+.. _CONTRIBUTING: CONTRIBUTING.rst
+
 
 
 Acknowledgments
@@ -177,12 +109,9 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 .. _`The MathWorks, Inc`: http://www.mathworks.com/
 
 
-Donations
----------
 
-If *matlab_wrapper* is useful for your work, please consider making a
-donation.  It will be a great feedback!
+License
+-------
 
-- Flattr: https://flattr.com/submit/auto?user_id=mrkrd&url=https://github.com/mrkrd/matlab_wrapper
-- Gittip: https://www.gittip.com/mrkrd/
-- Bitcoin: 1KwZMQCWJW8VbcmHT2xeMc4wsAeZinLeGe
+The project is licensed under the GNU General Public License v3 or
+later (GPLv3+).

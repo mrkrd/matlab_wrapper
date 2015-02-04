@@ -13,6 +13,7 @@ __author__ = "Marek Rudnicki"
 import numpy as np
 from numpy.testing import assert_equal, assert_almost_equal
 import pandas as pd
+import six
 
 import matlab_wrapper
 
@@ -168,6 +169,32 @@ def test_put_string(matlab):
     s = output[-1]
 
     assert_equal(s, "asdf")
+
+
+
+
+def test_put_unicode(matlab):
+    matlab.put('s', u"Łódź")
+    matlab.eval('s')
+
+    output = matlab.output_buffer.split()
+
+    s = output[-1]
+
+    assert_equal(s, u"Łódź")
+
+
+
+def test_put_unicode_len(matlab):
+    s = u"Łódź"
+    matlab.put('s', s)
+    matlab.eval('length(s)')
+
+    output = matlab.output_buffer.split()
+
+    length = int(output[-1])
+
+    assert_equal(length, len(s))
 
 
 
@@ -373,7 +400,7 @@ def test_get_struct(matlab):
     desired = np.array([
         (1, 'a'),
         (2*1j, 'b')
-    ], dtype=[('x', 'complex'), ('y', 'S1')])
+    ], dtype=[('x', np.complex_), ('y', six.text_type)])
 
     assert_equal(s, desired)
 
@@ -398,6 +425,17 @@ def test_get_uninitialized_struct(matlab):
 
     assert_equal(s, desired)
 
+
+
+def test_get_empty_struct(matlab):
+
+    matlab.eval("s = struct([])")
+
+    s = matlab.get('s')
+
+    desired = np.array([])
+
+    assert_equal(s, desired)
 
 
 
@@ -472,7 +510,7 @@ def test_put_get_dataframe(matlab):
     desired = np.array([
         (0, 1.0, 2, 'asdf'),
         (1, 1.1, 4, 'marek')
-    ], dtype=[('index', '<i8'), ('a', '<f8'), ('b', '<i8'), ('c', 'S5')])
+    ], dtype=[('index', '<i8'), ('a', '<f8'), ('b', '<i8'), ('c', six.text_type)])
 
     assert_equal(a, desired)
 

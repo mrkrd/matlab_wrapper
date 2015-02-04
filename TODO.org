@@ -2,15 +2,31 @@
 #+AUTHOR: Marek Rudnicki
 #+CATEGORY: matlab_wrap
 
-* TODO Donation info
-
 * IPython notebook support
 
-* Documentation
+* TODO Documentation
 
-** Sphinx
+** DONE Apply guidelines from writethedocs.org
 
-** Python hosted
+   http://docs.writethedocs.org/
+
+** DONE Sphinx
+
+** DONE Python hosted
+
+** DONE CONTRIBUTING
+
+   - small code snippet illustrating an issue
+   - python setup.py develop --user
+   - py.test
+
+
+** TODO FAQ
+
+   - matlab_root (modify PATH, ln -s)
+   - /bin/csh
+
+
 
 * Spread the word
 
@@ -50,8 +66,60 @@ Could be activated via by a parameters:
 
 matlab = matlab_wrapper.MatlabSession(auto_int_conversion=True)
 
-* Make sure that the MATLAB process is gone in __del__()
+* DONE Make sure that the MATLAB process is gone in __del__()      :canceled:
 
   - add `matlab._pid' (use features('getpid') in MATLAB, might not
     exist in older versions)
   - check the standard library for the best kill/terminate functions
+
+
+<2014-08-14 Thu>
+
+MATLAB is unresponsive during execution of svd().  I did not find a
+way to reasonably kill the process (in destructor), because it hangs
+in the engClose().
+
+
+
+#+BEGIN_SRC matlab
+m.workspace.svd(np.zeros((10000,10000)))
+#+END_SRC
+
+
+#+BEGIN_SRC python
+### Get MATLAB PID
+try:
+    pid = self.workspace.feature('getpid')
+    self._pid = int(pid)
+except RuntimeError:
+    self._pid = None
+#+END_SRC
+
+* DONE Check for /bin/csh on Linux
+
+/bin/csh is required by libeng and the lack of it could be detected by
+matlab_wrapper.
+
+<2014-09-29 Mon>
+
+* DONE Enable 32-bit versions
+
+ralili mentioned that it seem to be working on Windows 7, where:
+
+lib_dir = join(matlab_root, "bin", "win32")
+
+* Proper handling of char arrays (strings)
+
+The equivalent type of MATLAB's strings (char arrays) should be
+ndarray with dtype=S.
+
+At the moment MATLAB's multidimensional char array conversion to
+Python is not correct.
+
+* DONE Error when getting empty Matlab object                        :urgent:
+
+Issue #6 by Jeremy Moreau
+
+* Explicit warning when using Python 3
+
+* Setup a mailing list

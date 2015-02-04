@@ -20,13 +20,12 @@ import matlab_wrapper
 def main():
 
     matlab = matlab_wrapper.MatlabSession()
-    w = matlab.workspace
 
-    kaiser = w.kaiser(81., 8.)
+    kaiser = matlab.workspace.kaiser(81., 8.)
 
-    b = w.fir1(80., 0.5, kaiser)
+    b = matlab.workspace.fir1(80., 0.5, kaiser)
 
-    w.freqz(b, 1., nout=0)
+    matlab.workspace.freqz(b, 1., nout=0)
 
     raw_input("Press enter to finish...")
 

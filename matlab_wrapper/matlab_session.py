@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Copyright 2010-2013 Joakim Möller
-# Copyright 2014 Marek Rudnicki
+# Copyright 2014-2015 Marek Rudnicki
 #
 # This file is part of matlab_wrapper.
 #
@@ -18,9 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with matlab_wrapper.  If not, see <http://www.gnu.org/licenses/>.
 
-
+#Python 2.x compability
 from __future__ import print_function, division, absolute_import
 from __future__ import unicode_literals
+
+import six
+from six import string_types
+
+if six.PY2:
+    from future_builtins import zip
+
 
 __author__ = "Marek Rudnicki"
 __copyright__ = "Copyright 2014, Marek Rudnicki"
@@ -50,6 +57,9 @@ class Engine(ctypes.Structure):
 mwSize = c_size_t
 mwIndex = c_size_t
 
+# Use the system's default encoding for en-/decoding strings 
+import sys
+encd_str = 'utf-8'
 
 wrap_script = r"""
 ERRSTR__ = '';
@@ -89,8 +99,8 @@ class MatlabSession(object):
         Access to the MATLAB output buffer.
     workspace : Workspace object
         Easy access to MATLAB workspace, e.g. `workspace.sin([1.,2.,3.])`.
-    version : str
-        MATLAB version number.
+    version : tuple or None
+        MATLAB/libeng version number.
 
     Methods
     -------
@@ -110,16 +120,21 @@ class MatlabSession(object):
             matlab_root = find_matlab_root()
 
         if matlab_root is None:
-            raise RuntimeError("MATLAB location is unknown (try to initialize MatlabSession with matlab_root set properly).")
+            raise RuntimeError("Unknown MATLAB location: try to initialize MatlabSession with matlab_root set properly.")
 
         self._matlab_root = matlab_root
 
 
-        engine, libeng, libmx = load_engine_and_libs(matlab_root, options)
+        engine, libeng, libmx, version = load_engine_and_libs(matlab_root, options)
 
         self._libeng = libeng
         self._libmx = libmx
         self._ep = engine
+
+
+
+        ### MATLAB/libeng version
+        self.version = version
 
 
 
@@ -141,9 +156,10 @@ class MatlabSession(object):
 
 
 
-
     def __del__(self):
         self._libeng.engClose(self._ep)
+
+
 
 
     @property
@@ -151,7 +167,8 @@ class MatlabSession(object):
         if self._output_buffer is None:
             raise RuntimeError("Output buffer was not initialized properly.")
         else:
-            return self._output_buffer.value.decode('ascii')
+            return self._output_buffer.value.decode(encd_str)
+
 
 
     def eval(self, expression):
@@ -188,6 +205,7 @@ class MatlabSession(object):
         ----------
         name : str
             Name of the variable in MATLAB workspace.
+
         Returns
         -------
         array_like
@@ -218,15 +236,6 @@ class MatlabSession(object):
         self._libmx.mxDestroyArray(pm)
 
 
-    @property
-    def version(self):
-        """Return string representing MATLAB version."""
-
-        self.eval("VERSION__ = version")
-        ver = self.get('VERSION__')
-        self.eval("clear VERSION__")
-
-        return ver
 
 
 
@@ -285,7 +294,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "glnxa64")
         else:
-            unsupported_platforms()
+            lib_dir = join(matlab_root, "bin", "glnx86")
 
         libeng = Library(
             join(lib_dir, 'libeng.so')
@@ -299,12 +308,16 @@ def load_engine_and_libs(matlab_root, options):
             options=options
         )
 
+        ### Check for /bin/csh
+        if not os.path.exists("/bin/csh"):
+            warnings.warn("MATLAB engine requires /bin/csh.  Please, install it on your system or matlab_wrapper will not work properly.")
+
 
     elif system == 'Windows':
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "win64")
         else:
-            unsupported_platforms()
+            lib_dir = join(matlab_root, "bin", "win32")
 
         if lib_dir not in os.environ['PATH']:
             os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
@@ -319,7 +332,7 @@ def load_engine_and_libs(matlab_root, options):
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "maci64")
         else:
-            unsupported_platforms(system,bits)
+            unsupported_platform(system, bits)
 
         libeng = Library(
             join(lib_dir, 'libeng.dylib')
@@ -335,7 +348,7 @@ def load_engine_and_libs(matlab_root, options):
 
 
     else:
-        unsupported_platforms()
+        unsupported_platform(system, bits)
 
 
 
@@ -346,29 +359,16 @@ def load_engine_and_libs(matlab_root, options):
         version = tuple([int(v) for v in version_str.split('.')[:2]])
 
     except ValueError:
-        warnings.warn("Unable to identify MATLAB version, please let us know: https://github.com/mrkrd/matlab_wrapper")
+        warnings.warn("Unable to identify MATLAB (libeng) version.")
+        version = None
 
 
-    if (system == 'Linux') and (version == (8,1)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Linux') and (version == (8,2)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
+    if (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on Linux, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
-
-    elif (system == 'Windows') and (version == (8,3)) and (bits == '64bit'):
-        pass
-
-    elif (system == 'Darwin') and (version == (8,1)) and (bits == '64bit'):
-        pass
 
     elif (system == 'Darwin') and (version == (8,3)) and (bits == '64bit'):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
 
-    else:
-        warnings.warn("Hi! You are using MATLAB version that was never tested with matlab_wrapper.  Please, let us know about that and visit out website <https://github.com/mrkrd/matlab_wrapper> or send us an email <marekrud@gmail.com>.  Your MATLAB version is {version} on {os} with {bits}.".format(version=version_str,os=system,bits=bits))
 
 
 
@@ -376,12 +376,12 @@ def load_engine_and_libs(matlab_root, options):
     engine = libeng.engOpen(command)
 
 
-    return engine, libeng, libmx
+    return engine, libeng, libmx, version
 
 
 
 
-def unsopported_paltform(system, bits):
+def unsupported_platform(system, bits):
     raise RuntimeError("""Unsopported OS or architecture: {} {}.
 
 Please, check our website about supported platforms:
@@ -547,7 +547,7 @@ def mxarray_to_ndarray(libmx, pm):
     dims = libmx.mxGetDimensions(pm)
     numelems = libmx.mxGetNumberOfElements(pm)
     elem_size = libmx.mxGetElementSize(pm)
-    class_name = libmx.mxGetClassName(pm)
+    class_name = libmx.mxGetClassName(pm).decode('ascii')
     is_numeric = libmx.mxIsNumeric(pm)
     is_complex = libmx.mxIsComplex(pm)
     data = libmx.mxGetData(pm)
@@ -585,14 +585,7 @@ def mxarray_to_ndarray(libmx, pm):
 
 
     elif class_name == 'char':
-        # datasize = numelems + 1
-
-        # pystring = ctypes.create_string_buffer(datasize+1)
-        # libmx.mxGetString(pm, pystring, datasize)
-
-        # out = pystring.value.decode('ascii')
-
-        out = libmx.mxArrayToString(pm)
+        out= libmx.mxArrayToString(pm)
 
 
     elif class_name == 'logical':
@@ -641,7 +634,7 @@ def mxarray_to_ndarray(libmx, pm):
             field_names.append(field_name)
 
         ### Get all fields
-        records = []
+        records = []            # [(x0, y0, z0), (x1, y1, z1), ... (xN, yN, zN)]
         for i in range(numelems):
             record = []
             for field_name in field_names:
@@ -656,28 +649,30 @@ def mxarray_to_ndarray(libmx, pm):
                 record.append(el)
             records.append(record)
 
-
         ### Set the dtypes right (if there is any ndarray, we want dtype=object)
-        arrays = zip(*records)
+        arrays = zip(*records)  # [(x0, x1, ... xN), (y0, y1, ... yN), (z0, z1, ... zN)]
         new_arrays = []
+
+        ## This loop is necessary, because np.rec.fromarrays() cannot
+        ## handle a list of arrays of the same size well
         for arr in arrays:
             contains_ndarray = np.any([isinstance(el, np.ndarray) for el in arr])
 
-            ## This loop is necessary, because np.rec.fromarrays()
-            ## cannot handle well a list of arrays of the same size
             if contains_ndarray:
                 newarr = np.empty(len(arr), dtype='O')
                 for i,a in enumerate(arr):
                     newarr[i] = a
-
             else:
                 newarr = np.array(arr)
 
             new_arrays.append(newarr)
 
-        out = np.rec.fromarrays(new_arrays, names=field_names)
-        out = out.reshape(dims[:ndims], order='F')
-        out = out.squeeze()
+        if new_arrays:
+            out = np.rec.fromarrays(new_arrays, names=field_names)
+            out = out.reshape(dims[:ndims], order='F')
+            out = out.squeeze()
+        else:
+            out = np.array([])
 
 
     else:
@@ -693,7 +688,7 @@ def ndarray_to_mxarray(libmx, arr):
 
     ### Prepare `arr` object (convert to ndarray if possible), assert
     ### data type
-    if isinstance(arr, str):
+    if isinstance(arr, string_types):
         pass
 
     elif isinstance(arr, dict):
@@ -714,11 +709,8 @@ def ndarray_to_mxarray(libmx, arr):
     else:
         raise NotImplementedError("Data type not supported: {}".format(type(arr)))
 
-
-
-
     ### Convert ndarray to mxarray
-    if isinstance(arr, str):
+    if isinstance(arr, string_types):
         pm = libmx.mxCreateString(arr)
 
     elif isinstance(arr, np.ndarray) and arr.dtype.kind in ['i','u','f','c']:
@@ -752,7 +744,7 @@ def ndarray_to_mxarray(libmx, arr):
         ctypes.memmove(mat_data, np_data, len(np_data))
 
 
-    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ('O', 'S'):
+    elif isinstance(arr, np.ndarray) and arr.dtype.kind in ('O', 'S', 'U'):
         dim = arr.ctypes.shape_as(mwSize)
 
         pm = libmx.mxCreateCellArray(arr.ndim, dim)
@@ -767,7 +759,7 @@ def ndarray_to_mxarray(libmx, arr):
 
         name_num = len(arr.dtype.names)
 
-        names_p = (c_char_p*name_num)(*[c_char_p(name) for name in arr.dtype.names])
+        names_p = (c_char_p*name_num)(*[c_char_p(name.encode('ascii')) for name in arr.dtype.names])
 
         pm = libmx.mxCreateStructArray(
             arr.ndim,
@@ -827,7 +819,11 @@ class Library(object):
 
             self.engOutputBuffer.argtypes = (POINTER(Engine), c_char_p, c_int)
             self.engOutputBuffer.restype = c_int
+            self.engOutputBuffer.errcheck = error_check
 
+            self.engClose.argtypes = (POINTER(Engine),)
+            self.engClose.restype = c_int
+            self.engClose.errcheck = error_check
 
         elif 'libmx' in name:
 
@@ -941,7 +937,7 @@ class CCharP_To_Unicode(object):
         pass
 
     def __call__(self, ccharp):
-        u = c_char_p(ccharp).value.decode('ascii')
+        u = c_char_p(ccharp).value.decode(encd_str)
         return u
 
 
@@ -950,5 +946,5 @@ class Unicode_To_CCharP(object):
         pass
 
     def from_param(self, unicode_str):
-        ccharp = c_char_p(unicode_str.encode('ascii'))
+        ccharp = c_char_p(unicode_str.encode(encd_str))
         return ccharp
