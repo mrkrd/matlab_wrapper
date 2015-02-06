@@ -130,3 +130,25 @@ Issue #6 by Jeremy Moreau
 * DONE Setup a mailing list
 
 matlab_wrapper@googlegroups.com
+
+* Investigate `undefined symbol' error
+
+Might have something to do with matplotlib.
+
+Eventually put in FAQ.
+
+
+    790     """
+    791     def __init__(self, name, **kwargs):
+--> 792         self._lib = ctypes.CDLL(name, **kwargs)
+    793
+    794         if 'libeng' in name:
+
+/usr/lib/python2.7/ctypes/__init__.pyc in __init__(self, name, mode, handle, use_errno, use_last_error)
+    363
+    364         if handle is None:
+--> 365             self._handle = _dlopen(self._name, mode)
+    366         else:
+    367             self._handle = handle
+
+OSError: /nfs/system/opt/MATLAB/R2014b/bin/glnxa64/libicuio.so.52: undefined symbol: _ZN6icu_5213UnicodeString9doReplaceEiiPKDsii
