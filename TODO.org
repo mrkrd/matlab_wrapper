@@ -43,6 +43,11 @@ https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
 
 * TODO Python 3 support
 
+** Review PR #7 from David
+
+https://github.com/mrkrd/matlab_wrapper/pull/7
+
+
 * Auto-detect the number of output arguments (nout)
 
   - check get_nout() from oct2py:
@@ -122,4 +127,6 @@ Issue #6 by Jeremy Moreau
 
 * Explicit warning when using Python 3
 
-* Setup a mailing list
+* DONE Setup a mailing list
+
+matlab_wrapper@googlegroups.com
