@@ -280,6 +280,8 @@ def load_engine_and_libs(matlab_root, options):
         else:
             lib_dir = join(matlab_root, "bin", "glnx86")
 
+        check_python_matlab_architecture(bits, lib_dir)
+
         libeng = Library(
             join(lib_dir, 'libeng.so')
         )
@@ -294,7 +296,7 @@ def load_engine_and_libs(matlab_root, options):
 
         ### Check for /bin/csh
         if not os.path.exists("/bin/csh"):
-            warnings.warn("MATLAB engine requires /bin/csh.  Please, install it on your system or matlab_wrapper will not work properly.")
+            warnings.warn("MATLAB engine requires /bin/csh.  Please install it on your system or matlab_wrapper will not work properly.")
 
 
     elif system == 'Windows':
@@ -303,6 +305,9 @@ def load_engine_and_libs(matlab_root, options):
         else:
             lib_dir = join(matlab_root, "bin", "win32")
 
+        check_python_matlab_architecture(bits, lib_dir)
+
+        ## We need to modify PATH, to find MATLAB libs
         if lib_dir not in os.environ['PATH']:
             os.environ['PATH'] = lib_dir + ';' + os.environ['PATH']
 
@@ -317,6 +322,8 @@ def load_engine_and_libs(matlab_root, options):
             lib_dir = join(matlab_root, "bin", "maci64")
         else:
             unsupported_platform(system, bits)
+
+        check_python_matlab_architecture(bits, lib_dir)
 
         libeng = Library(
             join(lib_dir, 'libeng.dylib')
@@ -365,10 +372,17 @@ def load_engine_and_libs(matlab_root, options):
 
 
 
+def check_python_matlab_architecture(bits, lib_dir):
+    """Make sure we can find corresponding installation of Python and MATLAB."""
+    if not os.path.isdir(lib_dir):
+        raise RuntimeError("It seem that you are using {bits} version of Python, but there's no matching MATLAB installation in {lib_dir}.".format(bits=bits, lib_dir=lib_dir))
+
+
+
 def unsupported_platform(system, bits):
     raise RuntimeError("""Unsopported OS or architecture: {} {}.
 
-Please, check our website about supported platforms:
+Check our website about supported platforms:
 https://github.com/mrkrd/matlab_wrapper""".format(system, bits))
 
 
