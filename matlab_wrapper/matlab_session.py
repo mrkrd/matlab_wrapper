@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with matlab_wrapper.  If not, see <http://www.gnu.org/licenses/>.
 
-#Python 2.x compability
+# Python 2.x compability
 from __future__ import print_function, division, absolute_import
 from __future__ import unicode_literals
 
@@ -60,9 +60,8 @@ class Engine(ctypes.Structure):
 mwSize = c_size_t
 mwIndex = c_size_t
 
-# Use the system's default encoding for en-/decoding strings 
-import sys
-encd_str = 'utf-8'
+# Use the system's default encoding for en-/decoding strings
+default_encoding = 'utf-8'
 
 wrap_script = r"""
 ERRSTR__ = '';
@@ -170,7 +169,7 @@ class MatlabSession(object):
         if self._output_buffer is None:
             raise RuntimeError("Output buffer was not initialized properly.")
         else:
-            return self._output_buffer.value.decode(encd_str)
+            return self._output_buffer.value.decode(default_encoding)
 
 
 
@@ -938,7 +937,7 @@ class CCharP_To_Unicode(object):
         pass
 
     def __call__(self, ccharp):
-        u = c_char_p(ccharp).value.decode(encd_str)
+        u = c_char_p(ccharp).value.decode(default_encoding)
         return u
 
 
@@ -947,5 +946,5 @@ class Unicode_To_CCharP(object):
         pass
 
     def from_param(self, unicode_str):
-        ccharp = c_char_p(unicode_str.encode(encd_str))
+        ccharp = c_char_p(unicode_str.encode(default_encoding))
         return ccharp
