@@ -100,8 +100,8 @@ def test_get_string(matlab):
 
 
 def test_get_string_2d(matlab):
-    matlab.eval("s = char('aaaó', 'bb', 'c')")
-    matlab.eval("s(1,1,3) = 'x'")
+    matlab.eval("s = char('aaaaa', 'bb', 'c')")
+    matlab.eval("s(1,1,2) = 'x'")
     s = matlab.get('s')
 
     print()

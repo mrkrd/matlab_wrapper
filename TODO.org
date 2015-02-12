@@ -123,6 +123,71 @@ ndarray with dtype=S.
 At the moment MATLAB's multidimensional char array conversion to
 Python is not correct.
 
+<2015-02-12 Thu>
+
+py.test -sv test_matlab.py::test_get_string_2d
+
+
+#+BEGIN_SRC matlab
+>> s = char('aaaa', 'bbb', 'c');
+>> s(1,1,3) = 'x';
+>> s
+
+s(:,:,1) =
+
+aaaa
+bbb
+c
+
+s(:,:,2) =
+
+
+
+
+
+s(:,:,3) =
+
+x
+
+#+END_SRC
+
+Loaded by scipy.io.loadmat():
+
+array([[u'a\x00x', u'a', u'a', u'a'],
+       [u'b', u'b', u'b', u' '],
+       [u'c', u' ', u' ', u' ']],
+      dtype='<U3')
+
+
+Which does not look great. :/
+
+
+However, in a simpler case:
+
+#+BEGIN_SRC matlab
+>> save('s.mat', 's')
+>>
+>>
+>> s = char('aaaa', 'bbb', 'c')
+
+s =
+
+aaaa
+bbb
+c
+
+>> save('s.mat', 's')
+#+END_SRC
+
+We get:
+
+array([u'aaaa', u'bbb ', u'c   '],
+      dtype='<U4')
+
+which is OK.
+
+
+
 * DONE Error when getting empty Matlab object                        :urgent:
 
 Issue #6 by Jeremy Moreau

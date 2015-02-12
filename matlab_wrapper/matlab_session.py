@@ -575,6 +575,8 @@ def mxarray_to_ndarray(libmx, pm):
         buf = ctypes.create_string_buffer(datasize)
         ctypes.memmove(buf, data, datasize)
 
+        print()
+
         # print(dims[:ndims])
         # print(datasize)
 
@@ -587,7 +589,7 @@ def mxarray_to_ndarray(libmx, pm):
         buf_utf32[::4] = buf[::2]
         buf_utf32[1::4] = buf[1::2]
 
-        # print(buf_utf32.raw)
+        print(buf_utf32.raw)
 
 
         ### We need C ordered data to have continues individual
@@ -599,26 +601,39 @@ def mxarray_to_ndarray(libmx, pm):
             order='F'
         )
 
-        tmp_array_c = tmp_array_f.copy(order='C')
+        print(tmp_array_f[0,:,0])
+
+        # tmp_array_c = tmp_array_f.copy(order='C')
 
         # print('xxx', pyarray[1][0])
 
+        # print(tmp_array_c)
+
         # print(list(pyarray.data))
 
+        # TODO: 2nd arg in transpose is fixed
+        tmp_array_c = np.transpose(tmp_array_f, (1,0,2)).copy(order='F')
 
-
+        print(tmp_array_c.shape)
         print(dims[:ndims])
 
-        d = list(dims[:ndims])
-        d.pop(1)
+        # array_dims = list(dims[:ndims])
+        # str_len = array_dims.pop(0) # 2nd dimension (1) is the string length
 
+        array_dims = tmp_array_c.shape[1:][::-1]
+        str_len = tmp_array_c.shape[0]
+
+        # array_dims.reverse()
+
+        print(array_dims)
 
         pyarray = np.ndarray(
             buffer=tmp_array_c.data,
-            shape=d,
-            dtype='U4'
+            shape=array_dims,
+            dtype=('U', str_len)
         )
 
+        print(pyarray.dtype)
 
 
         # v = pyarray.view('U1')
