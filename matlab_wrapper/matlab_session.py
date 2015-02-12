@@ -141,8 +141,10 @@ class MatlabSession(object):
 
 
     def __del__(self):
-        self._libeng.engClose(self._ep)
-
+        try:
+            self._libeng.engClose(self._ep)
+        except AttributeError:
+            pass
 
 
 
