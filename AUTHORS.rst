@@ -9,8 +9,8 @@ Authors
 * Joakim Möller <joakim.moller@molflow.com>
 
 
-
 Contributors
 ------------
 
 * Michael Schutte <michael.schutte@tum.de>
+* David Ronnenberg <david.ronnenberg@tu-dortmund.de>
