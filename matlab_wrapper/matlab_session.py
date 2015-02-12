@@ -35,11 +35,14 @@ from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
 
 from matlab_wrapper.typeconv import dtype_to_mat
 
+
 class mxArray(ctypes.Structure):
     pass
 
+
 class Engine(ctypes.Structure):
     pass
+
 
 mwSize = c_size_t
 mwIndex = c_size_t
@@ -59,6 +62,7 @@ if exist('ERRSTR__','var') == 0
     ERRSTR__='';
 end
 """
+
 
 class MatlabSession(object):
     """Matlab session.
@@ -94,8 +98,6 @@ class MatlabSession(object):
 
     """
     def __init__(self, options='-nosplash', matlab_root=None, buffer_size=0):
-        system = platform.system()
-
 
         if (matlab_root is None) and ('MATLABROOT' in os.environ):
             matlab_root = os.environ['MATLABROOT']
@@ -107,7 +109,6 @@ class MatlabSession(object):
             raise RuntimeError("Unknown MATLAB location: try to initialize MatlabSession with matlab_root set properly.")
 
         self._matlab_root = matlab_root
-
 
         engine, libeng, libmx, version = load_engine_and_libs(matlab_root, options)
 
@@ -231,7 +232,6 @@ class MatlabSession(object):
         return r
 
 
-
 def error_check(result, func, arguments):
     if (isinstance(result, c_int) and result != 0) or (isinstance(result, POINTER(mxArray)) and not bool(result)):
         raise RuntimeError(
@@ -241,7 +241,6 @@ def error_check(result, func, arguments):
                 arguments=str(arguments)
             ))
     return result
-
 
 
 def find_matlab_root():
@@ -261,7 +260,6 @@ def find_matlab_root():
     return matlab_root
 
 
-
 def load_engine_and_libs(matlab_root, options):
     """Load and return `libeng` and `libmx`.  Start and return MATLAB
     engine.
@@ -279,7 +277,6 @@ def load_engine_and_libs(matlab_root, options):
         bits = '32bits'
 
     system = platform.system()
-
 
     if system == 'Linux':
         if bits == '64bit':
@@ -305,7 +302,6 @@ def load_engine_and_libs(matlab_root, options):
         if not os.path.exists("/bin/csh"):
             warnings.warn("MATLAB engine requires /bin/csh.  Please install it on your system or matlab_wrapper will not work properly.")
 
-
     elif system == 'Windows':
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "win64")
@@ -322,7 +318,6 @@ def load_engine_and_libs(matlab_root, options):
         libmx = Library('libmx')
 
         command = None
-
 
     elif system == 'Darwin':
         if bits == '64bit':
@@ -344,12 +339,8 @@ def load_engine_and_libs(matlab_root, options):
             options=options
         )
 
-
     else:
         unsupported_platform(system, bits)
-
-
-
 
     ### Check MATLAB version
     try:
@@ -360,23 +351,16 @@ def load_engine_and_libs(matlab_root, options):
         warnings.warn("Unable to identify MATLAB (libeng) version.")
         version = None
 
-
-    if (system == 'Linux') and (version == (8,3)) and (bits == '64bit'):
+    if (system == 'Linux') and (version == (8, 3)) and (bits == '64bit'):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on Linux, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
 
-    elif (system == 'Darwin') and (version == (8,3)) and (bits == '64bit'):
+    elif (system == 'Darwin') and (version == (8, 3)) and (bits == '64bit'):
         warnings.warn("You are using MATLAB version 8.3 (R2014a) on OS X, which appears to have a bug in engGetVariable().  You will only be able to use arrays of type double.")
-
-
-
 
     ### Start the engine
     engine = libeng.engOpen(command)
 
-
     return engine, libeng, libmx, version
-
-
 
 
 def check_python_matlab_architecture(bits, lib_dir):
@@ -385,14 +369,11 @@ def check_python_matlab_architecture(bits, lib_dir):
         raise RuntimeError("It seem that you are using {bits} version of Python, but there's no matching MATLAB installation in {lib_dir}.".format(bits=bits, lib_dir=lib_dir))
 
 
-
 def unsupported_platform(system, bits):
     raise RuntimeError("""Unsopported OS or architecture: {} {}.
 
 Check our website about supported platforms:
 https://github.com/mrkrd/matlab_wrapper""".format(system, bits))
-
-
 
 
 class Workspace(object):
@@ -425,7 +406,6 @@ class Workspace(object):
 
         """
         self._session_ref = session_ref
-
 
     def __getattr__(self, attr):
 
