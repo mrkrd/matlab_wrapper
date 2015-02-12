@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Design a lowpas FIR filter.  Based on an example from `freqz`
-documentation.
+"""This demo prints MATLAB version.
 
 """
 
@@ -13,7 +12,6 @@ __copyright__ = "Copyright 2014, Marek Rudnicki"
 __license__ = "GPLv3+"
 
 
-import numpy as np
 import matlab_wrapper
 
 
@@ -21,13 +19,9 @@ def main():
 
     matlab = matlab_wrapper.MatlabSession()
 
-    kaiser = matlab.workspace.kaiser(81., 8.)
+    print("matlab.version:", matlab.version)
 
-    b = matlab.workspace.fir1(80., 0.5, kaiser)
-
-    matlab.workspace.freqz(b, 1., nout=0)
-
-    raw_input("Press enter to finish...")
+    print("raw version string from MATLAB workspace:", matlab.workspace.version())
 
 
 if __name__ == "__main__":

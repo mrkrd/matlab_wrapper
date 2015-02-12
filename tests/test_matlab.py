@@ -172,6 +172,32 @@ def test_put_string(matlab):
 
 
 
+def test_put_unicode(matlab):
+    matlab.put('s', u"Łódź")
+    matlab.eval('s')
+
+    output = matlab.output_buffer.split()
+
+    s = output[-1].decode('utf-8')
+
+    assert_equal(s, u"Łódź")
+
+
+
+def test_put_unicode_len(matlab):
+    s = u"Łódź"
+    matlab.put('s', s)
+    matlab.eval('length(s)')
+
+    output = matlab.output_buffer.split()
+
+    length = int(output[-1])
+
+    assert_equal(length, len(s))
+
+
+
+
 def test_put_float(matlab):
     matlab.put('a', 3.2)
     matlab.eval('a')
@@ -398,6 +424,17 @@ def test_get_uninitialized_struct(matlab):
 
     assert_equal(s, desired)
 
+
+
+def test_get_empty_struct(matlab):
+
+    matlab.eval("s = struct([])")
+
+    s = matlab.get('s')
+
+    desired = np.array([])
+
+    assert_equal(s, desired)
 
 
 

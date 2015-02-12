@@ -22,10 +22,10 @@
 from __future__ import division, print_function, absolute_import
 from __future__ import unicode_literals
 
-__version__ = "0.9.3"
+__version__ = "0.9.6"
 
 __author__ = "Marek Rudnicki"
-__copyright__ = "Copyright 2014, Marek Rudnicki"
+__copyright__ = "Copyright 2014-2015, Marek Rudnicki"
 __license__ = "GPLv3+"
 
 
