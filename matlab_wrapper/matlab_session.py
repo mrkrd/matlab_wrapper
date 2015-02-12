@@ -272,9 +272,9 @@ def load_engine_and_libs(matlab_root, options):
 
     """
     if sys.maxsize > 2**32:
-        bits = '64bits'
+        bits = '64bit'
     else:
-        bits = '32bits'
+        bits = '32bit'
 
     system = platform.system()
 
