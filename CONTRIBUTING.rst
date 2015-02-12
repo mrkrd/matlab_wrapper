@@ -6,7 +6,7 @@ Contributing Guidelines
 Reporting Issues
 ----------------
 
-- Make sure that the issue is not addressed in the FAQ_.
+- Make sure that the issue is not addressed in the FAQ.rst_ file.
 
 - Provide information about your setup:
 
@@ -20,10 +20,12 @@ Reporting Issues
 - At best, provide a small code snippet, that can run by itself and
   illustrates the problem.
 
+- Use either our `issue tracker`_ or our `mailing list`_.
 
 
-.. _FAQ: https://pythonhosted.org/matlab_wrapper/faq.html
-
+.. _FAQ.rst: FAQ.rst
+.. _issue tracker: https://github.com/mrkrd/matlab_wrapper/issues
+.. _mailing list: matlab_wrapper@googlegroups.com
 
 
 
@@ -33,15 +35,15 @@ Contributing new Code
 
 - Source code is located at: https://github.com/mrkrd/matlab_wrapper
 
-- Patches or pull requests are very welcome!
+- Your patches or pull requests are very welcome!
 
 - Good place to start is the TODO.org_ file (best viewd in Emacs
   org-mode).  At the moment, all new features and ideas go through
   this file.  The status of the item can be: DONE (already
   implemented), TODO (some work has been started) or no status (not
   started).  The items often contain some intended implementation
-  details and remarks.  You can also contact me per email_ for further
-  details.
+  details and remarks.  You can also request more details through our
+  mailing list at matlab_wrapper@googlegroups.com.
 
 - Coding style is mostly PEP8 compliant and The Zen of Python is your
   friend::
@@ -58,8 +60,6 @@ Contributing new Code
 - Add your name to AUTHORS.rst_ file.
 
 
-.. _GitHub: https://github.com/mrkrd/matlab_wrapper
-.. _TODO.org: https://raw.githubusercontent.com/mrkrd/matlab_wrapper/master/TODO.org
-.. _email: marekrud@gmail.com
+.. _TODO.org: TODO.org
 .. _py.test: http://pytest.org
-.. _AUTHORS.rst: https://github.com/mrkrd/matlab_wrapper/blob/master/AUTHORS.rst
+.. _AUTHORS.rst: AUTHORS.rst

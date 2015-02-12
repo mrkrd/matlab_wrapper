@@ -5,9 +5,6 @@ matlab_wrapper
 scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
 
-The documentation is located at
-https://pythonhosted.org/matlab_wrapper/.
-
 
 
 Usage
@@ -53,11 +50,11 @@ Features
   `MATLAB engine library`_ using ctypes_)
 
 For a complete list of changes including new features, check the
-NEWS_.
+NEWS.rst_ file.
 
 .. _`MATLAB engine library`: http://www.mathworks.com/help/matlab/matlab_external/introducing-matlab-engine.html
 .. _ctypes: https://docs.python.org/2/library/ctypes.html
-.. _NEWS: https://pythonhosted.org/matlab_wrapper/news.html
+.. _NEWS.rst: NEWS.rst
 
 
 
@@ -83,20 +80,21 @@ Contribute
 
 Check our CONTRIBUTING_ guidelines.
 
+- Issue Tracker: https://github.com/mrkrd/matlab_wrapper/issues
+- Source Code: https://github.com/mrkrd/matlab_wrapper
+
 
 
 Support
 -------
 
-If you are having issues, please let us know either by:
-
-- opening a new issue: https://github.com/mrkrd/matlab_wrapper/issues
-- per email: Marek Rudnicki <marekrud@gmail.com>
+If you are having issues, please let us know.  We have a mailing list
+located at: matlab_wrapper@googlegroups.com
 
 Before reporting an issue, check FAQ_ and CONTRIBUTING_.
 
-.. _FAQ: https://pythonhosted.org/matlab_wrapper/faq.html
-.. _CONTRIBUTING: https://pythonhosted.org/matlab_wrapper/contributing.html
+.. _FAQ: FAQ.rst
+.. _CONTRIBUTING: CONTRIBUTING.rst
 
 
 

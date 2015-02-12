@@ -43,6 +43,11 @@ https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
 
 * TODO Python 3 support
 
+** Review PR #7 from David
+
+https://github.com/mrkrd/matlab_wrapper/pull/7
+
+
 * Auto-detect the number of output arguments (nout)
 
   - check get_nout() from oct2py:
@@ -110,6 +115,8 @@ lib_dir = join(matlab_root, "bin", "win32")
 
 * TODO Proper handling of char arrays (strings)
 
+Branch: char_arrays
+
 The equivalent type of MATLAB's strings (char arrays) should be
 ndarray with dtype=S.
 
@@ -122,4 +129,28 @@ Issue #6 by Jeremy Moreau
 
 * Explicit warning when using Python 3
 
-* Setup a mailing list
+* DONE Setup a mailing list
+
+matlab_wrapper@googlegroups.com
+
+* Investigate `undefined symbol' error
+
+Might have something to do with matplotlib.
+
+Eventually put in FAQ.
+
+
+    790     """
+    791     def __init__(self, name, **kwargs):
+--> 792         self._lib = ctypes.CDLL(name, **kwargs)
+    793
+    794         if 'libeng' in name:
+
+/usr/lib/python2.7/ctypes/__init__.pyc in __init__(self, name, mode, handle, use_errno, use_last_error)
+    363
+    364         if handle is None:
+--> 365             self._handle = _dlopen(self._name, mode)
+    366         else:
+    367             self._handle = handle
+
+OSError: /nfs/system/opt/MATLAB/R2014b/bin/glnxa64/libicuio.so.52: undefined symbol: _ZN6icu_5213UnicodeString9doReplaceEiiPKDsii
