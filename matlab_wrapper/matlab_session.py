@@ -271,8 +271,13 @@ def load_engine_and_libs(matlab_root, options):
     libmx
 
     """
-    bits, linkage = platform.architecture()
+    if sys.maxsize > 2**32:
+        bits = '64bits'
+    else:
+        bits = '32bits'
+
     system = platform.system()
+
 
     if system == 'Linux':
         if bits == '64bit':
