@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""Evaluate m-file and collect the results.
+"""Evaluate m-file and collect the results.  A simple MATLAB script is
+located in my_script.m
 
 """
 from __future__ import division, print_function, absolute_import
