@@ -106,7 +106,6 @@ Yes.  Here's a little compilation:
 
   - actively developed (good)
   - client-server architecture with ZeroMQ and JSON, complex (ugly)
-  - missing basic functions, there's no ``put`` (bad)
   - nice IPython Notebook support (good)
 
 
