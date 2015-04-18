@@ -80,7 +80,14 @@ Is there alternative software?
 
 Yes.  Here's a little compilation:
 
-(last updated on June 17, 2014)
+(last updated on April 18, 2015)
+
+
+- `MATLAB Engine for Python`_
+
+  - official package from Mathworks
+  - supports new versions of Python (2.7, 3.3, and 3.4)
+  - ships with MATLAB 2015a
 
 - pymatlab_
 
@@ -114,6 +121,7 @@ There is a nice overview of the `available packages`_ at
 StackOverflow.
 
 
+.. _`MATLAB Engine for Python`: http://mathworks.com/help/matlab/matlab-engine-for-python.html
 .. _pymatlab: http://pymatlab.sourceforge.net/
 .. _mlabwrap: http://mlabwrap.sourceforge.net/
 .. _mlab: https://github.com/ewiger/mlab
