@@ -155,3 +155,28 @@ Eventually put in FAQ.
     367             self._handle = handle
 
 OSError: /nfs/system/opt/MATLAB/R2014b/bin/glnxa64/libicuio.so.52: undefined symbol: _ZN6icu_5213UnicodeString9doReplaceEiiPKDsii
+
+* TODO Investigate indexing in Numpy and MATLAB
+
+https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
+
+<2015-04-18 Sat 19:41>
+
+Numpy indexing comes form C.
+
+In carr[i][j][k], k iterates the most inner row arrays.
+
+<2015-04-18 Sat 20:16>
+
+arr.ravel('K') flattens array in the order the elements occur in the
+memory.
+
+<2015-04-18 Sat 21:06>
+
+matlab_wrapper has to take into account inverse indexing:
+
+ [i][j][k][l] <=> [l][k][j][i]
+
+as well as row vs column of the inner most arrays:
+
+ [i][j][k][l] <=> [k][l][j][i]
