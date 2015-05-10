@@ -4,7 +4,7 @@
 
 * IPython notebook support
 
-* TODO Documentation
+* DONE Documentation
 
 ** DONE Apply guidelines from writethedocs.org
 
