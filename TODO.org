@@ -21,7 +21,7 @@
    - py.test
 
 
-** TODO FAQ
+** DONE FAQ
 
    - matlab_root (modify PATH, ln -s)
    - /bin/csh
