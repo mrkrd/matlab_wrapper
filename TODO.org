@@ -174,3 +174,4 @@ matlab_wrapper has to take into account inverse indexing:
 as well as row vs column of the inner most arrays:
 
  [i][j][k][l] <=> [k][l][j][i]
+* Test string parameters (path) to a function (#15)
