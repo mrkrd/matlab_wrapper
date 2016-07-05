@@ -2,8 +2,7 @@
 #+AUTHOR: Marek Rudnicki
 #+CATEGORY: matlab_wrap
 
-* IPython notebook support
-
+* TODO IPython notebook support
 * DONE Documentation
 
 ** DONE Apply guidelines from writethedocs.org
@@ -26,7 +25,7 @@
    - matlab_root (modify PATH, ln -s)
    - /bin/csh
 
-* Spread the word
+* CANCELED Spread the word
 
 ** Show HN
 
@@ -46,7 +45,7 @@ https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
 https://github.com/mrkrd/matlab_wrapper/pull/7
 
 
-* Auto-detect the number of output arguments (nout)
+* TODO Auto-detect the number of output arguments (nout)
 
   - check get_nout() from oct2py:
 
@@ -55,7 +54,7 @@ https://github.com/mrkrd/matlab_wrapper/pull/7
   - check mlabwrap
 
 
-* Auto-convert int to float in matlab.put()
+* TODO Auto-convert int to float in matlab.put()
 
 The problem is that in MATLAB this conversion is implicit and writing
 e.g.
@@ -125,13 +124,13 @@ Python is not correct.
 
 Issue #6 by Jeremy Moreau
 
-* Explicit warning when using Python 3
+* TODO Explicit warning when using Python 3
 
 * DONE Setup a mailing list
 
 matlab_wrapper@googlegroups.com
 
-* Investigate `undefined symbol' error
+* TODO Investigate `undefined symbol' error
 
 Might have something to do with matplotlib.
 
@@ -174,7 +173,7 @@ matlab_wrapper has to take into account inverse indexing:
 as well as row vs column of the inner most arrays:
 
  [i][j][k][l] <=> [k][l][j][i]
-* Test string parameters (path) to a function (#15)
+* TODO Test string parameters (path) to a function (#15)
 
 ftp://ftp.scp.byu.edu/pub/software/matlab/loadsir.m
 ftp://ftp.scp.byu.edu/data/qscat/1999/sir/queh/SAm/201/a/queh-a-SAm99-201-204.sir.gz
