@@ -93,10 +93,10 @@ Check our CONTRIBUTING_ guidelines.
 Support
 -------
 
-If you are having issues, please let us know.  We have a mailing list
-located at: matlab_wrapper@googlegroups.com
-
-Before reporting an issue, check FAQ_ and CONTRIBUTING_.
+If you are having issues, please let us know through the issue
+tracker: https://github.com/mrkrd/matlab_wrapper/issues.  Please avoid
+duplicates by searching previous issues, checking FAQ_ and
+CONTRIBUTING_.
 
 .. _FAQ: FAQ.rst
 .. _CONTRIBUTING: CONTRIBUTING.rst
