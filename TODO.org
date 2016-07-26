@@ -54,7 +54,10 @@ https://github.com/mrkrd/matlab_wrapper/pull/7
   - check mlabwrap
 
 
-* TODO Auto-convert int to float in matlab.put()
+* CANCELED Auto-convert int to float in matlab.put()
+  CLOSED: [2016-07-26 Tue 12:46]
+
+Canceled: “Explicit is better than implicit”
 
 The problem is that in MATLAB this conversion is implicit and writing
 e.g.
@@ -130,7 +133,10 @@ Issue #6 by Jeremy Moreau
 
 matlab_wrapper@googlegroups.com
 
-* TODO Investigate `undefined symbol' error
+* CANCELED Investigate `undefined symbol' error
+  CLOSED: [2016-07-26 Tue 12:47]
+
+Canceled: not able to reproduce.
 
 Might have something to do with matplotlib.
 
@@ -173,6 +179,7 @@ matlab_wrapper has to take into account inverse indexing:
 as well as row vs column of the inner most arrays:
 
  [i][j][k][l] <=> [k][l][j][i]
+
 * TODO Test string parameters (path) to a function (#15)
 
 ftp://ftp.scp.byu.edu/pub/software/matlab/loadsir.m
