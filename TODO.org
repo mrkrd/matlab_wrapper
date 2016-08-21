@@ -2,7 +2,8 @@
 #+AUTHOR: Marek Rudnicki
 #+CATEGORY: matlab_wrap
 
-* TODO IPython notebook support
+* MAYBE IPython notebook support
+  CLOSED: [2016-08-21 Sun 16:39]
 * DONE Documentation
 
 ** DONE Apply guidelines from writethedocs.org
