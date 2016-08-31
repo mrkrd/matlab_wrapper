@@ -20,12 +20,11 @@ Reporting Issues
 - At best, provide a small code snippet, that can run by itself and
   illustrates the problem.
 
-- Use either our `issue tracker`_ or our `mailing list`_.
+- Use the `issue tracker`_.
 
 
 .. _FAQ.rst: FAQ.rst
 .. _issue tracker: https://github.com/mrkrd/matlab_wrapper/issues
-.. _mailing list: matlab_wrapper@googlegroups.com
 
 
 
@@ -43,7 +42,7 @@ Contributing new Code
   implemented), TODO (some work has been started) or no status (not
   started).  The items often contain some intended implementation
   details and remarks.  You can also request more details through our
-  mailing list at matlab_wrapper@googlegroups.com.
+  issue tracker.
 
 - Coding style is mostly PEP8 compliant and The Zen of Python is your
   friend::
