@@ -185,3 +185,4 @@ as well as row vs column of the inner most arrays:
 
 ftp://ftp.scp.byu.edu/pub/software/matlab/loadsir.m
 ftp://ftp.scp.byu.edu/data/qscat/1999/sir/queh/SAm/201/a/queh-a-SAm99-201-204.sir.gz
+* TODO Create DOI for referencing
