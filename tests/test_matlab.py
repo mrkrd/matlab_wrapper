@@ -530,3 +530,12 @@ def test_put_object(matlab):
 
     with pytest.raises(NotImplementedError):
         matlab.put('foo', object())
+
+
+def test_cell_dimension(matlab):
+    command = """
+    cellNumEqualDims = { zeros(3,3); ones(3,3); rand(3,3) };
+    """
+    matlab.eval(command)
+    cellNumEqualDims = matlab.get('cellNumEqualDims')
+    assert(cellNumEqualDims.shape == (3,))
