@@ -597,19 +597,16 @@ def mxarray_to_ndarray(libmx, pm):
 
 
     elif class_name == 'cell':
-        out = []
+        out = np.empty(numelems, dtype='O')
         for i in range(numelems):
             cell = libmx.mxGetCell(pm, i)
 
             if bool(cell):
-                o = mxarray_to_ndarray(libmx, cell)
+                out[i] = mxarray_to_ndarray(libmx, cell)
             else:
                 ### uninitialized cell
-                o = None
+                out[i] = None
 
-            out.append(o)
-
-        out = np.array(out, dtype='O')
         out = out.reshape(dims[:ndims], order='F')
         out = out.squeeze()
 
