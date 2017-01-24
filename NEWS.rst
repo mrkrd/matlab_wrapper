@@ -1,6 +1,12 @@
 matlab_wrapper -- history of user-visible changes
 =================================================
 
+Changes in version 0.9.8
+------------------------
+
++ Fix problem with cells (#19)
+
+
 Changes in version 0.9.7
 ------------------------
 
