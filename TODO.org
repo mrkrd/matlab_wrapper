@@ -189,6 +189,13 @@ ftp://ftp.scp.byu.edu/data/qscat/1999/sir/queh/SAm/201/a/queh-a-SAm99-201-204.si
 * TODO Conversion of a struct (#18)
 
 https://github.com/mrkrd/matlab_wrapper/issues/18
+
+[[notmuch:id:mrkrd/matlab_wrapper/issues/18/274494320@github.com]]
+
+- backward compatibility is super important
+- possible solution is to disable squeeze'ing in a backward compatible
+  way, e.g., MatlabSession(squeeze=False)
+
 * DONE Dimension of cellarrays (#19)
   CLOSED: [2017-01-24 Tue 14:03]
 
