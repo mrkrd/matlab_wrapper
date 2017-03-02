@@ -68,7 +68,7 @@ Installation
 
 First, make sure that you have the following components installed:
 
-- Python (2.7, no Python 3 support yet)
+- Python 2.7
 - MATLAB (various versions)
 - Numpy
 

@@ -2,8 +2,8 @@
 #+AUTHOR: Marek Rudnicki
 #+CATEGORY: matlab_wrap
 
-* MAYBE IPython notebook support
-  CLOSED: [2016-08-21 Sun 16:39]
+* CANCELED IPython notebook support
+  CLOSED: [2017-03-02 Thu 18:02]
 * DONE Documentation
 
 ** DONE Apply guidelines from writethedocs.org
@@ -39,7 +39,15 @@
 
 https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
 
-* TODO Python 3 support
+* CANCELED Python 3 support
+  CLOSED: [2017-03-02 Thu 19:36]
+
+Better make a new library for Python 3 with the following properties:
+
+  - name: matlab_wrapper3 (?)
+  - don't squeeze values from Matlab
+  - assure proper indexing
+    https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
 
 ** Review PR #7 from David
 
@@ -159,7 +167,8 @@ Eventually put in FAQ.
 
 OSError: /nfs/system/opt/MATLAB/R2014b/bin/glnxa64/libicuio.so.52: undefined symbol: _ZN6icu_5213UnicodeString9doReplaceEiiPKDsii
 
-* TODO Investigate indexing in Numpy and MATLAB
+* DONE Investigate indexing in Numpy and MATLAB
+  CLOSED: [2017-03-02 Thu 18:04]
 
 https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
 
@@ -181,7 +190,7 @@ as well as row vs column of the inner most arrays:
 
  [i][j][k][l] <=> [k][l][j][i]
 
-* TODO Test string parameters (path) to a function (#15)
+* TODO [#C] Test string parameters (path) to a function (#15)
 
 ftp://ftp.scp.byu.edu/pub/software/matlab/loadsir.m
 ftp://ftp.scp.byu.edu/data/qscat/1999/sir/queh/SAm/201/a/queh-a-SAm99-201-204.sir.gz
