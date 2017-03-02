@@ -6,10 +6,6 @@ scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
 
 **Warning**: *matlab_wrapper* is maintained, but not actively developed.
-Consider using the official `MATLAB Engine for Python`_, forking the
-repository, or using alternatives mentioned in the FAQ_.
-
-.. _`MATLAB Engine for Python`: http://mathworks.com/help/matlab/matlab-engine-for-python.html
 
 
 Usage
