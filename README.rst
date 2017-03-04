@@ -1,6 +1,9 @@
 matlab_wrapper
 ==============
 
+.. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
+   :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
+
 *matlab_wrapper* allows you to use MATLAB directly from your Python
 scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
@@ -108,6 +111,16 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 
 .. _pymatlab: http://pymatlab.sourceforge.net/
 .. _`The MathWorks, Inc`: http://www.mathworks.com/
+
+
+Citing
+------
+
+Please cite this software when using in your research (click on the
+link for a full reference):
+
+.. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
+   :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
 
 
 
