@@ -20,7 +20,6 @@
 
 # Python 2.x compability
 from __future__ import print_function, division, absolute_import
-from __future__ import unicode_literals
 
 import six
 from six import string_types
@@ -44,6 +43,7 @@ import weakref
 import collections
 
 import ctypes
+import ctypes.util
 from ctypes import c_char_p, POINTER, c_size_t, c_bool, c_void_p, c_int
 
 from matlab_wrapper.typeconv import dtype_to_mat
@@ -293,11 +293,14 @@ def load_engine_and_libs(matlab_root, options):
 
     system = platform.system()
 
+    open_libssl = ctypes.CDLL(ctypes.util.find_library('ssl'))
+
     if system == 'Linux':
         if bits == '64bit':
             lib_dir = join(matlab_root, "bin", "glnxa64")
         else:
             lib_dir = join(matlab_root, "bin", "glnx86")
+
 
         check_python_matlab_architecture(bits, lib_dir)
 
@@ -607,19 +610,16 @@ def mxarray_to_ndarray(libmx, pm):
 
 
     elif class_name == 'cell':
-        out = []
+        out = np.empty(numelems, dtype='O')
         for i in range(numelems):
             cell = libmx.mxGetCell(pm, i)
 
             if bool(cell):
-                o = mxarray_to_ndarray(libmx, cell)
+                out[i] = mxarray_to_ndarray(libmx, cell)
             else:
                 ### uninitialized cell
-                o = None
+                out[i] = None
 
-            out.append(o)
-
-        out = np.array(out, dtype='O')
         out = out.reshape(dims[:ndims], order='F')
         out = out.squeeze()
 

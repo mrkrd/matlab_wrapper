@@ -1,10 +1,14 @@
 matlab_wrapper
 ==============
 
+.. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
+   :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
+
 *matlab_wrapper* allows you to use MATLAB directly from your Python
 scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python module.
 
+**Warning**: *matlab_wrapper* is maintained, but not actively developed.
 
 
 Usage
@@ -63,7 +67,7 @@ Installation
 
 First, make sure that you have the following components installed:
 
-- Python (2.7, no Python 3 support yet)
+- Python 2.7
 - MATLAB (various versions)
 - Numpy
 
@@ -88,10 +92,10 @@ Check our CONTRIBUTING_ guidelines.
 Support
 -------
 
-If you are having issues, please let us know.  We have a mailing list
-located at: matlab_wrapper@googlegroups.com
-
-Before reporting an issue, check FAQ_ and CONTRIBUTING_.
+If you are having issues, please let us know through the issue
+tracker: https://github.com/mrkrd/matlab_wrapper/issues.  Please avoid
+duplicates by searching previous issues, checking FAQ_ and
+CONTRIBUTING_.
 
 .. _FAQ: FAQ.rst
 .. _CONTRIBUTING: CONTRIBUTING.rst
@@ -107,6 +111,16 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 
 .. _pymatlab: http://pymatlab.sourceforge.net/
 .. _`The MathWorks, Inc`: http://www.mathworks.com/
+
+
+Citing
+------
+
+Please cite this software when using it in your research (click on the
+link for a full reference):
+
+.. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
+   :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
 
 
 

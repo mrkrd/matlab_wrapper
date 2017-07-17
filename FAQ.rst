@@ -7,10 +7,32 @@ Error: Unknown MATLAB location?
 
 *matlab_wrapper* is unable to locate your MATLAB installation.
 
-TODO: explain how to fix it
+There are several ways to fix it:
 
-At the moment, you can check the documentation of the MatlabSession
-class (``matlab_root`` parameter).
+1. Include a path to the matlab executable in your PATH environment
+   variable.  You should be able to type ``matlab`` in your terminal
+   prompt and start MATLAB.  *matlab_wrapper* will try to locate the
+   libraries based on the location of the ``matlab`` executable file.
+   For example, put in your start-up files (.profile)::
+
+     export PATH=$PATH:/opt/MATLAB_R2014a/bin
+
+2. Set the environment variable MATLABROOT to the main MALTAB
+   directory, which can be found in MATLAB by typing::
+
+     matlabroot
+
+   Next, type in the shell or your profile file::
+
+     MATLABROOT=/opt/MATLAB/R2014b
+
+3. You can also set MATLAB's root directory in the ``MatlabSession``
+   constructor.  The disadvantage is that your script will not be
+   portable, e.g.::
+
+     matlab = matlab_wrapper.MatlabSession(matlab_root="/opt/MATLAB/R2014b")
+
+   See the documentation of ``MatlabSession`` for more details.
 
 
 
@@ -80,7 +102,14 @@ Is there alternative software?
 
 Yes.  Here's a little compilation:
 
-(last updated on June 17, 2014)
+(last updated on April 18, 2015)
+
+
+- `MATLAB Engine for Python`_
+
+  - official package from Mathworks
+  - supports new versions of Python (2.7, 3.3, and 3.4)
+  - ships with MATLAB 2015a
 
 - pymatlab_
 
@@ -106,7 +135,6 @@ Yes.  Here's a little compilation:
 
   - actively developed (good)
   - client-server architecture with ZeroMQ and JSON, complex (ugly)
-  - missing basic functions, there's no ``put`` (bad)
   - nice IPython Notebook support (good)
 
 
@@ -115,6 +143,7 @@ There is a nice overview of the `available packages`_ at
 StackOverflow.
 
 
+.. _`MATLAB Engine for Python`: http://mathworks.com/help/matlab/matlab-engine-for-python.html
 .. _pymatlab: http://pymatlab.sourceforge.net/
 .. _mlabwrap: http://mlabwrap.sourceforge.net/
 .. _mlab: https://github.com/ewiger/mlab

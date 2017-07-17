@@ -2,9 +2,9 @@
 #+AUTHOR: Marek Rudnicki
 #+CATEGORY: matlab_wrap
 
-* IPython notebook support
-
-* TODO Documentation
+* CANCELED IPython notebook support
+  CLOSED: [2017-03-02 Thu 18:02]
+* DONE Documentation
 
 ** DONE Apply guidelines from writethedocs.org
 
@@ -21,14 +21,12 @@
    - py.test
 
 
-** TODO FAQ
+** DONE FAQ
 
    - matlab_root (modify PATH, ln -s)
    - /bin/csh
 
-
-
-* Spread the word
+* CANCELED Spread the word
 
 ** Show HN
 
@@ -41,14 +39,22 @@
 
 https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
 
-* TODO Python 3 support
+* CANCELED Python 3 support
+  CLOSED: [2017-03-02 Thu 19:36]
+
+Better make a new library for Python 3 with the following properties:
+
+  - name: matlab_wrapper3 (?)
+  - don't squeeze values from Matlab
+  - assure proper indexing
+    https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
 
 ** Review PR #7 from David
 
 https://github.com/mrkrd/matlab_wrapper/pull/7
 
 
-* Auto-detect the number of output arguments (nout)
+* TODO Auto-detect the number of output arguments (nout)
 
   - check get_nout() from oct2py:
 
@@ -57,7 +63,10 @@ https://github.com/mrkrd/matlab_wrapper/pull/7
   - check mlabwrap
 
 
-* Auto-convert int to float in matlab.put()
+* CANCELED Auto-convert int to float in matlab.put()
+  CLOSED: [2016-07-26 Tue 12:46]
+
+Canceled: “Explicit is better than implicit”
 
 The problem is that in MATLAB this conversion is implicit and writing
 e.g.
@@ -78,7 +87,6 @@ matlab = matlab_wrapper.MatlabSession(auto_int_conversion=True)
   - check the standard library for the best kill/terminate functions
 
 
-<2014-08-14 Thu>
 
 MATLAB is unresponsive during execution of svd().  I did not find a
 way to reasonably kill the process (in destructor), because it hangs
@@ -128,13 +136,16 @@ Python is not correct.
 
 Issue #6 by Jeremy Moreau
 
-* Explicit warning when using Python 3
+* TODO Explicit warning when using Python 3
 
 * DONE Setup a mailing list
 
 matlab_wrapper@googlegroups.com
 
-* Investigate `undefined symbol' error
+* CANCELED Investigate `undefined symbol' error
+  CLOSED: [2016-07-26 Tue 12:47]
+
+Canceled: not able to reproduce.
 
 Might have something to do with matplotlib.
 
@@ -155,3 +166,52 @@ Eventually put in FAQ.
     367             self._handle = handle
 
 OSError: /nfs/system/opt/MATLAB/R2014b/bin/glnxa64/libicuio.so.52: undefined symbol: _ZN6icu_5213UnicodeString9doReplaceEiiPKDsii
+
+* DONE Investigate indexing in Numpy and MATLAB
+  CLOSED: [2017-03-02 Thu 18:04]
+
+https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
+
+
+Numpy indexing comes form C.
+
+In carr[i][j][k], k iterates the most inner row arrays.
+
+
+arr.ravel('K') flattens array in the order the elements occur in the
+memory.
+
+
+matlab_wrapper has to take into account inverse indexing:
+
+ [i][j][k][l] <=> [l][k][j][i]
+
+as well as row vs column of the inner most arrays:
+
+ [i][j][k][l] <=> [k][l][j][i]
+
+* TODO [#C] Test string parameters (path) to a function (#15)
+
+ftp://ftp.scp.byu.edu/pub/software/matlab/loadsir.m
+ftp://ftp.scp.byu.edu/data/qscat/1999/sir/queh/SAm/201/a/queh-a-SAm99-201-204.sir.gz
+* DONE Create DOI for referencing
+  CLOSED: [2017-03-04 Sat 17:59]
+
+https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
+
+* TODO Conversion of a struct (#18)
+
+https://github.com/mrkrd/matlab_wrapper/issues/18
+
+[[notmuch:id:mrkrd/matlab_wrapper/issues/18/274494320@github.com]]
+
+- backward compatibility is super important
+- possible solution is to disable squeeze'ing in a backward compatible
+  way, e.g., MatlabSession(squeeze=False)
+
+* DONE Dimension of cellarrays (#19)
+  CLOSED: [2017-01-24 Tue 14:03]
+
+https://github.com/mrkrd/matlab_wrapper/issues/19
+
+fixed by PR #20
