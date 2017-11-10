@@ -199,7 +199,8 @@ ftp://ftp.scp.byu.edu/data/qscat/1999/sir/queh/SAm/201/a/queh-a-SAm99-201-204.si
 
 https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
 
-* TODO Conversion of a struct (#18)
+* DONE Conversion of a struct (#18)
+  CLOSED: [2017-11-10 Fri 21:06]
 
 https://github.com/mrkrd/matlab_wrapper/issues/18
 
@@ -216,6 +217,7 @@ https://github.com/mrkrd/matlab_wrapper/issues/19
 
 fixed by PR #20
 
-* TODO Python 3 tests (#23)
+* DONE Python 3 tests (#23)
+  CLOSED: [2017-11-10 Fri 21:06]
 
 https://github.com/mrkrd/matlab_wrapper/pull/23
