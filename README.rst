@@ -4,11 +4,11 @@ matlab_wrapper
 .. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
    :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
 
-*matlab_wrapper* allows you to use MATLAB directly from your Python
+With *matlab_wrapper* you can easily talk to MATLAB from your Python
 scripts and an interactive shell.  MATLAB session is started in the
-background and appears as a regular Python module.
+background and appears as a regular Python object.
 
-**Warning**: *matlab_wrapper* is maintained, but not actively developed.
+**Info**: *matlab_wrapper* is maintained, but not actively developed.
 
 
 Usage
@@ -49,7 +49,7 @@ Features
 - Access MATLAB variables and functions from Python
 - Multiplatform: GNU/Linux, Windows, OS X
 - On-the-fly conversion between MATLAB and Numpy data types
-- Support for MATLAB's numerical, logical, struct and cell arrays
+- Support for MATLAB's numerical, logical, struct, and cell arrays
 - Pure Python, no need to compile anything (*matlab_wrapper* talks to
   `MATLAB engine library`_ using ctypes_)
 
@@ -93,8 +93,8 @@ Support
 -------
 
 If you are having issues, please let us know through the issue
-tracker: https://github.com/mrkrd/matlab_wrapper/issues.  Please avoid
-duplicates by searching previous issues, checking FAQ_ and
+tracker: https://github.com/mrkrd/matlab_wrapper/issues.  Try to avoid
+duplicates by searching previous issues, checking FAQ_, and
 CONTRIBUTING_.
 
 .. _FAQ: FAQ.rst
