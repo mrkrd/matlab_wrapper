@@ -1,6 +1,12 @@
 matlab_wrapper -- history of user-visible changes
 =================================================
 
+Changes in version 1
+--------------------
+
++ Switch to int versioning
+
+
 Changes in version 0.9.8
 ------------------------
 

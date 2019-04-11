@@ -1,0 +1,367 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* CANCELED IPython notebook support
+  CLOSED: [2017-03-02 Thu 18:02]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: CANCELED
+  :END:
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* CANCELED IPython notebook support
+  CLOSED: [2017-03-02 Thu 18:02]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: CANCELED
+  :END:
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Documentation
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+** DONE Apply guidelines from writethedocs.org
+
+   http://docs.writethedocs.org/
+
+** DONE Sphinx
+
+** DONE Python hosted
+
+** DONE CONTRIBUTING
+
+   - small code snippet illustrating an issue
+   - python setup.py develop --user
+   - py.test
+
+
+** DONE FAQ
+
+   - matlab_root (modify PATH, ln -s)
+   - /bin/csh
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* CANCELED Spread the word
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: CANCELED
+  :END:
+
+** Show HN
+
+** reddit
+
+   - python
+   - matlab
+
+** comp.soft-sys.matlab
+
+https://groups.google.com/forum/#!forum/comp.soft-sys.matlab
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* CANCELED Python 3 support
+  CLOSED: [2017-03-02 Thu 19:36]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: CANCELED
+  :END:
+
+Better make a new library for Python 3 with the following properties:
+
+  - name: matlab_wrapper3 (?)
+  - don't squeeze values from Matlab
+  - assure proper indexing
+    https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
+
+** Review PR #7 from David
+
+https://github.com/mrkrd/matlab_wrapper/pull/7
+
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* CANCELED Auto-convert int to float in matlab.put()
+  CLOSED: [2016-07-26 Tue 12:46]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: CANCELED
+  :END:
+
+Canceled: “Explicit is better than implicit”
+
+The problem is that in MATLAB this conversion is implicit and writing
+e.g.
+
+matlab.put('a', 1)  # <- here 'a' will be int
+
+may lead to unexpected behaviors.
+
+
+Could be activated via by a parameters:
+
+matlab = matlab_wrapper.MatlabSession(auto_int_conversion=True)
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Make sure that the MATLAB process is gone in __del__()      :canceled:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+  - add `matlab._pid' (use features('getpid') in MATLAB, might not
+    exist in older versions)
+  - check the standard library for the best kill/terminate functions
+
+
+
+MATLAB is unresponsive during execution of svd().  I did not find a
+way to reasonably kill the process (in destructor), because it hangs
+in the engClose().
+
+
+
+#+BEGIN_SRC matlab
+m.workspace.svd(np.zeros((10000,10000)))
+#+END_SRC
+
+
+#+BEGIN_SRC python
+### Get MATLAB PID
+try:
+    pid = self.workspace.feature('getpid')
+    self._pid = int(pid)
+except RuntimeError:
+    self._pid = None
+#+END_SRC
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Check for /bin/csh on Linux
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+/bin/csh is required by libeng and the lack of it could be detected by
+matlab_wrapper.
+
+<2014-09-29 Mon>
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Enable 32-bit versions
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+ralili mentioned that it seem to be working on Windows 7, where:
+
+lib_dir = join(matlab_root, "bin", "win32")
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Error when getting empty Matlab object                        :urgent:
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+Issue #6 by Jeremy Moreau
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Setup a mailing list
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+matlab_wrapper@googlegroups.com
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* CANCELED Investigate `undefined symbol' error
+  CLOSED: [2016-07-26 Tue 12:47]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: CANCELED
+  :END:
+
+Canceled: not able to reproduce.
+
+Might have something to do with matplotlib.
+
+Eventually put in FAQ.
+
+
+    790     """
+    791     def __init__(self, name, **kwargs):
+--> 792         self._lib = ctypes.CDLL(name, **kwargs)
+    793
+    794         if 'libeng' in name:
+
+/usr/lib/python2.7/ctypes/__init__.pyc in __init__(self, name, mode, handle, use_errno, use_last_error)
+    363
+    364         if handle is None:
+--> 365             self._handle = _dlopen(self._name, mode)
+    366         else:
+    367             self._handle = handle
+
+OSError: /nfs/system/opt/MATLAB/R2014b/bin/glnxa64/libicuio.so.52: undefined symbol: _ZN6icu_5213UnicodeString9doReplaceEiiPKDsii
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Investigate indexing in Numpy and MATLAB
+  CLOSED: [2017-03-02 Thu 18:04]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+https://groups.google.com/forum/#!topic/matlab_wrapper/wAp6veM6xgY
+
+
+Numpy indexing comes form C.
+
+In carr[i][j][k], k iterates the most inner row arrays.
+
+
+arr.ravel('K') flattens array in the order the elements occur in the
+memory.
+
+
+matlab_wrapper has to take into account inverse indexing:
+
+ [i][j][k][l] <=> [l][k][j][i]
+
+as well as row vs column of the inner most arrays:
+
+ [i][j][k][l] <=> [k][l][j][i]
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Create DOI for referencing
+  CLOSED: [2017-03-04 Sat 17:59]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Conversion of a struct (#18)
+  CLOSED: [2017-11-10 Fri 21:06]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+https://github.com/mrkrd/matlab_wrapper/issues/18
+
+[[notmuch:id:mrkrd/matlab_wrapper/issues/18/274494320@github.com]]
+
+- backward compatibility is super important
+- possible solution is to disable squeeze'ing in a backward compatible
+  way, e.g., MatlabSession(squeeze=False)
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Dimension of cellarrays (#19)
+  CLOSED: [2017-01-24 Tue 14:03]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+https://github.com/mrkrd/matlab_wrapper/issues/19
+
+fixed by PR #20
+
+
+Archived entries from file /home/marek/projects/matlab_wrapper/TODO.org
+
+
+* DONE Python 3 tests (#23)
+  CLOSED: [2017-11-10 Fri 21:06]
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2019-04-11 Thu 15:28
+  :ARCHIVE_FILE: ~/projects/matlab_wrapper/TODO.org
+  :ARCHIVE_CATEGORY: matlab_wrap
+  :ARCHIVE_TODO: DONE
+  :END:
+
+https://github.com/mrkrd/matlab_wrapper/pull/23

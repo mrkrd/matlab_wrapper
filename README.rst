@@ -1,9 +1,6 @@
 matlab_wrapper
 ==============
 
-.. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
-   :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
-
 With *matlab_wrapper* you can easily talk to MATLAB from your Python
 scripts and an interactive shell.  MATLAB session is started in the
 background and appears as a regular Python object.
@@ -92,7 +89,7 @@ Check our CONTRIBUTING_ guidelines.
 Support
 -------
 
-If you are having issues, please let us know through the issue
+If you are having issues, please let me know through the issue
 tracker: https://github.com/mrkrd/matlab_wrapper/issues.  Try to avoid
 duplicates by searching previous issues, checking FAQ_, and
 CONTRIBUTING_.
@@ -112,15 +109,6 @@ MATLAB is a registered trademark of `The MathWorks, Inc`_.
 .. _pymatlab: http://pymatlab.sourceforge.net/
 .. _`The MathWorks, Inc`: http://www.mathworks.com/
 
-
-Citing
-------
-
-Please cite this software when using it in your research (click on the
-link for a full reference):
-
-.. image:: https://zenodo.org/badge/24233/mrkrd/matlab_wrapper.svg
-   :target: https://zenodo.org/badge/latestdoi/24233/mrkrd/matlab_wrapper
 
 
 
